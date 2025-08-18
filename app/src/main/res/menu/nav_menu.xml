@@ -1,0 +1,48 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_home"
+        android:title="Home"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_edit"
+        android:title="Edit Application"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_submit"
+        android:title="Final Submission"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_status"
+        android:title="Current Status"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_training"
+        android:title="EDP Training"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_grievance"
+        android:title="Grievance"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_upload"
+        android:title="Signboard Upload"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_sanction"
+        android:title="Sanction details"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_others"
+        android:title="Others"
+        app:showAsAction="never" />
+</menu>

@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">PmegpCustomerOnboardingApp</string>
+    <string name="txt_new_unit">Applicant for new Unit                   </string>
+    <string name="txt_reg_applicant_login">Registered Applicant Login</string>
+    <string name="txt_ex_applicant_login">Application for Existing Units(2nd Loan)</string>
+    <string name="txt_ex_reg_applicant_login">Register Applicant Login</string>
+
+    <string name="txt_basic_information">Basic Information</string>
+    <string name="txt_communication_address">Communication Address</string>
+    <string name="txt_implementing_agency">Implementing Agency</string>
+    <string name="txt_unit_address">Unit Address</string>
+    <string name="txt_project_info">Project Information</string>
+    <string name="txt_finance_bank_primary">Primary Financing Bank</string>
+    <string name="txt_alternate_finance_bank">Alternate Financeing Bank</string>
+    <string name="txt_other_info">Other Information</string>
+    <string name="txt_note">Note: Credit Guarantee Fund Trust for Micro and Small Enterprises (CGTMSE) fee will be applicable from bank.</string>
+    <string name="txt_terms_and_condition">1. I, hereby voluntarily and explicitly consent to the sharing of my Aadhaar and PAN details with KVIC and MoMSME. I understand that these details will be used solely for PMEGP Loan Purpose, and I confirm that all information shared is accurate to the best of my knowledge. I acknowledge that I have been informed about the purpose of sharing these details and agree to the same, also I will not shift my Unit till the Physical Verification is completed.
+          \n2. I hereby declare that I have not already availed or registered for other Govt. subsidy Schemes, and if found so I will be ready for further legal actions against myself.</string>
+
+    //hint text
+    <string name="adhar_card_no">Adhar Card No.*</string>
+    <string name="pan_no">Pan No.*</string>
+    <string name="title_txt">Title</string>
+    <string name="name_of_applicant">Name of Applicant*</string>
+    <string name="adhar_format">(Name as per Adhar card)</string>
+    <string name="date_of_birth">Date Of Birth*</string>
+    <string name="age">Age</string>
+    <string name="gender_selection">Select Gender*</string>
+    <string name="social_category">Social Category*</string>
+    <string name="special_category">Special Category(if any)*</string>
+    <string name="qualification">Qualification*</string>
+    <string name="communication_add">Communication address*</string>
+    <string name="select_state">Select State*</string>
+    <string name="select_district">District*</string>
+    <string name="otp_consent">"UIDAI OTP Consent\n\n" +
+                "I hereby give my consent to use Aadhaar OTP authentication for eKYC to apply for the PMEGP loan. " +
+                "I understand that by performing this authentication, the basic demographic details such as my name, " +
+                "date of birth, gender, and address as registered with UIDAI may be shared by UIDAI.\n\n" +
+                "Aadhaar OTP has been sent on registered mobile number. Enter Aadhaar OTP:"</string>
+
+</resources>

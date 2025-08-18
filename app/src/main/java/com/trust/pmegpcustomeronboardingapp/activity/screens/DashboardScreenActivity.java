@@ -1,0 +1,194 @@
+package com.trust.pmegpcustomeronboardingapp.activity.screens;
+
+import static com.trust.pmegpcustomeronboardingapp.R.id.stepLabel;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.trust.pmegpcustomeronboardingapp.R;
+import com.trust.pmegpcustomeronboardingapp.activity.Interface.FragmentNavigationListener;
+import com.trust.pmegpcustomeronboardingapp.activity.fragment.ApplicationFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.fragment.BaseFormFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.fragment.DPRFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.fragment.FinalSubmissionFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.fragment.LoanSanctionFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.fragment.ScoreCardFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.fragment.UnderProcessFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.fragment.UploadDocumentsFragment;
+
+public class DashboardScreenActivity extends AppCompatActivity {
+
+    private Fragment[] formSteps ;
+    private final String[] fragmentNames = new String[] {
+            "Application",
+            "DPR",
+            "Score Card",
+            "Upload Documents",
+            "Final Submission",
+            "Under Process",
+            "Loan Sanction",
+
+    };
+    private int currentStep = 0;
+    private LinearLayout stepLayout;
+    private int[] stepIcons = {
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24,
+            R.drawable.check_circle_24
+    };
+    TextView fragment_name;
+
+    HorizontalScrollView stepScrollView;
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard_screen);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        stepLayout =findViewById(R.id.stepLayout);
+        stepScrollView = findViewById(R.id.stepScrollView);
+        fragment_name = findViewById(R.id.fragment_name);
+
+        toolbar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.menu_home) {
+                return true;
+            } else if (id == R.id.menu_edit) {
+                return true;
+            } else if (id == R.id.menu_submit) {
+                return true;
+            } else if (id == R.id.menu_status) {
+                return true;
+            } else if (id == R.id.menu_training) {
+                return true;
+            } else if (id == R.id.menu_grievance) {
+                return true;
+            } else if (id == R.id.menu_upload) {
+                return true;
+            } else if (id == R.id.menu_sanction) {
+                return true;
+            } else if (id == R.id.menu_others) {
+                return true;
+            }
+            return false;
+        });
+
+
+        formSteps = new Fragment[]{
+                new ApplicationFragment(),
+                new DPRFragment(),
+                new ScoreCardFragment(),
+                new UploadDocumentsFragment(),
+                new FinalSubmissionFragment(),
+                new UnderProcessFragment(),
+                new LoanSanctionFragment()
+        };
+        setupStepper();
+        updateFragment();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.nav_menu, menu);
+        return true;
+    }
+    @SuppressLint("MissingInflatedId")
+    private void setupStepper() {
+        stepLayout.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        for (int i = 0; i < formSteps.length; i++) {
+            View stepView = inflater.inflate(R.layout.layout_step_item, stepLayout, false);
+            ImageView icon = stepView.findViewById(R.id.stepIcon);
+           TextView label = stepView.findViewById(stepLabel);
+            View line = stepView.findViewById(R.id.line);
+
+            int index = i;
+
+
+            icon.setImageResource(stepIcons[i]);
+            label.setText(fragmentNames[i]);
+
+
+            if (i == currentStep) {
+                icon.setBackground(ContextCompat.getDrawable(this, R.drawable.active_shape_circle));
+                label.setTextColor(ContextCompat.getColor(this, R.color.black)); // Active color
+            } else {
+                icon.setBackground(ContextCompat.getDrawable(this, R.drawable.inactive_shape_circle));
+                label.setTextColor(ContextCompat.getColor(this, R.color.colorFentBlack)); // Inactive color
+            }
+
+            icon.setOnClickListener(v -> {
+                currentStep = index;
+                updateFragment();
+            });
+
+            if (i == formSteps.length - 1) {
+                line.setVisibility(View.GONE);
+            }
+
+            stepLayout.addView(stepView);
+
+            if (i == currentStep) {
+                stepView.post(() -> scrollToStep(stepView));
+            }
+        }
+    }
+
+
+    private void updateFragment() {
+        Fragment fragment = formSteps[currentStep];
+        if (fragment instanceof BaseFormFragment) {
+            ((BaseFormFragment) fragment).setNavigationListener((FragmentNavigationListener) this);        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.formFragmentContainer, fragment)
+                .commit();
+
+        updateStepperUI();
+
+        if(currentStep < fragmentNames.length) {
+            fragment_name.setText(fragmentNames[currentStep]);
+            fragment_name.setVisibility(View.VISIBLE);
+        }
+        else
+            fragment_name.setVisibility(View.GONE);
+
+
+    }
+
+    private void updateStepperUI() {
+        setupStepper();
+    }
+    private void scrollToStep(View target) {
+        int scrollX = target.getLeft() - (stepScrollView.getWidth() / 2) + (target.getWidth() / 2);
+        stepScrollView.smoothScrollTo(scrollX, 0);
+    }
+
+}
