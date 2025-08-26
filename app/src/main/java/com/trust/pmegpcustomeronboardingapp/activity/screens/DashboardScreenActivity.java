@@ -3,6 +3,7 @@ package com.trust.pmegpcustomeronboardingapp.activity.screens;
 import static com.trust.pmegpcustomeronboardingapp.R.id.stepLabel;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,10 +31,13 @@ import com.trust.pmegpcustomeronboardingapp.activity.fragment.LoanSanctionFragme
 import com.trust.pmegpcustomeronboardingapp.activity.fragment.ScoreCardFragment;
 import com.trust.pmegpcustomeronboardingapp.activity.fragment.UnderProcessFragment;
 import com.trust.pmegpcustomeronboardingapp.activity.fragment.UploadDocumentsFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.model.LoginResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 
-public class DashboardScreenActivity extends AppCompatActivity {
+public class DashboardScreenActivity extends AppCompatActivity implements FragmentNavigationListener{
 
     private Fragment[] formSteps ;
+    TextView userId;
     private final String[] fragmentNames = new String[] {
             "Application",
             "DPR",
@@ -70,10 +74,15 @@ public class DashboardScreenActivity extends AppCompatActivity {
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        AppConstant.loadFromPrefs(this);
+        userId = findViewById(R.id.userId);
         stepLayout =findViewById(R.id.stepLayout);
         stepScrollView = findViewById(R.id.stepScrollView);
         fragment_name = findViewById(R.id.fragment_name);
 
+//         if (AppConstant.getIsLoggedIn().equals(true)) {
+             userId.setText("Welcome, Your Application ID is " + AppConstant.getUserID());
+//         }
         toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.menu_home) {
@@ -145,6 +154,7 @@ public class DashboardScreenActivity extends AppCompatActivity {
             }
 
             icon.setOnClickListener(v -> {
+
                 currentStep = index;
                 updateFragment();
             });
@@ -191,4 +201,18 @@ public class DashboardScreenActivity extends AppCompatActivity {
         stepScrollView.smoothScrollTo(scrollX, 0);
     }
 
+    @Override
+    public void onNextStep() {
+
+    }
+
+    @Override
+    public void onPreviousStep() {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
 }

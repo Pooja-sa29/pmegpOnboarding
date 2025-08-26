@@ -146,155 +146,161 @@
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_building_details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="6dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp">
-            <TextView
-                android:id="@+id/txt_add_row"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/top_curved_edge_rectangle"
-                android:drawableEnd="@drawable/baseline_add_24"
-                android:padding="8dp"
-                android:text="Add Row"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txt_inputlayout"
-                style="@style/CustomTextInputLayout"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_building_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="4dp"
-                android:visibility="visible"
-                android:layout_marginVertical="8dp"
-                android:hint="Land*"
-                card_view:boxBackgroundColor="@color/light_grayish_blue">
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/Land_entry"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="12dp"
-                    android:textColor="@color/colorFentBlack"
-                    android:enabled="false"
-                    android:textSize="16sp"
-                    android:layout_weight="1"/>
-            </com.google.android.material.textfield.TextInputLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/txt_add_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:background="@drawable/top_curved_edge_rectangle"
+                    android:drawableEnd="@drawable/baseline_add_24"
+                    android:padding="8dp"
+                    android:text="Add Row"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txt_inputlayout"
+                        style="@style/CustomTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4dp"
+                        android:visibility="visible"
+                        android:layout_margin="10dp"
+                        android:layout_marginVertical="8dp"
+                        android:hint="Land*"
+                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/Land_entry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="12dp"
+                            android:textColor="@color/colorFentBlack"
+                            android:enabled="false"
+                            android:textSize="16sp"
+                            android:layout_weight="1"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:layout_marginTop="8dp"
+                    android:scrollbars="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
+                        android:orientation="vertical">
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Sr No"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            android:orientation="horizontal"
+                            android:paddingVertical="4dp">
 
-                        <TextView
+                            <TextView
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Sr No"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Particulars"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Area"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Rate/Sq.ft"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="120dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Amount"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="2dp"
+                            android:background="@color/orange" />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_land_entry"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Particulars"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            android:paddingVertical="4dp" />
 
-                        <TextView
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Area"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            android:orientation="horizontal"
+                            android:gravity="end"
+                            android:paddingTop="8dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Rate/Sq."
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total: "
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Amount in Rs."
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
-
+                            <TextView
+                                android:id="@+id/land_total"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0.00"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                                android:textStyle="bold" />
+                        </LinearLayout>
                     </LinearLayout>
-
-                    <LinearLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:background="@drawable/orange_left_strip"
-                        android:elevation="4dp"
-                        android:orientation="horizontal" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_land_entry"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
+                    </LinearLayout>
+                </HorizontalScrollView>
                 </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="end">
+            </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Total : "
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/land_total"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-
-
-        </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/txt_MACHINERY_layout"
@@ -317,6 +323,8 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="6dp">
 
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -336,7 +344,17 @@
                         android:textStyle="bold" />
 
 
-
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="12dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -409,6 +427,8 @@
                             android:layout_height="wrap_content" />
 
                     </LinearLayout>
+                        </LinearLayout>
+                    </HorizontalScrollView>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -438,6 +458,7 @@
 
 
                 </LinearLayout>
+
             </androidx.cardview.widget.CardView>
 
             <TextView

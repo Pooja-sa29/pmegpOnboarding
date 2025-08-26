@@ -6,16 +6,22 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.AdharVerificationResp
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyShortCodeResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyShortCodes;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDataModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicationResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailResponce;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DPRResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DistrictModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.EDPRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.EDPResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.GenderModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.InformationSource;
+import com.trust.pmegpcustomeronboardingapp.activity.model.LoginRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.LoginResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.NICDevisionModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.NICGroupModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.QualificationModel;
@@ -23,6 +29,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.ResultModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SocialCategory;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SpecialCategory;
 import com.trust.pmegpcustomeronboardingapp.activity.model.StateModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.SubDistrictRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SubDistrictResponce;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UidRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UnitDetailResponse;
@@ -48,7 +55,7 @@ public interface ApiServices {
     Call<List<AgencyModel>> getAgencyList();
 
     @POST("MobileApp/GetAgencyShortCode")
-    Call<AgencyShortCodes> getAgencyShortCode(@Body AgencyModel agencyId);
+    Call<AgencyShortCodeResponse> getAgencyShortCode(@Body AgencyModel agencyId);
 
 
     @GET("MobileApp/GetUnitTypeActivity")
@@ -79,7 +86,7 @@ public interface ApiServices {
     @POST("MobileApp/GetEDPData")
     Call<EDPResponse> getEDPData(@Body EDPRequest request);
     @POST("MobileApp/GetSubDistricts")
-    Call<List<SubDistrictResponce>> GetSubDistricts(@Body DistrictModel  districtCode);
+    Call<List<SubDistrictResponce>> GetSubDistricts(@Body SubDistrictRequest request);
     @POST("MobileApp/GetVillages")
     Call<List<VillageDetailModel>> getVillages(@Body VillageRequest villageRequest);
 
@@ -113,4 +120,13 @@ public interface ApiServices {
 
     @POST("MobileApp/SaveApplicantData")
     Call<ResultModel> saveForm(@Body ApplicantDataModel applicantDataModel);
+
+    @POST("MobileApp/AuthenticateApplLogin")
+    Call<LoginResponse> loginAuthentication(@Body LoginRequest loginRequest);
+
+    @POST("MobileApp/GetApplicantData")
+    Call<ApplicationResponse>  getApplicantData(@Body ApplicantRequest applId);
+
+    @POST("MobileApp/GetDprData")
+    Call<DPRResponse>  getDprData(@Body ApplicantRequest applId);
 }

@@ -44,6 +44,7 @@ public class IndustryDataDialogFragment extends DialogFragment {
     private String[] nicCodes = {};
     private String[] descriptions = {};
     ApiServices apiService;
+    String   nicgroup_code;
     Spinner division_spinner,group_spinner,class_spinner;
     private OnIndustrySelectedListener listener;
     Button closeButton,selectButton;
@@ -152,6 +153,7 @@ public class IndustryDataDialogFragment extends DialogFragment {
                                         System.out.println("Selected Division: " + parent.getItemAtPosition(position).toString());
                                         NICDevisionModel devisionModel = nicDevisionModelList.get(position -1);
                                         String nic_code = devisionModel.getNic_code();
+
                                         fetchGroupData(nic_code);
                                     }
                                 }
@@ -213,8 +215,8 @@ public class IndustryDataDialogFragment extends DialogFragment {
                                 if (position > 0) {
                                     System.out.println("Selected group: " + parent.getItemAtPosition(position).toString());
                                     NICGroupModel groupModel = nicGroupModelList.get(position -1);
-                                    String nic_code = groupModel.getNic_code();
-                                    fetchClassData(nic_code);
+                                     nicgroup_code = groupModel.getNic_code();
+                                    fetchClassData(nicgroup_code);
                                 }
                             }
 

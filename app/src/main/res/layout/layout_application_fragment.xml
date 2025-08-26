@@ -52,7 +52,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/adharcardno"
+                          android:id="@+id/app_adharcardno"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:inputType="textCapCharacters"
@@ -72,7 +72,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/pannumber"
+                          android:id="@+id/app_pannumber"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -92,7 +92,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/titleSpinner"
+                      android:id="@+id/app_titleSpinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -113,7 +113,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/nameofapplicant"
+                          android:id="@+id/app_nameofapplicant"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -138,7 +138,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/dob"
+                          android:id="@+id/app_dob"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -158,7 +158,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/age"
+                          android:id="@+id/app_age"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -178,7 +178,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/spinner_gender"
+                      android:id="@+id/app_spinner_gender"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -196,7 +196,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/social_category_spinner"
+                      android:id="@+id/app_social_category_spinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -217,7 +217,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/special_category_spinner"
+                      android:id="@+id/app_special_category_spinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -238,7 +238,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/qualificationspinner"
+                      android:id="@+id/app_qualificationspinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -256,7 +256,7 @@
 
 
           <TextView
-              android:id="@+id/txt_communicationLayout"
+              android:id="@+id/app_txt_communicationLayout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="15dp"
@@ -269,7 +269,7 @@
               android:textStyle="bold" />
 
           <androidx.cardview.widget.CardView
-              android:id="@+id/cv_communication_address"
+              android:id="@+id/app_cv_communication_address"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               card_view:cardBackgroundColor="@color/white"
@@ -294,7 +294,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/communication_address"
+                          android:id="@+id/app_communication_address"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -313,7 +313,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/state_spinner"
+                      android:id="@+id/app_state_spinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -335,7 +335,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/district"
+                          android:id="@+id/app_district"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -346,7 +346,7 @@
                   </com.google.android.material.textfield.TextInputLayout>
 
                   <Button
-                      android:id="@+id/btn_district_change"
+                      android:id="@+id/app_btn_district_change"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:backgroundTint="@color/peacock_green"
@@ -363,7 +363,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/taluka_block_name"
+                          android:id="@+id/app_taluka_block_name"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -384,7 +384,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/pin_number"
+                          android:id="@+id/app_pin_number"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -404,7 +404,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/mobile_number"
+                          android:id="@+id/app_mobile_number"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -424,7 +424,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/alternate_mobile_number"
+                          android:id="@+id/app_alternate_mobile_number"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -445,7 +445,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/email"
+                          android:id="@+id/app_email"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -472,7 +472,7 @@
               android:textStyle="bold" />
 
           <androidx.cardview.widget.CardView
-              android:id="@+id/cv_implementing_agency"
+              android:id="@+id/app_cv_implementing_agency"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               card_view:cardBackgroundColor="@color/white"
@@ -497,7 +497,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/implementing_agency_txt"
+                      android:id="@+id/app_implementing_agency_txt"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -516,7 +516,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/iastateSpinner"
+                      android:id="@+id/app_iastateSpinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -534,7 +534,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/agencydistrictSpinner"
+                      android:id="@+id/app_agencydistrictSpinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -545,7 +545,7 @@
 
 
                   <LinearLayout
-                      android:id="@+id/implementing_type_agency_layout"
+                      android:id="@+id/app_implementing_type_agency_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
@@ -586,12 +586,12 @@
                                       android:layout_height="wrap_content"
                                       android:orientation="horizontal">
                                       <CheckBox
-                                          android:id="@+id/agencyTypecheck"
+                                          android:id="@+id/app_agencyTypecheck"
                                           android:layout_width="wrap_content"
                                           android:layout_height="wrap_content" />
 
                                       <TextView
-                                          android:id="@+id/agencyTypeName"
+                                          android:id="@+id/app_agencyTypeName"
                                           android:layout_width="wrap_content"
                                           android:layout_height="wrap_content"
                                           android:textStyle="bold" />
@@ -652,7 +652,7 @@
           </androidx.cardview.widget.CardView>
 
           <TextView
-              android:id="@+id/txt_unitlayout"
+              android:id="@+id/app_txt_unitlayout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="15dp"
@@ -665,7 +665,7 @@
               android:textStyle="bold" />
 
           <androidx.cardview.widget.CardView
-              android:id="@+id/cv_unitAddress"
+              android:id="@+id/app_cv_unitAddress"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               card_view:cardBackgroundColor="@color/white"
@@ -690,7 +690,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/unitdistrictnameList"
+                      android:id="@+id/app_unitdistrictnameList"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -708,7 +708,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/unitsubdistrictnameSpinner"
+                      android:id="@+id/app_unitsubdistrictnameSpinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -726,7 +726,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/unitvillagenamespinner"
+                      android:id="@+id/app_unitvillagenamespinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -745,7 +745,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/lgd_code"
+                          android:id="@+id/app_lgd_code"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -765,7 +765,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/unitpincode"
+                          android:id="@+id/app_unitpincode"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -785,7 +785,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/unitLoc"
+                          android:id="@+id/app_unitLoc"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -804,7 +804,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/unitaddress"
+                          android:id="@+id/app_unitaddress"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -816,7 +816,7 @@
           </androidx.cardview.widget.CardView>
 
           <TextView
-              android:id="@+id/txt_projectinfo_Layout"
+              android:id="@+id/app_txt_projectinfo_Layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="15dp"
@@ -830,7 +830,7 @@
 
 
           <androidx.cardview.widget.CardView
-              android:id="@+id/cv_projectinfo"
+              android:id="@+id/app_cv_projectinfo"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               card_view:cardBackgroundColor="@color/white"
@@ -855,7 +855,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/activityspinner"
+                      android:id="@+id/app_activityspinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -879,7 +879,7 @@
                       android:orientation="horizontal">
 
                       <Button
-                          android:id="@+id/btn_industry_activity"
+                          android:id="@+id/app_btn_industry_activity"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_margin="2dp"
@@ -888,7 +888,7 @@
                           android:text="Select Industry/Activity" />
 
                       <Button
-                          android:id="@+id/btn_show_nic_code_list"
+                          android:id="@+id/app_btn_show_nic_code_list"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_margin="2dp"
@@ -954,7 +954,7 @@
                           android:orientation="horizontal" />
 
                       <androidx.recyclerview.widget.RecyclerView
-                          android:id="@+id/rv_product"
+                          android:id="@+id/app_rv_product"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content" />
 
@@ -971,21 +971,21 @@
 
 
                   <RadioGroup
-                      android:id="@+id/edp_radioGrp"
+                      android:id="@+id/app_edp_radioGrp"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
                       android:orientation="horizontal">
 
                       <RadioButton
-                          android:id="@+id/yes_radio"
+                          android:id="@+id/app_yes_radio"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="Yes"
                           android:textColor="@color/grey" />
 
                       <RadioButton
-                          android:id="@+id/No_radio"
+                          android:id="@+id/app_No_radio"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="No"
@@ -993,7 +993,7 @@
                   </RadioGroup>
 
                   <RadioGroup
-                      android:id="@+id/edp_subgrp_radioGrp"
+                      android:id="@+id/app_edp_subgrp_radioGrp"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -1001,14 +1001,14 @@
                       android:orientation="horizontal">
 
                       <RadioButton
-                          android:id="@+id/online_radio"
+                          android:id="@+id/app_online_radio"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="Online EDP"
                           android:textColor="@color/grey" />
 
                       <RadioButton
-                          android:id="@+id/offline_radio"
+                          android:id="@+id/app_offline_radio"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="Offline EDP"
@@ -1017,7 +1017,7 @@
 
 
                   <LinearLayout
-                      android:id="@+id/edp_layout"
+                      android:id="@+id/app_edp_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal">
@@ -1034,7 +1034,7 @@
                           card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                           <com.google.android.material.textfield.TextInputEditText
-                              android:id="@+id/edp_training_insti_name"
+                              android:id="@+id/app_edp_training_insti_name"
                               android:layout_width="wrap_content"
                               android:layout_height="wrap_content"
                               android:padding="12dp"
@@ -1046,7 +1046,7 @@
                       </com.google.android.material.textfield.TextInputLayout>
 
                       <Button
-                          android:id="@+id/btn_edpSelection"
+                          android:id="@+id/app_btn_edpSelection"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:gravity="center"
@@ -1074,7 +1074,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/capital_exp"
+                          android:id="@+id/app_capital_exp"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -1099,7 +1099,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/workingcapital"
+                          android:id="@+id/app_workingcapital"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -1124,7 +1124,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/totalexp"
+                          android:id="@+id/app_totalexp"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1150,7 +1150,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/employee_count"
+                          android:id="@+id/app_employee_count"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="12dp"
@@ -1162,7 +1162,7 @@
           </androidx.cardview.widget.CardView>
 
           <TextView
-              android:id="@+id/txt_primary_finance_bank_layout"
+              android:id="@+id/app_txt_primary_finance_bank_layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="15dp"
@@ -1175,7 +1175,7 @@
               android:textStyle="bold" />
 
           <androidx.cardview.widget.CardView
-              android:id="@+id/cv_primary_Financing_bank"
+              android:id="@+id/app_cv_primary_Financing_bank"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               card_view:cardBackgroundColor="@color/white"
@@ -1200,7 +1200,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/bank_spinner_list"
+                      android:id="@+id/app_bank_spinner_list"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -1219,7 +1219,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/ifscbank_code"
+                          android:id="@+id/app_ifscbank_code"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1230,7 +1230,7 @@
                   </com.google.android.material.textfield.TextInputLayout>
 
                   <Button
-                      android:id="@+id/btn_ifsc_code"
+                      android:id="@+id/app_btn_ifsc_code"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_margin="2dp"
@@ -1248,7 +1248,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/branch_name"
+                          android:id="@+id/app_branch_name"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1269,7 +1269,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/primary_address"
+                          android:id="@+id/app_primary_address"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1289,7 +1289,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/pf_districtEd"
+                          android:id="@+id/app_pf_districtEd"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1304,7 +1304,7 @@
           </androidx.cardview.widget.CardView>
 
           <TextView
-              android:id="@+id/txt_altfbank_Layout"
+              android:id="@+id/app_txt_altfbank_Layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="15dp"
@@ -1318,7 +1318,7 @@
 
 
           <androidx.cardview.widget.CardView
-              android:id="@+id/cv_alternate_Financing_bank"
+              android:id="@+id/app_cv_alternate_Financing_bank"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               card_view:cardBackgroundColor="@color/white"
@@ -1343,7 +1343,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/alt_bank_spinner_list"
+                      android:id="@+id/app_alt_bank_spinner_list"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -1362,7 +1362,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/alt_ifscbank_code"
+                          android:id="@+id/app_alt_ifscbank_code"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1373,7 +1373,7 @@
                   </com.google.android.material.textfield.TextInputLayout>
 
                   <Button
-                      android:id="@+id/alt_btn_ifsc_code"
+                      android:id="@+id/app_alt_btn_ifsc_code"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_margin="2dp"
@@ -1391,7 +1391,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/alt_branch_name"
+                          android:id="@+id/app_alt_branch_name"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1412,7 +1412,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/alt_primary_address"
+                          android:id="@+id/app_alt_primary_address"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1432,7 +1432,7 @@
                       card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                       <com.google.android.material.textfield.TextInputEditText
-                          android:id="@+id/alt_pf_districtEd"
+                          android:id="@+id/app_alt_pf_districtEd"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:enabled="false"
@@ -1447,7 +1447,7 @@
           </androidx.cardview.widget.CardView>
 
           <TextView
-              android:id="@+id/txt_other_info_Layout"
+              android:id="@+id/app_txt_other_info_Layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="15dp"
@@ -1461,7 +1461,7 @@
 
 
           <androidx.cardview.widget.CardView
-              android:id="@+id/cv_otherInfo"
+              android:id="@+id/app_cv_otherInfo"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               card_view:cardBackgroundColor="@color/white"
@@ -1486,21 +1486,21 @@
                       android:textSize="16sp" />
 
                   <RadioGroup
-                      android:id="@+id/cgtmse_radioGrp"
+                      android:id="@+id/app_cgtmse_radioGrp"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
                       android:orientation="horizontal">
 
                       <RadioButton
-                          android:id="@+id/yes_cgt"
+                          android:id="@+id/app_yes_cgt"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="Yes"
                           android:textColor="@color/grey" />
 
                       <RadioButton
-                          android:id="@+id/No_cgt"
+                          android:id="@+id/app_No_cgt"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="No"
@@ -1508,13 +1508,13 @@
                   </RadioGroup>
 
                   <LinearLayout
-                      android:id="@+id/avail_layout"
+                      android:id="@+id/app_avail_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:visibility="gone">
 
                       <CheckBox
-                          android:id="@+id/checkbox_availt_note"
+                          android:id="@+id/app_checkbox_availt_note"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"/>
 
@@ -1534,7 +1534,7 @@
                       android:textSize="16sp" />
 
                   <Spinner
-                      android:id="@+id/spinner_about_us_spinner"
+                      android:id="@+id/app_spinner_about_us_spinner"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_marginHorizontal="4dp"
@@ -1552,7 +1552,7 @@
               android:layout_margin="5dp">
 
               <CheckBox
-                  android:id="@+id/form_check"
+                  android:id="@+id/app_form_check"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   />
@@ -1569,7 +1569,7 @@
               android:layout_height="wrap_content"
               android:gravity="center">
               <Button
-                  android:id="@+id/btn_updateform"
+                  android:id="@+id/app_btn_updateform"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_margin="5dp"

@@ -43,6 +43,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.AdharVerificationResp
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyShortCodeResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyShortCodes;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDataModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailRequest;
@@ -60,6 +61,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.ResultModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SocialCategory;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SpecialCategory;
 import com.trust.pmegpcustomeronboardingapp.activity.model.StateModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.SubDistrictRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SubDistrictResponce;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UidRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UnitDetailResponse;
@@ -71,9 +73,12 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.VillageRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,7 +95,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     Button changeDistrict,btn_edpSelection,btn_submitform,btn_validateaddhar,btn_ifsc_code,alt_btn_ifsc_code,btn_industry_activity;
     ApiServices apiService;
     private ProgressDialog progressDialog;
-    String selectedStateCode,selectedStateCodeIa,selectedAgencyCode,selectedunittype,selectedDistrictCode;
+    String selectedStateCode,  state_shortCode,selectedStateCodeIa,selectedAgencyCode,selectedAgency_Code,selectedNodalCode,selectedunittype,selectedDistrictCode;
     List<DistrictModel> districts;
     List<String> stateNamesList;
     List<String> qualificationNameList;
@@ -104,13 +109,13 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     List<EDPDetails> EdpDetailList;
     List<AgencyRequest> agencyRequestList;
     List<String> titleList = new ArrayList<String>();
-    EditText lgd_code,edp_training_insti,pin_code,unit_loc,adharcardno,nameofapplicant,uid_dob,uid_age,communication_address,district,taluka_block_name,pin_number,mobile_number,alternate_mobile_number,panNumber,unitlocation,unitaddress,unitPin,capital_exp,workingcapital,totalexp,employee_count;
+    EditText email,lgd_code,edp_training_insti,pin_code,unit_loc,adharcardno,nameofapplicant,uid_dob,uid_age,communication_address,district,taluka_block_name,pin_number,mobile_number,alternate_mobile_number,panNumber,unitlocation,unitaddress,unitPin,capital_exp,workingcapital,totalexp,employee_count;
     CheckBox agency_type_check;
     TextView agency_type,agency_type_district,agency_type_pin,agency_type_state, agency_type_mobile,agency_type_email;
     LinearLayout implementing_type_agency_layout;
-    String agencyName,district_name,statename,state_zonal_code,nodalCode,  gender;
-    String districtCode,pinCode,unitLocation,selectedCityName,alt_selectedCityName;
-    int stateId,districtId,stateCode,lgdCode,activityUnitType,alt_selectedBankListID,selectedBankListID;
+    String agencyName, edp_name,district_name,statename, subdistrictName,state_zonal_code,nodalCode,  gender;
+    String districtCode,pinCode,unitLocation,selectedCityName,alt_selectedCityName,selectedSocialCatCode,selectedBankName1,selectedBankName2,selectedNicDesc,selectedNicDesc2,selectedNicDesc3,selectedNicCode,selectedNicCode2,selectedNicCode3,selectedIfsc1,selectedIfsc2,selectedBankDistrict2,selectedBankDistrict1,selectedBankAddress2,selectedBankAddress1,selectedBranch1,selectedBranch2,selectedSpecialCatCode,selectedQualCode,selectedQualDesc,selectedDistrictName,selectedVillageName,selectedPincode;
+    int stateId,districtId,state_code,lgdCode,activityUnitType,alt_selectedBankListID,selectedBankListID,selectedBankId2,selectedagencyoffId;
     RadioGroup cgtmse_radioGrp,edp_radioGrp,edp_subgrp_radioGrp;
     CheckBox checkbox_availt_note;
     int cgtmseFlag = 0, agentId;
@@ -187,6 +192,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         employee_count= findViewById(R.id.employee_count);
         checkbox_availt_note = findViewById(R.id.checkbox_availt_note);
 
+        email = findViewById(R.id.email);
         lgd_code = findViewById(R.id.lgd_code);
         pin_code = findViewById(R.id.unitpincode);
         unit_loc = findViewById(R.id.unitLoc);
@@ -228,125 +234,137 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
             getAdharOtp(adharcardno.getText().toString());
         });
-        btn_submitform.setOnClickListener(v -> {
-            ApplicantDataModel applicantDataModel = new ApplicantDataModel();
-            AgencyModel agencyModel = new AgencyModel();
-            AgencyShortCodes agencyShortCodes = new AgencyShortCodes();
-            AgencyResponse agencyResponse = new AgencyResponse();
-            StateModel stateModel = new StateModel();
-            DistrictModel districtModel = new DistrictModel();
-            SocialCategory socialCategory = new SocialCategory();
-            SpecialCategory specialCategory = new SpecialCategory();
-            QualificationModel qualificationModel = new QualificationModel();
-            VillageDetailResponse villageDetailModel = new VillageDetailResponse();
-            UnitTypeModel unitTypeModel = new UnitTypeModel();
-            NICGroupModel nicGroupModel = new NICGroupModel();
-            BankDetailResponce bankDetailRequest = new BankDetailResponce();
+//        btn_submitform.setOnClickListener(v -> {
+//            ApplicantDataModel applicant = new ApplicantDataModel();
+//
+//            double capitalExp       = parseDoubleSafe(capital_exp.getText().toString());
+//            double workingCapital   = parseDoubleSafe(workingcapital.getText().toString());
+//            double totalProjectCost = parseDoubleSafe(totalexp.getText().toString());
+//            int employment          = parseIntSafe(employee_count.getText().toString());
+////            int age = 0;
+////            String  agetext =uid_age.getText().toString();
+////            if (!agetext.isEmpty()) {
+////                try {
+////                    age = Integer.parseInt(agetext);
+////                } catch (NumberFormatException e) {
+////                    age = 0;
+////                }
+////            }
+//
+////            applicant.setAadharNo(adharcardno.getText().toString().trim());
+////            applicant.setApplTitle(0);
+////            applicant.setApplName(nameofapplicant.getText().toString().trim());
+//            applicant.setAadharNo("979779652019");
+//            applicant.setApplTitle(0);
+//            applicant.setApplName("Rajat Rajesh Rai");
+//            applicant.setAgencyID(agentId);
+//            applicant.setAgencyCode(selectedAgencyCode);
+////            applicant.setNodalCode(selectedNodalCode);
+//            applicant.setNodalCode("KV");
+//
+//            applicant.setStateID(stateId);
+//            applicant.setDistID(districtId);
+//            applicant.setStateCode(selectedStateCode);
+//            applicant.setAgencyOffID(selectedagencyoffId > 0 ? selectedagencyoffId : 0);
+//            applicant.setLegalType("INDIVIDUAL");
+////            applicant.setGender(gender != null ? gender : "");
+////            applicant.setDateofBirth(uid_dob.getText().toString().trim());
+//            applicant.setGender("M");
+//            applicant.setDateofBirth("1999-07-23");
+//            applicant.setAge(26);
+//
+//            applicant.setSocialCatID(selectedSocialCatCode != null ? selectedSocialCatCode : "");
+//            applicant.setSpecialCatID(selectedSpecialCatCode != null ? selectedSpecialCatCode : "");
+//            applicant.setQualID(selectedQualCode != null ? selectedQualCode : "");
+//            applicant.setQualDesc(selectedQualDesc != null ? selectedQualDesc : "");
+//
+//            applicant.setComnAddress(communication_address.getText().toString().trim());
+//            applicant.setComnTaluka(taluka_block_name.getText().toString().trim());
+//            applicant.setComnDistrict(district.getText().toString().trim());
+//            applicant.setComnPin(pin_number.getText().toString().trim());
+//            applicant.setMobileNo1(mobile_number.getText().toString().trim());
+//            applicant.setMobileNo2(alternate_mobile_number.getText().toString().trim());
+//            applicant.seteMail(email.getText().toString().trim());
+//
+//            applicant.setPanNo(panNumber.getText().toString().trim());
+//            applicant.setUnitLocation(unit_loc.getText().toString().trim());
+//            applicant.setUnitAddress(unitaddress.getText().toString().trim());
+//            applicant.setUnitTaluka(selectedVillageName != null ? selectedVillageName : "");
+//            applicant.setUnitDistrict(selectedDistrictName != null ? selectedDistrictName : "");
+//            applicant.setUnitPin(selectedPincode != null ? selectedPincode : "");
+//            applicant.setUnitActivityType("");
+//            applicant.setUnitActivityName(selectedNicCode != null ? selectedNicCode : "");
+//            applicant.setProdDescr(selectedNicDesc != null ? selectedNicDesc : "");
+//
+//            applicant.setIsEDPTraining(1);
+//            applicant.setEdpTrainingInst(agencyName != null ? agencyName : "");
+//            applicant.setCapitalExpd(capitalExp);
+//            applicant.setWorkingCapital(workingCapital);
+//            applicant.setTotalProjectCost(totalProjectCost);
+//            applicant.setEmployment(employment);
+//
+//            applicant.setFinBankID1(selectedBankListID);
+//            applicant.setFinBank1(selectedBankName1 != null ? selectedBankName1 : "");
+//            applicant.setBankIFSC1(selectedIfsc1 != null ? selectedIfsc1 : "");
+//            applicant.setBankBranch1(selectedBranch1 != null ? selectedBranch1 : "");
+//            applicant.setBankAddress1(selectedBankAddress1 != null ? selectedBankAddress1 : "");
+//            applicant.setBankDist1(selectedBankDistrict1 != null ? selectedBankDistrict1 : "");
+//
+//            applicant.setFinBankID2(selectedBankId2);
+//            applicant.setFinBank2(selectedBankName2 != null ? selectedBankName2 : "");
+//            applicant.setBankIFSC2(selectedIfsc2 != null ? selectedIfsc2 : "");
+//            applicant.setBankBranch2(selectedBranch2 != null ? selectedBranch2 : "");
+//            applicant.setBankAddress2(selectedBankAddress2 != null ? selectedBankAddress2 : "");
+//            applicant.setBankDist2(selectedBankDistrict2 != null ? selectedBankDistrict2 : "");
+//
+//            applicant.setIsAvailCGTMSE(cgtmseFlag);
+//            applicant.setPmegpRef(agencyName != null ? agencyName : "");
+//            applicant.setIsDeclrAccept(1);
+//            applicant.setFinalSubDate(null);
+//            applicant.setIsFinalSub(null);
+//            applicant.setCreatedOn("");  // backend will overwrite
+//            applicant.setModifyOn("");
+//            applicant.setModifyBy("");
+//            applicant.setIsAadharVerified(1);
+//            applicant.setIsPanVerified(1);
+//            applicant.setIsUnitLocationSame(1);
+//            applicant.setSchemeWrkFlowID(1);
+//            applicant.setIsAltnBank(1);
+//            applicant.setUserType("APPL");
+//            applicant.setStateName(statename != null ? statename : "");
+//            applicant.setDistrictName(district_name != null ? district_name : "");
+//            applicant.setSchemeID(1);
+//            applicant.setIsUnderAlternativeBank(0);
+//            applicant.setIsAltBankRejected(0);
+//
+//            applicant.setUnitActivityName2(selectedNicCode2 != null ? selectedNicCode2 : "");
+//            applicant.setProdDescr2(selectedNicDesc2 != null ? selectedNicDesc2 : "");
+//            applicant.setUnitActivityName3(selectedNicCode3 != null ? selectedNicCode3 : "");
+//            applicant.setProdDescr3(selectedNicDesc3 != null ? selectedNicDesc3 : "");
+//
+//            applicant.setIsCharAppliAccepted(1);
+//            applicant.setComnStateID(stateId);
+//            applicant.setComnStateName(statename != null ? statename : "");
+//            applicant.setMaskAadharNo("");
+//            applicant.setState_Code(state_code);
+//            applicant.setStateName(statename);
+//
+//            applicant.setLgdCode(535843);
+//            applicant.setTrainingMode(0);
+//            applicant.setVillageName(selectedVillageName != null ? selectedVillageName : "");
+//            applicant.setLgdCodeId(535843);
+//            applicant.setIsGenerateChallan(0);
+//            applicant.setIsDPRVerified(0);
+//
+//            SaveApplicationForm(applicant);
+//            Log.d("FINAL_JSON",
+//                    new GsonBuilder().setPrettyPrinting().create().toJson(applicant));
+//        });
 
-            String capitalExpStr = capital_exp.getText().toString().trim();
-            String workingCapitalStr = workingcapital.getText().toString().trim();
-            String totalExpStr = totalexp.getText().toString().trim();
-            String employeeCountStr = employee_count.getText().toString().trim();
 
-            double capitalExp = capitalExpStr.isEmpty() ? 0.0 : Double.parseDouble(capitalExpStr);
-            double workingCapital = workingCapitalStr.isEmpty() ? 0.0 : Double.parseDouble(workingCapitalStr);
-            double totalProjectCost = totalExpStr.isEmpty() ? 0.0 : Double.parseDouble(totalExpStr);
-            int employment = employeeCountStr.isEmpty() ? 0 : Integer.parseInt(employeeCountStr);
 
-            applicantDataModel.setAadharNo(adharcardno.getText().toString());
-            applicantDataModel.setApplTitle(0);
-            applicantDataModel.setApplName(nameofapplicant.getText().toString());
-            applicantDataModel.setAgencyID(agentId);
-            applicantDataModel.setAgencyCode(selectedAgencyCode);
 
-            applicantDataModel.setStateID(stateModel.getStateId());
-            applicantDataModel.setDistID(districtModel.getDistrictId());
-            applicantDataModel.setStateCode(selectedStateCode);
-//            applicantDataModel.setAgencyOffID(agencyResponse.getAgencyOffId());
-            applicantDataModel.setLegalType("");
-            applicantDataModel.setGender("");
-            applicantDataModel.setDateofBirth(uid_dob.getText().toString());
-            applicantDataModel.setAge(0);
-            applicantDataModel.setSocialCatID(socialCategory.getLk_shortCode());
-            applicantDataModel.setSpecialCatID(specialCategory.getLk_shortCode());
-            applicantDataModel.setQualID(qualificationModel.getLk_shortCode());
-            applicantDataModel.setQualDesc(qualificationModel.getLk_desc());
-            applicantDataModel.setComnAddress(communication_address.getText().toString());
-            applicantDataModel.setComnTaluka(taluka_block_name.getText().toString());
-            applicantDataModel.setComnDistrict(district.getText().toString());
-            applicantDataModel.setComnPin(pin_number.getText().toString());
-            applicantDataModel.setMobileNo1(mobile_number.getText().toString());
-            applicantDataModel.setMobileNo2(alternate_mobile_number.getText().toString());
-            applicantDataModel.setPanNo(panNumber.getText().toString());
-            applicantDataModel.setUnitLocation(unit_loc.getText().toString());
-            applicantDataModel.setUnitAddress(unitaddress.getText().toString());
-            applicantDataModel.setUnitTaluka(villageDetailModel.getVillageName());
-            applicantDataModel.setUnitDistrict("");
-            applicantDataModel.setUnitPin(villageDetailModel.getPincode());
-            applicantDataModel.setUnitActivityType(null);
-            applicantDataModel.setUnitActivityName(nicGroupModel.getNic_code());
-            applicantDataModel.setProdDescr(nicGroupModel.getNic_desc());
-            applicantDataModel.setIsEDPTraining(1);
-            applicantDataModel.setEdpTrainingInst(agencyName);
-            applicantDataModel.setCapitalExpd(capitalExp);
-            applicantDataModel.setWorkingCapital(workingCapital);
-            applicantDataModel.setTotalProjectCost(totalProjectCost);
-            applicantDataModel.setEmployment(employment);
-            applicantDataModel.setFinBankID1(bankDetailRequest.getBankListId());
-            applicantDataModel.setFinBank1(bankDetailRequest.getBankName());
-            applicantDataModel.setBankIFSC1(bankDetailRequest.getIFSCCode());
-            applicantDataModel.setBankBranch1(bankDetailRequest.getBranchName());
-            applicantDataModel.setBankAddress1("");
-            applicantDataModel.setBankDist1("");
-            applicantDataModel.setFinBankID2(bankDetailRequest.getBankListId());
-            applicantDataModel.setFinBank2(bankDetailRequest.getBankName());
-            applicantDataModel.setBankIFSC2(bankDetailRequest.getIFSCCode());
-            applicantDataModel.setBankBranch2(bankDetailRequest.getBranchName());
-            applicantDataModel.setBankAddress2("");
-            applicantDataModel.setBankDist2("");
-            applicantDataModel.setIsAvailCGTMSE(cgtmseFlag);
-            applicantDataModel.setPmegpRef(agencyName);
-            applicantDataModel.setIsDeclrAccept(1);
-            applicantDataModel.setFinalSubDate(null);
-            applicantDataModel.setIsFinalSub(null);
-            applicantDataModel.setCreatedOn("");
-            applicantDataModel.setModifyOn("");
-            applicantDataModel.setModifyBy("");
-            applicantDataModel.setIsAadharVerified(1);
-            applicantDataModel.setIsPanVerified(1);
-            applicantDataModel.setIsUnitLocationSame(1);
-            applicantDataModel.setSchemeWrkFlowID(2);
-            applicantDataModel.setIsAltnBank(1);
-            applicantDataModel.setUserType("APPL");
-            applicantDataModel.setStateName(statename);
-            applicantDataModel.setDistrictName(district_name);
-            applicantDataModel.setSchemeID(unitTypeModel.getSchemeId());
-            applicantDataModel.setIsUnderAlternativeBank(0);
-            applicantDataModel.setIsAltBankRejected(0);
-            applicantDataModel.setUnitActivityName2(nicGroupModel.getNic_code());
-            applicantDataModel.setProdDescr2(nicGroupModel.getNic_desc());
-            applicantDataModel.setUnitActivityName3(nicGroupModel.getNic_code());
-            applicantDataModel.setProdDescr3(nicGroupModel.getNic_desc());
-            applicantDataModel.setIsCharAppliAccepted(1);
-            applicantDataModel.setComnStateID(stateId);
-            applicantDataModel.setComnStateName(statename);
-            applicantDataModel.setMaskAadharNo("");
-            applicantDataModel.setStateCode(selectedStateCode);
-            applicantDataModel.setStateName(statename);
-            applicantDataModel.setLgdCode(villageDetailModel.getLgdCodeId());
-            applicantDataModel.setTrainingMode(0);
-            applicantDataModel.setVillageName(villageDetailModel.getVillageName());
-            applicantDataModel.setLgdCodeId(villageDetailModel.getLgdCodeId());
-            applicantDataModel.setIsGenerateChallan(0);
-            applicantDataModel.setIsDPRVerified(0);
 
-            fetchAgencyShortCode(applicantDataModel);
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Log.d("FINAL_JSON", gson.toJson(applicantDataModel));
-
-//            SaveApplicationForm(applicantDataModel);
-
-        });
 
 //        btn_submitform.setOnClickListener(v -> {
 //            ApplicantDataModel applicant = new ApplicantDataModel();
@@ -454,6 +472,130 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 //
 //            SaveApplicationForm(applicant);
 //        });
+        btn_submitform.setOnClickListener(v -> {
+            ApplicantDataModel applicant = new ApplicantDataModel();
+
+
+            applicant.setAadharNo(adharcardno.getText().toString().trim());
+            applicant.setApplTitle(0);
+            applicant.setApplName(nameofapplicant.getText().toString().trim());
+            applicant.setAgencyID(agentId);
+            System.out.println("agentId"+agentId);
+            applicant.setAgencyCode(selectedAgencyCode);
+            System.out.println("selectedAgencyCode"+selectedAgencyCode);
+            applicant.setNodalCode(selectedNodalCode);
+            System.out.println("selectedNodalCode"+selectedNodalCode);
+            applicant.setStateID(stateId);
+            System.out.println("stateId"+stateId);
+            applicant.setDistID(districtId);
+            System.out.println("districtId"+districtId);
+            applicant.setStateCode(selectedStateCode);
+            System.out.println("selectedStateCode"+selectedStateCode);
+            applicant.setAgencyOffID(selectedagencyoffId > 0 ? selectedagencyoffId : 0);
+            System.out.println("selectedagencyoffId"+selectedagencyoffId);
+            applicant.setLegalType("INDIVIDUAL");
+            applicant.setGender(gender != null ? gender : "");
+            System.out.println("gender"+gender);
+            applicant.setDateofBirth(uid_dob.getText().toString().trim());
+            System.out.println("uid_dob"+uid_dob.getText().toString());
+
+            applicant.setAge(26);
+            applicant.setSocialCatID(selectedSocialCatCode != null ? selectedSocialCatCode : "");
+            System.out.println("selectedSocialCatCode"+selectedSocialCatCode);
+            applicant.setSpecialCatID(selectedSpecialCatCode != null ? selectedSpecialCatCode : "");
+            System.out.println("selectedSpecialCatCode"+selectedSpecialCatCode);
+            applicant.setQualID(selectedQualCode != null ? selectedQualCode : "");
+            System.out.println("selectedQualCode"+selectedQualCode);
+
+            applicant.setQualDesc(selectedQualDesc != null ? selectedQualDesc : "");
+            System.out.println("selectedQualDesc"+selectedQualDesc);
+
+
+            applicant.setComnAddress(communication_address.getText().toString());
+            applicant.setComnTaluka(taluka_block_name.getText().toString());
+            applicant.setComnDistrict(selectedDistrictName);
+            applicant.setComnPin(pin_number.getText().toString());
+            applicant.setMobileNo1(mobile_number.getText().toString());
+            applicant.setMobileNo2(alternate_mobile_number.getText().toString());
+            applicant.seteMail(email.getText().toString());
+            applicant.setPanNo(panNumber.getText().toString());
+
+            applicant.setUnitLocation(unit_loc.getText().toString());
+            applicant.setUnitAddress(unitaddress.getText().toString());
+            applicant.setUnitTaluka(subdistrictName);
+            applicant.setUnitDistrict(district_name);
+            applicant.setUnitPin(pin_code.getText().toString());
+            applicant.setUnitActivityType(String.valueOf(1));
+            applicant.setUnitActivityName(selectedNicCode);
+            applicant.setProdDescr(selectedNicDesc3);
+
+            applicant.setIsEDPTraining(1);
+            applicant.setEdpTrainingInst(edp_name);
+            applicant.setCapitalExpd(Double.parseDouble(capital_exp.getText().toString()));
+            applicant.setWorkingCapital(Double.parseDouble(workingcapital.getText().toString()));
+            applicant.setTotalProjectCost(Double.parseDouble(totalexp.getText().toString()));
+            applicant.setEmployment(Integer.parseInt(employee_count.getText().toString()));
+
+            applicant.setFinBankID1(selectedBankListID);
+            applicant.setFinBank1(selectedBranch1);
+            applicant.setBankIFSC1(selectedIfsc1);
+            applicant.setBankBranch1(selectedBankAddress1);
+            applicant.setBankAddress1(selectedBankAddress1);
+            applicant.setBankDist1(selectedBankDistrict1);
+
+            applicant.setFinBankID2(selectedBankListID);
+            applicant.setFinBank2(selectedBranch2);
+            applicant.setBankIFSC2(selectedIfsc2);
+            applicant.setBankBranch2(selectedBankAddress2);
+            applicant.setBankAddress2(selectedBankAddress2);
+            applicant.setBankDist2(selectedBankDistrict2);
+
+            applicant.setIsAvailCGTMSE(1);
+            applicant.setPmegpRef("Implementing Agencies(KVIC/KVIB/DIC)");
+            applicant.setIsDeclrAccept(1);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
+            String currentDate = sdf.format(new Date());
+            applicant.setCreatedOn(currentDate);
+            applicant.setFinalSubDate(null);
+            applicant.setIsFinalSub(null);
+            applicant.setModifyOn(null);
+            applicant.setModifyBy(null);
+
+            applicant.setIsAadharVerified(1);
+            applicant.setIsPanVerified(1);
+            applicant.setIsUnitLocationSame(1);
+            applicant.setSchemeWrkFlowID(2);
+            applicant.setIsAltnBank(1);
+            applicant.setUserType("APPL");
+            applicant.setStateName(statename);
+            applicant.setDistrictName(district_name);
+            applicant.setSchemeID(1);
+            applicant.setIsUnderAlternativeBank(0);
+            applicant.setIsAltBankRejected(0);
+
+            applicant.setUnitActivityName2(selectedNicCode);
+            applicant.setProdDescr2(selectedNicDesc);
+            applicant.setUnitActivityName3(selectedNicCode2);
+            applicant.setProdDescr3(selectedNicDesc3);
+            applicant.setIsCharAppliAccepted(1);
+
+            applicant.setComnStateID(27);
+            applicant.setComnStateName(statename);
+            applicant.setMaskAadharNo("XXXX XXXX 2019");
+            applicant.setState_Code(stateId);
+            applicant.setState_Name(statename);
+            applicant.setLgdCode(535843);
+            applicant.setTrainingMode(0);
+            applicant.setVillageName(selectedVillageName);
+            applicant.setLgdCodeId(Integer.parseInt(lgd_code.getText().toString()));
+            applicant.setIsGenerateChallan(0);
+            applicant.setIsDPRVerified(0);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Log.d("FINAL_JSON", gson.toJson(applicant));
+
+            SaveApplicationForm(applicant);
+        });
 
         btn_ifsc_code.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -486,10 +628,21 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                 dialogFragment.setOnIndustrySelectedListener(new IndustryDataDialogFragment.OnIndustrySelectedListener() {
                     @Override
                     public void onIndustrySelected(List<NICGroupModel> selectedList) {
-                        for (NICGroupModel model : selectedList) {
+                        for (int i = 0; i < selectedList.size(); i++) {
+                            NICGroupModel model = selectedList.get(i);
                             Log.d("SelectedIndustry", "NIC Code: " + model.getNic_code() + ", Desc: " + model.getNic_desc());
-
+                            if (i == 0) {
+                                selectedNicCode = model.getNic_code();
+                                selectedNicDesc = model.getNic_desc();
+                            } else if (i == 1) {
+                                selectedNicCode2 = model.getNic_code();
+                                selectedNicDesc2 = model.getNic_desc();
+                            } else if (i == 2) {
+                                selectedNicCode3 = model.getNic_code();
+                                selectedNicDesc3 = model.getNic_desc();
+                            }
                         }
+
                         ProjectInfoAdapter adapter = new ProjectInfoAdapter(selectedList);
                         rv_product_recyclerview.setAdapter(adapter);
                     }
@@ -527,6 +680,15 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         initData();
     }
 
+    private double parseDoubleSafe(String s) {
+        try { return Double.parseDouble(s.trim()); }
+        catch (Exception e) { return 0.0; }
+    }
+
+    private int parseIntSafe(String s) {
+        try { return Integer.parseInt(s.trim()); }
+        catch (Exception e) { return 0; }
+    }
     private void getAdharOtp(String adhharno) {
         UidRequest uidNo = new UidRequest(adhharno);
 
@@ -745,6 +907,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             DistrictModel selected = districtList.get(which);
             EditText districtname = findViewById(R.id.district);
             districtname.setText(selected.getDistrictName());
+            selectedDistrictName = selected.getDistrictName();
 
         });
         builder.setNegativeButton("Cancel", null);
@@ -763,6 +926,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         fetchUnitTypeData();
         fetchGenderList();
         fetchBankList();
+
 
 
 
@@ -828,36 +992,38 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
     }
 
-    private void fetchAgencyShortCode(ApplicantDataModel applicantDataModel) {
-        System.out.println("agency id"+applicantDataModel.getAgencyID());
-        AgencyModel request = new AgencyModel(applicantDataModel.getAgencyID());
-        apiService.getAgencyShortCode((request))
-                .enqueue(new Callback<AgencyShortCodes>() {
-                    @Override
-                    public void onResponse(Call<AgencyShortCodes> call, Response<AgencyShortCodes> response) {
-                        if (response.body() != null) {
-                            AgencyShortCodes agencyShortCodes = response.body();
-                            nodalCode= agencyShortCodes.getShortCode();
-                            Log.d("DEBUG", "NodalCode set: " + nodalCode);
-                            applicantDataModel.setNodalCode(nodalCode);
-                            SaveApplicationForm(applicantDataModel);
-                        }   else {
-                            Toast.makeText(NewApplicantUnitActivity.this, "Failed to load nodal code", Toast.LENGTH_SHORT).show();
-                        }
+    private void fetchAgencyShortCode(AgencyModel agencyModel) {
+        System.out.println("agency id " + agencyModel.getAgencyId());
+        AgencyModel request = new AgencyModel(agencyModel.getAgencyId());
 
+        apiService.getAgencyShortCode(request).enqueue(new Callback<AgencyShortCodeResponse>() {
+            @Override
+            public void onResponse(Call<AgencyShortCodeResponse> call, Response<AgencyShortCodeResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    List<AgencyShortCodes> data = response.body().getData();
+                    if (!data.isEmpty()) {
+                        AgencyShortCodes agencyShortCodes = data.get(0);
+                        selectedAgencyCode = agencyShortCodes.getAgencyCode();
+                        selectedNodalCode = agencyShortCodes.getShortCode();
+                        System.out.println("nodal code " + selectedNodalCode + " " + selectedAgencyCode);
                     }
+                } else {
+                    Log.e("DEBUG", "Failed to fetch nodal code");
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<AgencyShortCodes> call, Throwable t) {
-                        t.printStackTrace();
-                        Toast.makeText(NewApplicantUnitActivity.this, "Error loading nodal code", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onFailure(Call<AgencyShortCodeResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
+
 
     private void fetchSubdistrictList(String code) {
         System.out.println("code_d"+code);
-        apiService.GetSubDistricts(new DistrictModel("", code)).enqueue(
+        SubDistrictRequest request = new SubDistrictRequest(code);
+        apiService.GetSubDistricts(request).enqueue(
                 new Callback<List<SubDistrictResponce>>() {
                     @Override
                     public void onResponse(Call<List<SubDistrictResponce>> call, Response<List<SubDistrictResponce>> response) {
@@ -887,6 +1053,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                         int subdistrictId = selectedDistrict.getDistrictId();
                                         System.out.println("subdistrictId"+subdistrictId);
                                         int selectedSubdistrictCode = subDistrictSource.get(position - 1).getSubdistrict_code();
+                                         subdistrictName = subDistrictSource.get(position - 1).getSubdistrict_name();
                                         System.out.println("subdistrictId"+subdistrictId+selectedSubdistrictCode);
                                         fetchVillageList(String.valueOf(selectedSubdistrictCode));
                                     }
@@ -933,8 +1100,11 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if (position >= 0 && position < villageList.size()) {
-                                String villageCode = villageList.get(position).getVillageCode();
+                                VillageDetailModel villageDetailModel= villageList.get(position);
+                                String villageCode = villageDetailModel.getVillageCode();
                                 System.out.println("villagecode"+villageCode);
+                                selectedVillageName = villageDetailModel.getVillageName();
+
                                 fetchVillageDetails(villageCode);
                             }
                         }
@@ -944,7 +1114,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
                             pin_code.setText("");
                             unit_loc.setText("");
-                            // lgd_code.setText("");
+                             lgd_code.setText("");
                         }
                     });
                 } else {
@@ -971,6 +1141,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     lgd_code.setText(String.valueOf(village.getLgdCodeId()));
                     pin_code.setText(village.getPincode());
                     unit_loc.setText(village.getRuralUrban());
+                    selectedPincode = village.getPincode();
                 } else {
                     Toast.makeText(NewApplicantUnitActivity.this, "Village details not found", Toast.LENGTH_SHORT).show();
                 }
@@ -1008,7 +1179,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                             rvEdpList.setLayoutManager(new LinearLayoutManager(NewApplicantUnitActivity.this));
                             EDPAdapter adapter = new EDPAdapter(edpList, selected -> {
                                 TextInputEditText etEdpName = findViewById(R.id.edp_training_insti_name);
-                                etEdpName.setText(selected.getOff_name());
+                               etEdpName.setText(selected.getOff_name());
+                                edp_name = selected.getOff_name();
                                 dialog.dismiss();
                             });
                             rvEdpList.setAdapter(adapter);
@@ -1100,7 +1272,9 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<AgencyResponse> agencyResponses = response.body();
                     System.out.println("agencyResponses" +agencyResponses.size());
+                    AgencyResponse agency = agencyResponses.get(0);
 
+                    selectedagencyoffId = agency.getAgencyOffId();
                     for (int i = 0; i < agencyRequestList.size(); i++) {
                         if (agencyRequestList.size()!=0){
 
@@ -1132,6 +1306,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     List<SocialCategory> socialCategoryList = response.body();
                     System.out.println("socialCategoryList" +socialCategoryList.size());
 
+
+
                     socialCatnameList = new ArrayList<>();
                     socialCatnameList.add(0,"--Select Social Category--");
                     for (SocialCategory socialCategorymodel : socialCategoryList) {
@@ -1143,6 +1319,18 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, socialCatnameList);
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     socialCategorySpinner.setAdapter(adapter);
+                    socialCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            SocialCategory socialCategory = socialCategoryList.get(position);
+                            selectedSocialCatCode = socialCategory.getLk_shortCode();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
 
 
                 }
@@ -1173,7 +1361,18 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, specialCatnameList);
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     specialCategorySpinner.setAdapter(adapter);
+                    specialCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            SpecialCategory specialCategory = specialCategoryList.get(position);
+                            selectedSpecialCatCode= specialCategory.getLk_shortCode();
+                        }
 
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
 
                 }
             }
@@ -1203,7 +1402,19 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, qualificationNameList);
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     qualificationspinner.setAdapter(adapter);
+                     qualificationspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                         @Override
+                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                             QualificationModel qualificationModel = qualificationModelList.get(position);
+                             selectedQualCode = qualificationModel.getLk_shortCode();
+                             selectedQualDesc = qualificationModel.getLk_desc();
+                         }
 
+                         @Override
+                         public void onNothingSelected(AdapterView<?> parent) {
+
+                         }
+                     });
 
                 }
             }
@@ -1240,11 +1451,17 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
                             if (position > 0) {
                                 AgencyModel selectedAgency = agencyModelList.get(position - 1);
-                                selectedAgencyCode = selectedAgency.getAgency_code();
-                                agentId = selectedAgency.getAgencyId();
-                                String filterAgencyCodeTxt = selectedAgencyCode.split("\\s|\\(")[0];
-                                agencyName = filterAgencyCodeTxt;
+                                selectedAgency_Code = selectedAgency.getAgency_code();
+                                agentId = Integer.valueOf(selectedAgency.getAgencyId());
+                                if (selectedAgencyCode != null && !selectedAgencyCode.isEmpty()) {
+                                    String filterAgencyCodeTxt = selectedAgencyCode.split("\\s|\\(")[0];
+                                    agencyName = filterAgencyCodeTxt;
+                                } else {
+                                    agencyName = ""; // Or handle appropriately
+                                }
+
                                 System.out.println("Selected agencyCode: " + selectedAgencyCode+" "+agentId);
+                                fetchAgencyShortCode(selectedAgency);
 
 
                             } else {
@@ -1293,6 +1510,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                 BankModel bankModel = bankModelList.get(position - 1);
                                 selectedBankListID = bankModel.getBankListId();
                                 selectedCityName = district_name;
+                                selectedBankName1 = bankModel.getBankName();
                             }
                         }
 
@@ -1309,6 +1527,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                 BankModel bankModel = bankModelList.get(position - 1);
                                 alt_selectedBankListID = bankModel.getBankListId();
                                 alt_selectedCityName = district_name;
+                                selectedBankId2 = bankModel.getBankListId();
+                                selectedBankName2 = bankModel.getBankName();
                             }
                         }
 
@@ -1384,6 +1604,15 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             alt_primary_address.setText(selected.getAddress());
             districtName.setText(selected.getCityName());
             alt_pf_districtEd.setText(selected.getCityName());
+
+            selectedIfsc1 = ifsc_code.getText().toString();
+            selectedIfsc2 = ifsc_code.getText().toString();
+            selectedBranch1 = branchName.getText().toString();
+            selectedBranch2 = branchName.getText().toString();
+            selectedBankAddress1 = address.getText().toString();
+            selectedBankAddress2 = address.getText().toString();
+            selectedBankDistrict1 = districtName.getText().toString();
+            selectedBankDistrict2 = districtName.getText().toString();
 
         });
         builder.setNegativeButton("Cancel", null);
@@ -1471,7 +1700,10 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                 StateModel selectedState = states.get(position - 1);
                                 selectedStateCode = selectedState.getStateCode();
                                 System.out.println("Selected stateCode: " + selectedStateCode);
+                                ApplicantDataModel applicant = new ApplicantDataModel();
 
+                                 state_shortCode = selectedState.getStateShortCode(); // "MH"
+                                 state_code = selectedState.getStateId();
 
                             } else {
                                 selectedStateCode = null;
