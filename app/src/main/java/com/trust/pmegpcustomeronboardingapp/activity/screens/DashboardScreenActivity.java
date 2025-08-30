@@ -3,6 +3,7 @@ package com.trust.pmegpcustomeronboardingapp.activity.screens;
 import static com.trust.pmegpcustomeronboardingapp.R.id.stepLabel;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -103,6 +104,9 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
                 return true;
             } else if (id == R.id.menu_others) {
                 return true;
+            } else if (id == R.id.menu_logout) {
+                logoutUser();
+                return true;
             }
             return false;
         });
@@ -120,6 +124,20 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
         setupStepper();
         updateFragment();
 
+    }
+
+    private void logoutUser() {
+        SharedPreferences preferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+
+        Toast.makeText(this, "Session expired. Please log in again.", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override

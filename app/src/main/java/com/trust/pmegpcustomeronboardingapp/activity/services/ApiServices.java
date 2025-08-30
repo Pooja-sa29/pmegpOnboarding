@@ -15,6 +15,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailResponce;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DPRResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DRPMasterData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DistrictModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.EDPRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.EDPResponse;
@@ -129,4 +130,8 @@ public interface ApiServices {
 
     @POST("MobileApp/GetDprData")
     Call<DPRResponse>  getDprData(@Body ApplicantRequest applId);
+
+
+    @POST("MobileApp/GetSavedDPRMasterData")
+    Call<DRPMasterData>  getSavedDPRMasterData(@Body ApplicantRequest applId);
 }

@@ -24,7 +24,7 @@
         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/buildup_particulars"
+            android:id="@+id/sales_particulars"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -33,16 +33,18 @@
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+
     <com.google.android.material.textfield.TextInputLayout
         style="@style/CustomTextInputLayout"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
-        android:hint="Area"
+        android:hint="Rate/Sq.ft"
         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/buildup_area"
+            android:id="@+id/sales_rate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
@@ -56,11 +58,11 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
-        android:hint="Rate/Sq.ft"
+        android:hint="Quantity"
         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/buildup_rate"
+            android:id="@+id/sales_quantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
@@ -78,7 +80,7 @@
         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/buildup_amount"
+            android:id="@+id/sales_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
@@ -86,15 +88,4 @@
             android:textColor="@color/colorFentBlack"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <ImageView
-        android:id="@+id/btn_delete_row"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:padding="8dp"
-        android:contentDescription="Delete Row"
-        android:src="@drawable/delete_recyclerview"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        card_view:tint="@color/orange" />
 </LinearLayout>

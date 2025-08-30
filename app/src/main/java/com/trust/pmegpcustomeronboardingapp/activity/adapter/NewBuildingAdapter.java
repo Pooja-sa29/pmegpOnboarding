@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,11 @@ public class NewBuildingAdapter extends RecyclerView.Adapter<NewBuildingAdapter.
             holder.area.setText(item.getArea());
             holder.rate.setText(item.getRate());
             holder.amount.setText(item.getAmount());
+            holder.btnDelete.setOnClickListener(v -> {
+                buildingList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, buildingList.size());
+        });
 
         TextWatcher watcher = new SimpleTextWatcher() {
             @Override
@@ -78,7 +84,7 @@ public class NewBuildingAdapter extends RecyclerView.Adapter<NewBuildingAdapter.
         holder.rate.addTextChangedListener(holder.rateWatcher);
     }
 
-    private void calculateTotal() {
+    public void calculateTotal() {
 
         double total = 0.0;
         for (BuildingItem b : buildingList) {
@@ -105,7 +111,7 @@ public class NewBuildingAdapter extends RecyclerView.Adapter<NewBuildingAdapter.
     static class ViewHolder extends RecyclerView.ViewHolder {
         EditText particulars, area, rate, amount;
         TextView tv_sr_no;
-
+        ImageView btnDelete;
         TextWatcher areaWatcher, rateWatcher;
 
         public ViewHolder(@NonNull View itemView) {
@@ -115,6 +121,8 @@ public class NewBuildingAdapter extends RecyclerView.Adapter<NewBuildingAdapter.
             area = itemView.findViewById(R.id.buildup_area);
             rate = itemView.findViewById(R.id.buildup_rate);
             amount = itemView.findViewById(R.id.buildup_amount);
+             btnDelete = itemView.findViewById(R.id.btn_delete_row);
+
         }
     }
 }

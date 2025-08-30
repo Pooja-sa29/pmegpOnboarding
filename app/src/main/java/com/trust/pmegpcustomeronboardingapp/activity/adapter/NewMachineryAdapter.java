@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import java.util.List;
 public class NewMachineryAdapter extends RecyclerView.Adapter<NewMachineryAdapter.ViewHolder> {
 
     private final List<MachineryItem> machineryItemList;
+
     private final NewMachineryAdapter.OnAmountChangeListener onAmountChangeListener;
 
     public interface OnAmountChangeListener {
@@ -49,6 +51,16 @@ public class NewMachineryAdapter extends RecyclerView.Adapter<NewMachineryAdapte
         holder.rate.setText(item.getRate());
         holder.amount.setText(item.getAmount());
 
+        holder.btnDelete.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                machineryItemList.remove(pos);
+                notifyItemRemoved(pos);
+                notifyItemRangeChanged(pos, machineryItemList.size());
+                recalculateTotal();
+            }
+        });
+
         TextWatcher watcher = new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -70,6 +82,7 @@ public class NewMachineryAdapter extends RecyclerView.Adapter<NewMachineryAdapte
                 calculateTotal();
             }
         };
+
         holder.area.removeTextChangedListener(holder.areaWatcher);
         holder.rate.removeTextChangedListener(holder.rateWatcher);
 
@@ -79,7 +92,19 @@ public class NewMachineryAdapter extends RecyclerView.Adapter<NewMachineryAdapte
         holder.rate.addTextChangedListener(holder.rateWatcher);
     }
 
-    private void calculateTotal() {
+    private void recalculateTotal() {
+        double total = 0;
+        for (MachineryItem i : machineryItemList) {
+            try {
+                total += Double.parseDouble(i.getAmount().isEmpty() ? "0" : i.getAmount());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        onAmountChangeListener.onAmountChanged(total);
+    }
+
+    public void calculateTotal() {
 
         double total = 0.0;
         for (MachineryItem b : machineryItemList) {
@@ -99,13 +124,14 @@ public class NewMachineryAdapter extends RecyclerView.Adapter<NewMachineryAdapte
 
     public void addRow(MachineryItem item) {
         machineryItemList.add(item);
-        notifyItemInserted(machineryItemList.size() - 1);
-
+        int position = machineryItemList.size() - 1;
+        notifyItemInserted(position);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         EditText particulars, area, rate, amount;
         TextView tv_sr_no;
+        ImageView btnDelete;
 
         TextWatcher areaWatcher, rateWatcher;
 
@@ -116,6 +142,8 @@ public class NewMachineryAdapter extends RecyclerView.Adapter<NewMachineryAdapte
             area = itemView.findViewById(R.id.machinery_area);
             rate = itemView.findViewById(R.id.machinery_rate);
             amount = itemView.findViewById(R.id.machine_amount);
+            btnDelete = itemView.findViewById(R.id.btn_machinery_delete_row);
+
         }
     }
 }

@@ -80,14 +80,6 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Sr No"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                                android:textColor="@color/black"
-                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -191,7 +183,6 @@
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -482,6 +473,13 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="6dp">
 
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:layout_marginTop="8dp"
+                    android:scrollbars="horizontal">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -572,6 +570,7 @@
 
 
                 </LinearLayout>
+            </HorizontalScrollView>
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -685,7 +684,12 @@
                         android:textStyle="bold" />
 
 
-
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="horizontal">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -758,6 +762,7 @@
                             android:layout_height="wrap_content" />
 
                     </LinearLayout>
+                    </HorizontalScrollView>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -828,7 +833,12 @@
                         android:textColor="@color/black"
                         android:textStyle="bold" />
 
-
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="horizontal">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -911,6 +921,9 @@
                             android:layout_height="wrap_content" />
 
                     </LinearLayout>
+
+
+                    </HorizontalScrollView>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -936,9 +949,6 @@
                             android:textStyle="bold" />
 
                     </LinearLayout>
-
-
-
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -982,7 +992,12 @@
                         android:textColor="@color/black"
                         android:textStyle="bold" />
 
-
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="horizontal">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -1057,6 +1072,7 @@
                             android:layout_height="wrap_content" />
 
                     </LinearLayout>
+                    </HorizontalScrollView>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -1147,7 +1163,12 @@
                         android:textStyle="bold" />
 
 
-
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="horizontal">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -1221,6 +1242,7 @@
                             android:layout_height="wrap_content" />
 
                     </LinearLayout>
+                    </HorizontalScrollView>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -1329,14 +1351,6 @@
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="No. of staff"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                                android:textColor="@color/black"
-                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -1402,7 +1416,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/txt_power_req"
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -1412,7 +1426,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edp_training_insti_name"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
@@ -1489,9 +1503,9 @@
                     </LinearLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/txt_power_req"
+                        android:id="@+id/txt_rate_of_interest"
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -1501,7 +1515,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/rate_of_interest_power"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
@@ -1549,7 +1563,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/txt_on_building"
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -1559,7 +1573,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/onBuilding"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
@@ -1575,7 +1589,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -1585,7 +1599,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/onmachinery"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
@@ -1597,7 +1611,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -1607,7 +1621,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/payBackPeriod"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
@@ -1618,7 +1632,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -1628,7 +1642,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/prj_impl_period"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
@@ -1674,7 +1688,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/txt_into"
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -1683,8 +1697,8 @@
                         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/into_ofc"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/intro_ofc"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
@@ -1696,7 +1710,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                  <TextView
-                     android:layout_width="wrap_content"
+                     android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:text="0/500 words"/>
 
@@ -1778,6 +1792,7 @@
                 android:drawableEnd="@drawable/arrow_up_24"
                 android:padding="8dp"
                 android:text="Implementing Agency"
+                android:visibility="gone"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -1789,6 +1804,7 @@
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="6dp"
                 card_view:cardElevation="6dp"
+                android:visibility="gone"
                 card_view:cardPreventCornerOverlap="false"
                 card_view:cardUseCompatPadding="true">
 

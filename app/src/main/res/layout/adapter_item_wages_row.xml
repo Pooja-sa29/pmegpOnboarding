@@ -24,7 +24,7 @@
         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/buildup_particulars"
+            android:id="@+id/wages_particulars"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -33,16 +33,18 @@
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+
     <com.google.android.material.textfield.TextInputLayout
         style="@style/CustomTextInputLayout"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
-        android:hint="Area"
+        android:hint="No. of workers"
         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/buildup_area"
+            android:id="@+id/wages_workersCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
@@ -56,11 +58,11 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
-        android:hint="Rate/Sq.ft"
+        android:hint="Wages Per Month (Total Month 12)"
         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/buildup_rate"
+            android:id="@+id/wages_permonth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
@@ -74,11 +76,11 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
-        android:hint="Amount"
+        android:hint="Amount in Rs."
         card_view:boxBackgroundColor="@color/light_grayish_blue">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/buildup_amount"
+            android:id="@+id/wages_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
@@ -86,15 +88,4 @@
             android:textColor="@color/colorFentBlack"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <ImageView
-        android:id="@+id/btn_delete_row"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:padding="8dp"
-        android:contentDescription="Delete Row"
-        android:src="@drawable/delete_recyclerview"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        card_view:tint="@color/orange" />
 </LinearLayout>

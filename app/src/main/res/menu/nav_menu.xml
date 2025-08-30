@@ -45,4 +45,9 @@
         android:id="@+id/menu_others"
         android:title="Others"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_logout"
+        android:title="LOGOUT"
+        app:showAsAction="never" />
 </menu>
