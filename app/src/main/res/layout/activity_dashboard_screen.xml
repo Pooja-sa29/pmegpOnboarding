@@ -58,7 +58,8 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:background="@drawable/top_curved_edge_rectangle"
-                    android:scrollbars="none">
+                    android:scrollbars="none"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/stepLayout"
@@ -69,9 +70,11 @@
 
 
         <RelativeLayout
+            android:id="@+id/layout_relative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
             <TextView
                 android:id="@+id/fragment_name"
                 android:layout_width="match_parent"
@@ -97,10 +100,12 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/welcome_txt_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#212121"
             android:padding="16dp"
+            android:visibility="gone"
             android:gravity="center">
 
             <TextView
@@ -114,12 +119,14 @@
 
 
         <LinearLayout
+            android:id="@+id/welcome_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@drawable/bg_card"
             android:padding="16dp"
             android:layout_margin="12dp"
+            android:visibility="gone"
             android:elevation="4dp">
 
             <LinearLayout

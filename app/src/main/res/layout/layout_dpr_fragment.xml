@@ -1750,7 +1750,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -1760,11 +1760,10 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/promoter_info"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:maxLines="50"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
@@ -1964,8 +1963,11 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:orientation="horizontal">
-                                        <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1"  android:text="eMail :" />
-                                        <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1"  android:id="@+id/agency_type_email"  />
+                                        <TextView android:layout_height="wrap_content"
+                                            android:layout_width="wrap_content" android:layout_weight="1"  android:text="eMail :" />
+                                        <TextView android:layout_height="wrap_content"
+                                            android:layout_width="wrap_content" android:layout_weight="1"
+                                            android:id="@+id/agency_type_email"  />
                                     </LinearLayout>
 
                                 </LinearLayout>
@@ -2007,7 +2009,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -2017,11 +2019,10 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/intro"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:maxLines="50"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
@@ -2070,7 +2071,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/CustomTextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:visibility="visible"
@@ -2080,11 +2081,10 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/beneficiary_details"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:maxLines="50"
                             android:textSize="16sp"
                             android:layout_weight="1"/>

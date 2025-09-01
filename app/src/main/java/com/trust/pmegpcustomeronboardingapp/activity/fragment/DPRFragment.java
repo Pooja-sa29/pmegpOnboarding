@@ -1,5 +1,7 @@
 package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
+import static android.content.Intent.getIntent;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -450,8 +452,23 @@ public class DPRFragment extends BaseFormFragment {
             newWorkingCapitalEstimatesAdapter.notifyDataSetChanged();
 
         }
-        txt_power_req.setText(data.getData().getDPRDetail().getPowerRequirement().toString());
-        rate_of_interest_power.setText(data.getData().getDPRDetail().getRateOfInterest().toString());
+        String powerReq = null;
+        if (data != null
+                && data.getData() != null
+                && data.getData().getDPRDetail() != null) {
+            powerReq = data.getData().getDPRDetail().getPowerRequirement();
+        }
+        txt_power_req.setText(powerReq != null ? powerReq : "");
+        String roi = null;
+        if (data != null
+                && data.getData() != null
+                && data.getData().getDPRDetail() != null
+                && data.getData().getDPRDetail().getRateOfInterest() != null) {
+            roi = data.getData().getDPRDetail().getRateOfInterest().toString();
+        }
+
+        rate_of_interest_power.setText(roi != null ? roi : "");
+
         if (data.getData().getPowerEstimateExpenditure() != null && !data.getData().getPowerEstimateExpenditure().isEmpty()){
             powerEstimateExpenditureList.clear();
             for (DRPMasterData.PowerEstimateExpenditure material : data.getData().getPowerEstimateExpenditure()) {
@@ -504,8 +521,11 @@ public class DPRFragment extends BaseFormFragment {
     private void setDataToUI(DPRDetailData data) {
 
 
-        setSpinnerSelection(activitySpinner, data.getUnitActivityName());
-         List<DPRDetailData> dataList = new ArrayList<>();
+        if (data != null && data.getUnitActivityName() != null) {
+            setSpinnerSelection(activitySpinner, data.getUnitActivityName());
+        } else {
+            Log.e("TAG", "Data or UnitActivityName is null");
+        }         List<DPRDetailData> dataList = new ArrayList<>();
          dataList.add(data);
         productAdapter = new ProductAdapter(dataList);
         rvProduct.setAdapter(productAdapter);

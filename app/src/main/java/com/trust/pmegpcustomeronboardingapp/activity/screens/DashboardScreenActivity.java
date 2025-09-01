@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,8 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
 
     private Fragment[] formSteps ;
     TextView userId;
+    RelativeLayout relativeLayout;
+    LinearLayout linearLayout1,linearLayout2;
     private final String[] fragmentNames = new String[] {
             "Application",
             "DPR",
@@ -80,15 +83,30 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
         stepLayout =findViewById(R.id.stepLayout);
         stepScrollView = findViewById(R.id.stepScrollView);
         fragment_name = findViewById(R.id.fragment_name);
-
+        relativeLayout = findViewById(R.id.layout_relative);
+        linearLayout1 = findViewById(R.id.welcome_txt_layout);
+        linearLayout2 = findViewById(R.id.welcome_layout);
+        linearLayout1.setVisibility(View.VISIBLE);
+        linearLayout2.setVisibility(View.VISIBLE);
 //         if (AppConstant.getIsLoggedIn().equals(true)) {
              userId.setText("Welcome, Your Application ID is " + AppConstant.getUserID());
 //         }
         toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.menu_home) {
+                stepScrollView.setVisibility(View.GONE);
+                relativeLayout.setVisibility(View.GONE);
+                linearLayout1.setVisibility(View.VISIBLE);
+                linearLayout2.setVisibility(View.VISIBLE);
                 return true;
             } else if (id == R.id.menu_edit) {
+
+                stepScrollView.setVisibility(View.VISIBLE);
+                relativeLayout.setVisibility(View.VISIBLE);
+                linearLayout1.setVisibility(View.GONE);
+                linearLayout2.setVisibility(View.GONE);
+                setupStepper();
+                updateFragment();
                 return true;
             } else if (id == R.id.menu_submit) {
                 return true;
@@ -121,8 +139,7 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
                 new UnderProcessFragment(),
                 new LoanSanctionFragment()
         };
-        setupStepper();
-        updateFragment();
+
 
     }
 
