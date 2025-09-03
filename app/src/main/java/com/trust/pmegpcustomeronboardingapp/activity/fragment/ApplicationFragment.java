@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +34,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.TrustMethods;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,6 +43,10 @@ import retrofit2.Response;
 
 public class ApplicationFragment extends BaseFormFragment {
     private ApiServices apiService;
+    private List<CardView> allCards;
+    private List<TextView> allTextViews;
+    TextView txt_application_layout,app_txt_communicationLayout,txtimplementing_agency_layout,app_txt_unitlayout,app_txt_projectinfo_Layout,app_txt_primary_finance_bank_layout,app_txt_altfbank_Layout,app_txt_other_info_Layout;
+    CardView cv_application,app_cv_communication_address,app_cv_implementing_agency,app_cv_unitAddress,app_cv_projectinfo,app_cv_primary_Financing_bank,app_cv_alternate_Financing_bank,app_cv_otherInfo;
     Button app_btn_district_change,app_alt_btn_ifsc_code,app_btn_ifsc_code,app_btn_updateform,app_btn_show_nic_code_list,app_btn_industry_activity,app_btn_edpSelection;
     EditText  app_email,app_mobile_number,app_alternate_mobile_number,app_pin_number,app_adharcardno,app_district,app_taluka_block_name,app_pannumber,app_nameofapplicant,app_dob,app_age,app_communication_address,app_unitaddress,app_unitLoc,app_unitpincode,app_lgd_code,app_edp_training_insti_name,app_capital_exp,app_workingcapital,app_totalexp,app_employee_count,app_ifscbank_code,app_branch_name,app_primary_address,app_pf_districtEd,app_alt_ifscbank_code,app_alt_primary_address,app_alt_pf_districtEd;
     Spinner app_implementing_agency_txt,app_titleSpinner,app_spinner_about_us_spinner,app_iastateSpinner,app_activityspinner,app_agencydistrictSpinner,app_unitvillagenamespinner,app_unitsubdistrictnameSpinner,app_unitdistrictnameList,app_spinner_gender,app_social_category_spinner,app_special_category_spinner,app_qualificationspinner,app_state_spinner,app_bank_spinner_list,app_alt_bank_spinner_list;
@@ -116,6 +123,54 @@ public class ApplicationFragment extends BaseFormFragment {
         app_form_check = view.findViewById(R.id.app_form_check);
         app_btn_updateform = view.findViewById(R.id.app_btn_updateform);
 
+        txt_application_layout = view.findViewById(R.id.txt_application_layout);
+        app_txt_communicationLayout = view.findViewById(R.id.app_txt_communicationLayout);
+        txtimplementing_agency_layout = view.findViewById(R.id.txtimplementing_agency_layout);
+        app_txt_unitlayout = view.findViewById(R.id.app_txt_unitlayout);
+        app_txt_projectinfo_Layout = view.findViewById(R.id.app_txt_projectinfo_Layout);
+        app_txt_primary_finance_bank_layout = view.findViewById(R.id.app_txt_primary_finance_bank_layout);
+        app_txt_altfbank_Layout = view.findViewById(R.id.app_txt_altfbank_Layout);
+        app_txt_other_info_Layout = view.findViewById(R.id.app_txt_other_info_Layout);
+
+
+        cv_application = view.findViewById(R.id.cv_application);
+        app_cv_communication_address = view.findViewById(R.id.app_cv_communication_address);
+        app_cv_implementing_agency = view.findViewById(R.id.app_cv_implementing_agency);
+        app_cv_unitAddress = view.findViewById(R.id.app_cv_unitAddress);
+        app_cv_projectinfo = view.findViewById(R.id.app_cv_projectinfo);
+        app_cv_primary_Financing_bank = view.findViewById(R.id.app_cv_primary_Financing_bank);
+        app_cv_alternate_Financing_bank = view.findViewById(R.id.app_cv_alternate_Financing_bank);
+        app_cv_otherInfo = view.findViewById(R.id.app_cv_otherInfo);
+
+        cv_application.setVisibility(View.GONE);
+        app_cv_communication_address.setVisibility(View.GONE);
+        app_cv_implementing_agency.setVisibility(View.GONE);
+        app_cv_unitAddress.setVisibility(View.GONE);
+        app_cv_projectinfo.setVisibility(View.GONE);
+        app_cv_primary_Financing_bank.setVisibility(View.GONE);
+        app_cv_alternate_Financing_bank.setVisibility(View.GONE);
+        app_cv_otherInfo.setVisibility(View.GONE);
+
+
+
+        allCards = Arrays.asList(cv_application, app_cv_communication_address, app_cv_implementing_agency,
+                app_cv_unitAddress, app_cv_projectinfo, app_cv_primary_Financing_bank, app_cv_alternate_Financing_bank,app_cv_otherInfo);
+
+        allTextViews = Arrays.asList(txt_application_layout,app_txt_communicationLayout, txtimplementing_agency_layout,app_txt_unitlayout,
+                app_txt_projectinfo_Layout,app_txt_primary_finance_bank_layout,app_txt_altfbank_Layout,app_txt_other_info_Layout);
+
+
+        closeAllCards();
+
+
+        txt_application_layout.setOnClickListener(v -> toggleSection(cv_application, txt_application_layout));
+        app_txt_communicationLayout.setOnClickListener(v -> toggleSection(app_cv_communication_address, app_txt_communicationLayout));
+        txtimplementing_agency_layout.setOnClickListener(v -> toggleSection(app_cv_implementing_agency, txtimplementing_agency_layout));
+        app_txt_unitlayout.setOnClickListener(v -> toggleSection(app_cv_unitAddress, app_txt_unitlayout));
+        app_txt_projectinfo_Layout.setOnClickListener(v -> toggleSection(app_cv_projectinfo, app_txt_projectinfo_Layout));
+        app_txt_primary_finance_bank_layout.setOnClickListener(v -> toggleSection(app_cv_primary_Financing_bank, app_txt_primary_finance_bank_layout));
+        app_txt_altfbank_Layout.setOnClickListener(v -> toggleSection(app_cv_alternate_Financing_bank, app_txt_altfbank_Layout));
+        app_txt_other_info_Layout.setOnClickListener(v -> toggleSection(app_cv_otherInfo, app_txt_other_info_Layout));
 
         initData();
 
@@ -219,5 +274,26 @@ public class ApplicationFragment extends BaseFormFragment {
         }
     }
 
+    private void toggleSection(CardView selectedCard, TextView selectedText) {
+        boolean isVisible = selectedCard.getVisibility() == View.VISIBLE;
 
+        closeAllCards();
+
+        if (!isVisible) {
+            selectedCard.setVisibility(View.VISIBLE);
+            selectedText.setCompoundDrawablesWithIntrinsicBounds(
+                    null, null,
+                    ContextCompat.getDrawable(getContext(), R.drawable.arrow_down_24),
+                    null
+            );
+        }
+    }
+    private void closeAllCards() {
+        for (CardView card : allCards) {
+            card.setVisibility(View.GONE);
+        }
+        for (TextView txt : allTextViews) {
+            txt.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getContext(), R.drawable.arrow_up_24), null);
+        }
+    }
 }

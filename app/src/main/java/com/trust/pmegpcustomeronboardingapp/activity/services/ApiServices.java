@@ -27,6 +27,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.NICDevisionModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.NICGroupModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.QualificationModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ResultModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ScoreCard;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SocialCategory;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SpecialCategory;
 import com.trust.pmegpcustomeronboardingapp.activity.model.StateModel;
@@ -134,4 +135,7 @@ public interface ApiServices {
 
     @POST("MobileApp/GetSavedDPRMasterData")
     Call<DRPMasterData>  getSavedDPRMasterData(@Body ApplicantRequest applId);
+
+    @POST("MobileApp/ScoreCard")
+    Call<ScoreCard>  getScoreCardData(@Body ApplicantRequest applId);
 }

@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +53,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -59,13 +62,17 @@ import retrofit2.Response;
 
 public class DPRFragment extends BaseFormFragment {
     private ApiServices apiService;
-    private TextView txtDprApplicationLayout, txtBuildingLayout, txtAddbuildingRow,txt_add_machinery_row,txt_wages_row,txt_salary_row,txt_raw_material_row,txt_add_sales_row, landTotal,machinery_total,workingCapitalTotal,salesTotal,wagesTotal,rawTotal,salartTotal,rate_of_interest_power;
+    private TextView txtDprApplicationLayout, txtBuildingLayout, txt_MACHINERY_layout,txt_working_capitallayout,txt_financing_details_Layout,txt_salesDetails_layout,txt_raw_material_Layout,txt_beneficiary_Layout,txt_introduction_Layout,txt_imp_agency_Layout,txt_promoter_details_Layout,txt_ofc_intro_Layout,txt_depreciation_Layout,txt_power_estimate_Layout,txt_working_capital_Layout,txt_salary_details_Layout,txt_wages_Layout,txtAddbuildingRow,txt_add_machinery_row,txt_wages_row,txt_salary_row,txt_raw_material_row,txt_add_sales_row, landTotal,machinery_total,workingCapitalTotal,salesTotal,wagesTotal,rawTotal,salartTotal,rate_of_interest_power;
     private Spinner activitySpinner;
+
+    CardView cv_dpr,cv_building_details,cv_machinery_details,cv_working_capital,cv_means_of_financing,cv_sales_details,cv_raw_material_details,cv_wages_details,cv_salary_details,cv_workking_capital_details,cv_power_estimates,cv_depreciation,cv_intro_ofc,cv_promoter,cv_implementing_agency,cv_intro,cv_abt_beneficiary;
     private RecyclerView rvProduct, rvLandEntry, rvMachineryEntry, rvWorkingCapital,
             rvMeansOfFinancing, rvSalesDetails, rvRawMaterialEntry, rvWagesEntry,rvSalaryEntry,rv_capital_estimates_entry,rv_power_estimate_entry;
     private TextInputLayout txtInputLayout;
     private TextInputEditText landEntry,txt_power_req,into_ofc,onmachinery,payBackPeriod,prj_impl_period,promoter_info,intro_ofc,introduction_txt,aboutBeneficiary;
     String selectedunittype;
+    private List<CardView> allCards;
+    private List<TextView> allTextViews;
     int activityUnitType;
     ProductAdapter productAdapter;
     NewBuildingAdapter newBuildingAdapter;
@@ -101,6 +108,22 @@ public class DPRFragment extends BaseFormFragment {
         apiService = ApiClient.getClient().create(ApiServices.class);
         txtDprApplicationLayout = view.findViewById(R.id.txt_dpr_application_layout);
         txtBuildingLayout = view.findViewById(R.id.txt_building_Layout);
+        txt_MACHINERY_layout = view.findViewById(R.id.txt_MACHINERY_layout);
+        txt_working_capitallayout = view.findViewById(R.id.txt_working_capitallayout);
+        txt_financing_details_Layout = view.findViewById(R.id.txt_financing_details_Layout);
+        txt_salesDetails_layout = view.findViewById(R.id.txt_salesDetails_layout);
+        txt_raw_material_Layout = view.findViewById(R.id.txt_raw_material_Layout);
+        txt_wages_Layout = view.findViewById(R.id.txt_wages_Layout);
+        txt_beneficiary_Layout = view.findViewById(R.id.txt_beneficiary_Layout);
+        txt_introduction_Layout = view.findViewById(R.id.txt_introduction_Layout);
+        txt_imp_agency_Layout = view.findViewById(R.id.txt_imp_agency_Layout);
+        txt_promoter_details_Layout = view.findViewById(R.id.txt_promoter_details_Layout);
+        txt_ofc_intro_Layout = view.findViewById(R.id.txt_ofc_intro_Layout);
+        txt_depreciation_Layout = view.findViewById(R.id.txt_depreciation_Layout);
+        txt_power_estimate_Layout = view.findViewById(R.id.txt_power_estimate_Layout);
+        txt_working_capital_Layout = view.findViewById(R.id.txt_working_capital_Layout);
+        txt_salary_details_Layout = view.findViewById(R.id.txt_salary_details_Layout);
+
         txtAddbuildingRow = view.findViewById(R.id.txt_add_row);
         txt_add_machinery_row = view.findViewById(R.id.txt_add_machinery_row);
         txt_add_sales_row = view.findViewById(R.id.txt_add_sales_row);
@@ -156,6 +179,71 @@ public class DPRFragment extends BaseFormFragment {
         landEntry = view.findViewById(R.id.Land_entry);
 
         activitySpinner.setEnabled(false);
+
+
+        cv_dpr = view.findViewById(R.id.cv_dpr);
+        cv_building_details = view.findViewById(R.id.cv_building_details);
+        cv_machinery_details = view.findViewById(R.id.cv_machinery_details);
+        cv_working_capital = view.findViewById(R.id.cv_working_capital);
+        cv_means_of_financing = view.findViewById(R.id.cv_means_of_financing);
+        cv_sales_details = view.findViewById(R.id.cv_sales_details);
+        cv_raw_material_details = view.findViewById(R.id.cv_raw_material_details);
+        cv_wages_details = view.findViewById(R.id.cv_wages_details);
+        cv_salary_details = view.findViewById(R.id.cv_salary_details);
+        cv_workking_capital_details = view.findViewById(R.id.cv_workking_capital_details);
+        cv_power_estimates = view.findViewById(R.id.cv_power_estimates);
+        cv_depreciation = view.findViewById(R.id.cv_depreciation);
+        cv_intro_ofc = view.findViewById(R.id.cv_intro_ofc);
+        cv_promoter = view.findViewById(R.id.cv_promoter);
+        cv_implementing_agency = view.findViewById(R.id.cv_implementing_agency);
+        cv_intro = view.findViewById(R.id.cv_intro);
+        cv_abt_beneficiary = view.findViewById(R.id.cv_abt_beneficiary);
+
+        cv_dpr.setVisibility(View.GONE);
+        cv_building_details.setVisibility(View.GONE);
+        cv_machinery_details.setVisibility(View.GONE);
+        cv_working_capital.setVisibility(View.GONE);
+        cv_means_of_financing.setVisibility(View.GONE);
+        cv_sales_details.setVisibility(View.GONE);
+        cv_raw_material_details.setVisibility(View.GONE);
+        cv_wages_details.setVisibility(View.GONE);
+        cv_salary_details.setVisibility(View.GONE);
+        cv_workking_capital_details.setVisibility(View.GONE);
+        cv_power_estimates.setVisibility(View.GONE);
+        cv_depreciation.setVisibility(View.GONE);
+        cv_intro_ofc.setVisibility(View.GONE);
+        cv_promoter.setVisibility(View.GONE);
+        cv_implementing_agency.setVisibility(View.GONE);
+        cv_intro.setVisibility(View.GONE);
+        cv_abt_beneficiary.setVisibility(View.GONE);
+
+
+
+        allCards = Arrays.asList(cv_dpr,cv_building_details,cv_machinery_details,cv_working_capital,cv_means_of_financing,cv_sales_details,cv_raw_material_details,cv_wages_details,cv_salary_details,cv_workking_capital_details,cv_power_estimates,cv_depreciation,cv_intro_ofc,cv_promoter,cv_implementing_agency,cv_intro,cv_abt_beneficiary);
+
+        allTextViews = Arrays.asList(txtDprApplicationLayout, txtBuildingLayout, txtAddbuildingRow,txt_add_machinery_row,txt_wages_row,txt_salary_row,txt_raw_material_row,txt_add_sales_row, landTotal,machinery_total,workingCapitalTotal,salesTotal,wagesTotal,rawTotal,salartTotal,rate_of_interest_power);
+
+
+        closeAllCards();
+
+
+        txtDprApplicationLayout.setOnClickListener(v -> toggleSection(cv_dpr,txtDprApplicationLayout ));
+        txtBuildingLayout.setOnClickListener(v -> toggleSection(cv_building_details,txtBuildingLayout ));
+        txt_MACHINERY_layout.setOnClickListener(v -> toggleSection(cv_machinery_details,txt_MACHINERY_layout));
+        txt_working_capitallayout.setOnClickListener(v -> toggleSection(cv_working_capital,txt_working_capitallayout));
+        txt_financing_details_Layout.setOnClickListener(v -> toggleSection(cv_means_of_financing,txt_financing_details_Layout));
+        txt_salesDetails_layout.setOnClickListener(v -> toggleSection(cv_sales_details,txt_salesDetails_layout ));
+        txt_raw_material_Layout.setOnClickListener(v -> toggleSection(cv_raw_material_details,txt_raw_material_Layout));
+        txt_wages_Layout.setOnClickListener(v -> toggleSection(cv_wages_details,txt_wages_Layout ));
+        txt_salary_details_Layout.setOnClickListener(v -> toggleSection(cv_salary_details, txt_salary_details_Layout));
+        txt_working_capital_Layout.setOnClickListener(v -> toggleSection(cv_workking_capital_details,txt_working_capital_Layout ));
+        txt_power_estimate_Layout.setOnClickListener(v -> toggleSection(cv_power_estimates, txt_power_estimate_Layout));
+        txt_depreciation_Layout.setOnClickListener(v -> toggleSection(cv_depreciation,txt_depreciation_Layout));
+        txt_ofc_intro_Layout.setOnClickListener(v -> toggleSection(cv_intro_ofc, txt_ofc_intro_Layout));
+        txt_promoter_details_Layout.setOnClickListener(v -> toggleSection(cv_promoter, txt_promoter_details_Layout));
+        txt_imp_agency_Layout.setOnClickListener(v -> toggleSection(cv_implementing_agency,txt_imp_agency_Layout ));
+        txt_introduction_Layout.setOnClickListener(v -> toggleSection(cv_intro,txt_introduction_Layout ));
+        txt_beneficiary_Layout.setOnClickListener(v -> toggleSection(cv_abt_beneficiary,txt_beneficiary_Layout ));
 
         initData();
         return view;
@@ -586,5 +674,27 @@ public class DPRFragment extends BaseFormFragment {
                 t.printStackTrace();
             }
         });
+    }
+    private void toggleSection(CardView selectedCard, TextView selectedText) {
+        boolean isVisible = selectedCard.getVisibility() == View.VISIBLE;
+
+        closeAllCards();
+
+        if (!isVisible) {
+            selectedCard.setVisibility(View.VISIBLE);
+            selectedText.setCompoundDrawablesWithIntrinsicBounds(
+                    null, null,
+                    ContextCompat.getDrawable(getContext(), R.drawable.arrow_down_24),
+                    null
+            );
+        }
+    }
+    private void closeAllCards() {
+        for (CardView card : allCards) {
+            card.setVisibility(View.GONE);
+        }
+        for (TextView txt : allTextViews) {
+            txt.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getContext(), R.drawable.arrow_up_24), null);
+        }
     }
 }
