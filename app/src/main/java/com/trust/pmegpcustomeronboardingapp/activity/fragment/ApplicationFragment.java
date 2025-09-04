@@ -23,7 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.trust.pmegpcustomeronboardingapp.R;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDataModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDetailData;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantInfoModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicationResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.GenderModel;
@@ -173,7 +175,79 @@ public class ApplicationFragment extends BaseFormFragment {
         app_txt_other_info_Layout.setOnClickListener(v -> toggleSection(app_cv_otherInfo, app_txt_other_info_Layout));
 
         initData();
-
+//        app_btn_updateform.setOnClickListener(v -> {
+//            ApplicantInfoModel applicant = new ApplicantInfoModel();
+//            ApplicantDataModel applicantDataModel = new ApplicantDataModel();
+//
+//            applicant.setApplID(AppConstant.getApplId());
+//            applicant.setApplCode();
+//            applicant.setAadharNo(applicantDataModel.getAadharNo());
+//            applicant.setApplTitle(applicantDataModel.getApplTitle());
+//            applicant.setApplName(applicantDataModel.getApplName());
+//            applicant.setAgencyID(applicantDataModel.getAgencyID());
+//            applicant.setAgencyCode(applicantDataModel.getAgencyCode());
+//            applicant.setStateID(applicantDataModel.getStateID());
+//            applicant.setStateName(applicantDataModel.getStateName());
+//            applicant.setComnStateID(applicantDataModel.getComnStateID());
+//            applicant.setComnStateName(applicantDataModel.getComnStateName());
+//            applicant.setDistID(applicantDataModel.getDistID());
+//            applicant.setDistrictName(applicantDataModel.getDistrictName());
+//            applicant.setAgencyOffID(applicantDataModel.getAgencyOffID());
+//            applicant.setLegalType(applicantDataModel.getLegalType());
+//            applicant.setGender(applicantDataModel.getGender());
+//            applicant.setDateOfBirth(applicantDataModel.getDateofBirth());
+//            applicant.setAge(applicantDataModel.getAge());
+//            applicant.setSocialCatID(applicantDataModel.getSocialCatID());
+//            applicant.setSpecialCatID(applicantDataModel.getSpecialCatID());
+//            applicant.setQualID(applicantDataModel.getQualID());
+//            applicant.setQualDesc(applicantDataModel.getQualDesc());
+//            applicant.setComnAddress(applicantDataModel.getComnAddress());
+//            applicant.setComnTaluka(applicantDataModel.getComnTaluka());
+//            applicant.setComnDistrict(applicantDataModel.setComnDistrict(););
+//            applicant.setComnPin(applicantDataModel.getComnPin());
+//            applicant.setMobileNo1(applicantDataModel.getMobileNo1());
+//            applicant.setMobileNo2(applicantDataModel.getMobileNo2());
+//            applicant.setEmail(applicantDataModel.geteMail());
+//            applicant.setPanNo(applicantDataModel.getPanNo());
+//            applicant.setUnitLocation(applicantDataModel.getUnitLocation());
+//            applicant.setUnitAddress(applicantDataModel.getUnitAddress());
+//            applicant.setUnitTaluka(applicantDataModel.getUnitTaluka());
+//            applicant.setVillageName(applicantDataModel.getVillageName());
+//            applicant.setLgdCodeId(applicantDataModel.getLgdCodeId());
+//            applicant.setUnitDistrict(applicantDataModel.getUnitDistrict());
+//            applicant.setLgdCode(applicantDataModel.getLgdCode());
+//            applicant.setUnitPin(applicantDataModel.getUnitPin());
+//            applicant.setUnitActivityTypeId("");
+//            applicant.setEDPTraining(applicantDataModel.getIsEDPTraining());
+//            applicant.setUnitLocationSame(applicantDataModel.getIsUnitLocationSame());
+//            applicant.setEdpTrainingInst(applicantDataModel.getEdpTrainingInst());
+//            applicant.setCapitalExpd(applicantDataModel.getCapitalExpd());
+//            applicant.setWorkingCapital(applicantDataModel.getWorkingCapital());
+//            applicant.setTotalProjectCost(applicantDataModel.getTotalProjectCost());
+//            applicant.setEmployment(applicantDataModel.getEmployment());
+//            applicant.setFinBankID1(applicantDataModel.getFinBankID1());
+//            applicant.setFinBank1(applicantDataModel.getFinBank1());
+//            applicant.setBankIFSC1(applicantDataModel.getBankIFSC1());
+//            applicant.setBankBranch1(applicantDataModel.getBankBranch1());
+//            applicant.setBankAddress1(applicantDataModel.getBankAddress1());
+//            applicant.setBankDist1(applicantDataModel.getBankDist1());
+//            applicant.setFinBankID1(applicantDataModel.getFinBankID1());
+//            applicant.setFinBank1(applicantDataModel.getFinBank1());
+//            applicant.setBankIFSC2(applicantDataModel.getBankIFSC2());
+//            applicant.setBankBranch2(applicantDataModel.getBankBranch2());
+//            applicant.setBankDist2(applicantDataModel.getBankDist2());
+//            applicant.isAvailCGTMSE(applicantDataModel.getIsAvailCGTMSE());
+//            applicant.setPmegpRef(applicantDataModel.getPmegpRef());
+//            applicant.setIsAadharVerified(applicantDataModel.getIsAadharVerified());
+//            applicant.setIsPanVerified(applicantDataModel.getIsPanVerified());
+//            applicant.setDeclrAccept(applicantDataModel.getIsDeclrAccept());
+//            applicant.setSchemeID(applicantDataModel.getSchemeID());
+//            applicant.setCharAppliAccepted(applicantDataModel.getIsCharAppliAccepted());
+//            applicant.setStateCode(applicantDataModel.getStateCode());
+//            applicant.setState_Name(applicantDataModel.getState_Name());
+//
+//
+//        });
         return view;
     }
 

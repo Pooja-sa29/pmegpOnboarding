@@ -18,14 +18,16 @@
         android:id="@+id/tvMarks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
+        android:layout_weight="0.4"
         android:text="Marks" />
 
     <RadioButton
         android:id="@+id/rbSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-   />
+        android:layout_weight="0.2"
+        android:gravity="center"
+        />
 
     <TextView
         android:id="@+id/tvMarksSecured"

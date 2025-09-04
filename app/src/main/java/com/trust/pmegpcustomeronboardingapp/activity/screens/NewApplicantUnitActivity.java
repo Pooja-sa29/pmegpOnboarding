@@ -8,6 +8,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +76,9 @@ import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -91,6 +96,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     private List<CardView> allCards;
     private List<TextView> allTextViews;
     RecyclerView rv_product_recyclerview;
+    ArrayAdapter<String> adapter;
+    String apiState = null;
     Spinner state_spinner,implementing_agency_spinner,bankNameSpinner,alternate_finance_spinner,unit_type_spinner,iastateSpinner,iaDistrictSpinner,unitlocationspinner,unitdistrictnameListspinner,qualificationspinner,specialCategorySpinner,socialCategorySpinner,informationSourceSpinner,spinner_gender,titleSpinner,spinner_subdistrict,spinnerVillage;
     Button changeDistrict,btn_edpSelection,btn_submitform,btn_validateaddhar,btn_ifsc_code,alt_btn_ifsc_code,btn_industry_activity;
     ApiServices apiService;
@@ -176,6 +183,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         adharcardno = findViewById(R.id.adharcardno);
         nameofapplicant = findViewById(R.id.nameofapplicant);
         uid_dob = findViewById(R.id.dob);
+        uid_age = findViewById(R.id.age);
         communication_address= findViewById(R.id.communication_address);
         district= findViewById(R.id.district);
         taluka_block_name= findViewById(R.id.taluka_block_name);
@@ -262,7 +270,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             applicant.setDateofBirth(uid_dob.getText().toString().trim());
             System.out.println("uid_dob"+uid_dob.getText().toString());
 
-            applicant.setAge(26);
+            applicant.setAge(Integer.parseInt(uid_age.getText().toString()));
             applicant.setSocialCatID(selectedSocialCatCode != null ? selectedSocialCatCode : "");
             System.out.println("selectedSocialCatCode"+selectedSocialCatCode);
             applicant.setSpecialCatID(selectedSpecialCatCode != null ? selectedSpecialCatCode : "");
@@ -384,6 +392,9 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
             }
         });
+
+
+
         btn_industry_activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -448,6 +459,41 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         initData();
     }
 
+    public int calculateAge(String dobString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        LocalDate dob = LocalDate.parse(dobString, formatter);
+        LocalDate today = LocalDate.now();
+        return Period.between(dob, today).getYears();
+    }
+
+    private void setupAutoCalculation() {
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                calculateTotal();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        capital_exp.addTextChangedListener(watcher);
+        workingcapital.addTextChangedListener(watcher);
+    }
+
+    private void calculateTotal() {
+        String cap = capital_exp.getText() != null ? capital_exp.getText().toString().trim() : "";
+        String working_cap = workingcapital.getText() != null ? workingcapital.getText().toString().trim() : "";
+
+        double capVal = cap.isEmpty() ? 0.0 : Double.parseDouble(cap);
+        double workingVal = working_cap.isEmpty() ? 0.0 : Double.parseDouble(working_cap);
+
+        double total_exp = capVal + workingVal;
+        totalexp.setText(String.valueOf(total_exp));
+    }
     private double parseDoubleSafe(String s) {
         try { return Double.parseDouble(s.trim()); }
         catch (Exception e) { return 0.0; }
@@ -567,7 +613,18 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     if (status.isSuccess()) {
                         nameofapplicant.setText(status.getData().getName());
                         uid_dob.setText(status.getData().getDob());
+                        String dob = uid_dob.getText().toString().trim();
+                        int age = calculateAge(dob);
+                        uid_age.setText(String.valueOf(age));
+                        Log.d("AGE", "Age = " + age);
                          gender = status.getData().getGender();
+                         communication_address.setText(status.getData().getHouse() +" ,"+status.getData().getLandmark()+","+status.getData().getLoc());
+                         apiState = status.getData().getState(); // "Maharashtra"
+                        setSpinnerToAadharState();
+
+                         district.setText(status.getData().getDist());
+                         taluka_block_name.setText(status.getData().getSubdist());
+                         pin_code.setText(status.getData().getPincode());
 
                         if (gender != null) {
                             if (gender.equalsIgnoreCase("M")) {
@@ -684,7 +741,6 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
     private void initData() {
 
-
         fetchStateList();
         fetchAgencyList();
         fetchQualificationList();
@@ -696,6 +752,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         fetchBankList();
 
 
+        setupAutoCalculation();
 
 
         titleList.add(0, "--Select title--");
@@ -1555,9 +1612,10 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, stateNamesList);
+                     adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, stateNamesList);
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     state_spinner.setAdapter(adapter);
+                    setSpinnerToAadharState();
 
                     ArrayAdapter<String> stateadapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, stateNamesList);
                     stateadapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
@@ -1617,6 +1675,17 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    private void setSpinnerToAadharState() {
+        if (apiState != null) {
+            for (int i = 0; i < stateNamesList.size(); i++) {
+                if (stateNamesList.get(i).equalsIgnoreCase(apiState.trim())) {
+                    state_spinner.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
     private void fetchDistrictListforIA(String selectedStateCode) {
