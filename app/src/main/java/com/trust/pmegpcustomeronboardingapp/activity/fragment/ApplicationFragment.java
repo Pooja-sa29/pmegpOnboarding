@@ -1,14 +1,19 @@
 package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,14 +27,39 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.trust.pmegpcustomeronboardingapp.R;
+import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyShortCodeResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyShortCodes;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDataModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDetailData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantInfoModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantUpdateResult;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicationResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.BankModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DistrictModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.GenderModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.InformationSource;
+import com.trust.pmegpcustomeronboardingapp.activity.model.QualificationModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ResultModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.SocialCategory;
+import com.trust.pmegpcustomeronboardingapp.activity.model.SpecialCategory;
+import com.trust.pmegpcustomeronboardingapp.activity.model.StateModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.SubDistrictRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.SubDistrictResponce;
+import com.trust.pmegpcustomeronboardingapp.activity.model.UnitDetailResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.UnitTypeModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailRequestModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.VillageRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
+import com.trust.pmegpcustomeronboardingapp.activity.screens.DashboardScreenActivity;
+import com.trust.pmegpcustomeronboardingapp.activity.screens.LoginActivity;
 import com.trust.pmegpcustomeronboardingapp.activity.screens.NewApplicantUnitActivity;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
@@ -47,7 +77,9 @@ public class ApplicationFragment extends BaseFormFragment {
     private ApiServices apiService;
     private List<CardView> allCards;
     private List<TextView> allTextViews;
-    TextView txt_application_layout,app_txt_communicationLayout,txtimplementing_agency_layout,app_txt_unitlayout,app_txt_projectinfo_Layout,app_txt_primary_finance_bank_layout,app_txt_altfbank_Layout,app_txt_other_info_Layout;
+
+    LinearLayout implementing_type_agency_layout;
+    TextView agency_type_state,agency_type_pin,agency_type_district,agency_type,agency_type_mobile,agency_type_email,txt_application_layout,app_txt_communicationLayout,txtimplementing_agency_layout,app_txt_unitlayout,app_txt_projectinfo_Layout,app_txt_primary_finance_bank_layout,app_txt_altfbank_Layout,app_txt_other_info_Layout;
     CardView cv_application,app_cv_communication_address,app_cv_implementing_agency,app_cv_unitAddress,app_cv_projectinfo,app_cv_primary_Financing_bank,app_cv_alternate_Financing_bank,app_cv_otherInfo;
     Button app_btn_district_change,app_alt_btn_ifsc_code,app_btn_ifsc_code,app_btn_updateform,app_btn_show_nic_code_list,app_btn_industry_activity,app_btn_edpSelection;
     EditText  app_email,app_mobile_number,app_alternate_mobile_number,app_pin_number,app_adharcardno,app_district,app_taluka_block_name,app_pannumber,app_nameofapplicant,app_dob,app_age,app_communication_address,app_unitaddress,app_unitLoc,app_unitpincode,app_lgd_code,app_edp_training_insti_name,app_capital_exp,app_workingcapital,app_totalexp,app_employee_count,app_ifscbank_code,app_branch_name,app_primary_address,app_pf_districtEd,app_alt_ifscbank_code,app_alt_primary_address,app_alt_pf_districtEd;
@@ -56,15 +88,27 @@ public class ApplicationFragment extends BaseFormFragment {
     TextView app_agencyTypeName;
     RecyclerView app_rv_product;
     RadioGroup app_edp_radioGrp,app_edp_subgrp_radioGrp,app_cgtmse_radioGrp;
-
+    ArrayAdapter<String> adapter;
+    List<String> stateNamesList;
+    List<String> qualificationNameList;
+    List<String> specialCatnameList;
+    List<String> socialCatnameList;
+    List<String> informationSourceList;
     List<String> titleList = new ArrayList<String>();
     List<String> genderInfoList;
+    List<DistrictModel> districtList;
+    List<AgencyRequest> agencyRequestList;
 
+    String selectedPincode,selectedVillageName,subdistrictName,selectedNodalCode,agencyName,selectedAgencyCode,selectedAgency_Code,selectedBankName2,alt_selectedCityName,selectedBankName1,selectedCityName,selectedQualDesc,selectedQualCode,selectedSocialCatCode,selectedSpecialCatCode,selectedunittype,selectedStateCode,state_shortCode,state_code,selectedStateCodeIa,statename,state_zonal_code,selectedDistrictCode,districtCode,district_name;
+    int selectedagencyoffId,agentId,stateId,districtId,activityUnitType,selectedBankListID,alt_selectedBankListID,selectedBankId2;
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.layout_application_fragment, container, false);
+        apiService = ApiClient.getClient().create(ApiServices.class);
 
+        implementing_type_agency_layout = view.findViewById(R.id.implementing_type_agency_layout);
         app_adharcardno = view.findViewById(R.id.app_adharcardno);
         app_pannumber = view.findViewById(R.id.app_pannumber);
         app_titleSpinner = view.findViewById(R.id.app_titleSpinner);
@@ -84,6 +128,12 @@ public class ApplicationFragment extends BaseFormFragment {
         app_mobile_number = view.findViewById(R.id.app_mobile_number);
         app_alternate_mobile_number = view.findViewById(R.id.app_alternate_mobile_number);
         app_email = view.findViewById(R.id.app_email);
+        agency_type_mobile = view.findViewById(R.id.agency_type_mobile);
+        agency_type_email = view.findViewById(R.id.agency_type_email);
+        agency_type= view.findViewById(R.id.agencyTypeName);
+        agency_type_district= view.findViewById(R.id.agency_type_district);
+        agency_type_pin = view.findViewById(R.id.agency_type_pin);
+        agency_type_state = view.findViewById(R.id.agency_type_state);
         app_implementing_agency_txt = view.findViewById(R.id.app_implementing_agency_txt);
         app_iastateSpinner = view.findViewById(R.id.app_iastateSpinner);
         app_agencydistrictSpinner = view.findViewById(R.id.app_agencydistrictSpinner);
@@ -144,6 +194,7 @@ public class ApplicationFragment extends BaseFormFragment {
         app_cv_alternate_Financing_bank = view.findViewById(R.id.app_cv_alternate_Financing_bank);
         app_cv_otherInfo = view.findViewById(R.id.app_cv_otherInfo);
 
+
         cv_application.setVisibility(View.GONE);
         app_cv_communication_address.setVisibility(View.GONE);
         app_cv_implementing_agency.setVisibility(View.GONE);
@@ -174,81 +225,115 @@ public class ApplicationFragment extends BaseFormFragment {
         app_txt_altfbank_Layout.setOnClickListener(v -> toggleSection(app_cv_alternate_Financing_bank, app_txt_altfbank_Layout));
         app_txt_other_info_Layout.setOnClickListener(v -> toggleSection(app_cv_otherInfo, app_txt_other_info_Layout));
 
+        app_btn_updateform.setOnClickListener(v -> {
+            ApplicantInfoModel applicant = new ApplicantInfoModel();
+            ApplicantDataModel applicantDataModel = new ApplicantDataModel();
+            ApplicantDetailData applicantDetailData = new ApplicantDetailData();
+
+            applicant.setApplID(AppConstant.getApplId());
+            applicant.setApplCode(applicantDetailData.getApplCode());
+            applicant.setAadharNo(applicantDataModel.getAadharNo());
+            applicant.setApplTitle(applicantDataModel.getApplTitle());
+            applicant.setApplName(applicantDataModel.getApplName());
+            applicant.setAgencyID(applicantDataModel.getAgencyID());
+            applicant.setAgencyCode(applicantDataModel.getAgencyCode());
+            applicant.setStateID(applicantDataModel.getStateID());
+            applicant.setStateName(applicantDataModel.getStateName());
+            applicant.setComnStateID(applicantDataModel.getComnStateID());
+            applicant.setComnStateName(applicantDataModel.getComnStateName());
+            applicant.setDistID(applicantDataModel.getDistID());
+            applicant.setDistrictName(applicantDataModel.getDistrictName());
+            applicant.setAgencyOffID(applicantDataModel.getAgencyOffID());
+            applicant.setLegalType(applicantDataModel.getLegalType());
+            applicant.setGender(applicantDataModel.getGender());
+            applicant.setDateOfBirth(applicantDataModel.getDateofBirth());
+            applicant.setAge(applicantDataModel.getAge());
+            applicant.setSocialCatID(applicantDataModel.getSocialCatID());
+            applicant.setSpecialCatID(applicantDataModel.getSpecialCatID());
+            applicant.setQualID(applicantDataModel.getQualID());
+            applicant.setQualDesc(applicantDataModel.getQualDesc());
+            applicant.setComnAddress(applicantDataModel.getComnAddress());
+            applicant.setComnTaluka(applicantDataModel.getComnTaluka());
+            applicant.setComnDistrict(applicantDataModel.getComnDistrict());
+            applicant.setComnPin(applicantDataModel.getComnPin());
+            applicant.setMobileNo1(applicantDataModel.getMobileNo1());
+            applicant.setMobileNo2(applicantDataModel.getMobileNo2());
+            applicant.setEmail(applicantDataModel.geteMail());
+            applicant.setPanNo(applicantDataModel.getPanNo());
+            applicant.setUnitLocation(applicantDataModel.getUnitLocation());
+            applicant.setUnitAddress(applicantDataModel.getUnitAddress());
+            applicant.setUnitTaluka(applicantDataModel.getUnitTaluka());
+            applicant.setVillageName(applicantDataModel.getVillageName());
+            applicant.setLgdCodeId(applicantDataModel.getLgdCodeId());
+            applicant.setUnitDistrict(applicantDataModel.getUnitDistrict());
+            applicant.setLgdCode(applicantDataModel.getLgdCode());
+            applicant.setUnitPin(applicantDataModel.getUnitPin());
+            applicant.setUnitActivityTypeId("");
+            applicant.setEDPTraining(applicantDataModel.getIsEDPTraining());
+            applicant.setUnitLocationSame(applicantDataModel.getIsUnitLocationSame());
+            applicant.setEdpTrainingInst(applicantDataModel.getEdpTrainingInst());
+            applicant.setCapitalExpd(applicantDataModel.getCapitalExpd());
+            applicant.setWorkingCapital(applicantDataModel.getWorkingCapital());
+            applicant.setTotalProjectCost(applicantDataModel.getTotalProjectCost());
+            applicant.setEmployment(applicantDataModel.getEmployment());
+            applicant.setFinBankID1(applicantDataModel.getFinBankID1());
+            applicant.setFinBank1(applicantDataModel.getFinBank1());
+            applicant.setBankIFSC1(applicantDataModel.getBankIFSC1());
+            applicant.setBankBranch1(applicantDataModel.getBankBranch1());
+            applicant.setBankAddress1(applicantDataModel.getBankAddress1());
+            applicant.setBankDist1(applicantDataModel.getBankDist1());
+            applicant.setFinBankID1(applicantDataModel.getFinBankID1());
+            applicant.setFinBank1(applicantDataModel.getFinBank1());
+            applicant.setBankIFSC2(applicantDataModel.getBankIFSC2());
+            applicant.setBankBranch2(applicantDataModel.getBankBranch2());
+            applicant.setBankDist2(applicantDataModel.getBankDist2());
+            applicant.isAvailCGTMSE(applicantDataModel.getIsAvailCGTMSE());
+            applicant.setPmegpRef(applicantDataModel.getPmegpRef());
+            applicant.setIsAadharVerified(applicantDataModel.getIsAadharVerified());
+            applicant.setIsPanVerified(applicantDataModel.getIsPanVerified());
+            applicant.setDeclrAccept(applicantDataModel.getIsDeclrAccept());
+            applicant.setSchemeID(applicantDataModel.getSchemeID());
+            applicant.setCharAppliAccepted(applicantDataModel.getIsCharAppliAccepted());
+            applicant.setStateCode(applicantDataModel.getStateCode());
+            applicant.setState_Name(applicantDataModel.getState_Name());
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Log.d("FINAL_JSON", gson.toJson(applicant));
+
+            SaveApplicationForm(applicant);
+
+        });
         initData();
-//        app_btn_updateform.setOnClickListener(v -> {
-//            ApplicantInfoModel applicant = new ApplicantInfoModel();
-//            ApplicantDataModel applicantDataModel = new ApplicantDataModel();
-//
-//            applicant.setApplID(AppConstant.getApplId());
-//            applicant.setApplCode();
-//            applicant.setAadharNo(applicantDataModel.getAadharNo());
-//            applicant.setApplTitle(applicantDataModel.getApplTitle());
-//            applicant.setApplName(applicantDataModel.getApplName());
-//            applicant.setAgencyID(applicantDataModel.getAgencyID());
-//            applicant.setAgencyCode(applicantDataModel.getAgencyCode());
-//            applicant.setStateID(applicantDataModel.getStateID());
-//            applicant.setStateName(applicantDataModel.getStateName());
-//            applicant.setComnStateID(applicantDataModel.getComnStateID());
-//            applicant.setComnStateName(applicantDataModel.getComnStateName());
-//            applicant.setDistID(applicantDataModel.getDistID());
-//            applicant.setDistrictName(applicantDataModel.getDistrictName());
-//            applicant.setAgencyOffID(applicantDataModel.getAgencyOffID());
-//            applicant.setLegalType(applicantDataModel.getLegalType());
-//            applicant.setGender(applicantDataModel.getGender());
-//            applicant.setDateOfBirth(applicantDataModel.getDateofBirth());
-//            applicant.setAge(applicantDataModel.getAge());
-//            applicant.setSocialCatID(applicantDataModel.getSocialCatID());
-//            applicant.setSpecialCatID(applicantDataModel.getSpecialCatID());
-//            applicant.setQualID(applicantDataModel.getQualID());
-//            applicant.setQualDesc(applicantDataModel.getQualDesc());
-//            applicant.setComnAddress(applicantDataModel.getComnAddress());
-//            applicant.setComnTaluka(applicantDataModel.getComnTaluka());
-//            applicant.setComnDistrict(applicantDataModel.setComnDistrict(););
-//            applicant.setComnPin(applicantDataModel.getComnPin());
-//            applicant.setMobileNo1(applicantDataModel.getMobileNo1());
-//            applicant.setMobileNo2(applicantDataModel.getMobileNo2());
-//            applicant.setEmail(applicantDataModel.geteMail());
-//            applicant.setPanNo(applicantDataModel.getPanNo());
-//            applicant.setUnitLocation(applicantDataModel.getUnitLocation());
-//            applicant.setUnitAddress(applicantDataModel.getUnitAddress());
-//            applicant.setUnitTaluka(applicantDataModel.getUnitTaluka());
-//            applicant.setVillageName(applicantDataModel.getVillageName());
-//            applicant.setLgdCodeId(applicantDataModel.getLgdCodeId());
-//            applicant.setUnitDistrict(applicantDataModel.getUnitDistrict());
-//            applicant.setLgdCode(applicantDataModel.getLgdCode());
-//            applicant.setUnitPin(applicantDataModel.getUnitPin());
-//            applicant.setUnitActivityTypeId("");
-//            applicant.setEDPTraining(applicantDataModel.getIsEDPTraining());
-//            applicant.setUnitLocationSame(applicantDataModel.getIsUnitLocationSame());
-//            applicant.setEdpTrainingInst(applicantDataModel.getEdpTrainingInst());
-//            applicant.setCapitalExpd(applicantDataModel.getCapitalExpd());
-//            applicant.setWorkingCapital(applicantDataModel.getWorkingCapital());
-//            applicant.setTotalProjectCost(applicantDataModel.getTotalProjectCost());
-//            applicant.setEmployment(applicantDataModel.getEmployment());
-//            applicant.setFinBankID1(applicantDataModel.getFinBankID1());
-//            applicant.setFinBank1(applicantDataModel.getFinBank1());
-//            applicant.setBankIFSC1(applicantDataModel.getBankIFSC1());
-//            applicant.setBankBranch1(applicantDataModel.getBankBranch1());
-//            applicant.setBankAddress1(applicantDataModel.getBankAddress1());
-//            applicant.setBankDist1(applicantDataModel.getBankDist1());
-//            applicant.setFinBankID1(applicantDataModel.getFinBankID1());
-//            applicant.setFinBank1(applicantDataModel.getFinBank1());
-//            applicant.setBankIFSC2(applicantDataModel.getBankIFSC2());
-//            applicant.setBankBranch2(applicantDataModel.getBankBranch2());
-//            applicant.setBankDist2(applicantDataModel.getBankDist2());
-//            applicant.isAvailCGTMSE(applicantDataModel.getIsAvailCGTMSE());
-//            applicant.setPmegpRef(applicantDataModel.getPmegpRef());
-//            applicant.setIsAadharVerified(applicantDataModel.getIsAadharVerified());
-//            applicant.setIsPanVerified(applicantDataModel.getIsPanVerified());
-//            applicant.setDeclrAccept(applicantDataModel.getIsDeclrAccept());
-//            applicant.setSchemeID(applicantDataModel.getSchemeID());
-//            applicant.setCharAppliAccepted(applicantDataModel.getIsCharAppliAccepted());
-//            applicant.setStateCode(applicantDataModel.getStateCode());
-//            applicant.setState_Name(applicantDataModel.getState_Name());
-//
-//
-//        });
+
         return view;
+    }
+
+    private void SaveApplicationForm(ApplicantInfoModel applicant) {
+        apiService.updateApplicantData(applicant).enqueue(new Callback<ApplicantUpdateResult>() {
+            @Override
+            public void onResponse(Call<ApplicantUpdateResult> call, Response<ApplicantUpdateResult> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApplicantUpdateResult status = response.body();
+
+                    Log.d("API_RESPONSE", new Gson().toJson(status));
+
+                    if (status.isSuccess()) {
+                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
+                        startActivity(i);
+
+                    } else {
+                        Toast.makeText(getContext(), "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Unexpected response", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApplicantUpdateResult> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initData() {
@@ -261,8 +346,753 @@ public class ApplicationFragment extends BaseFormFragment {
                 R.layout.spinner_selected_item, titleList);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         app_titleSpinner.setAdapter(adapter);
+
+        fetchStateList();
+        fetchAgencyList();
+        fetchQualificationList();
+        fetchSpecialCategoryList();
+        fetchSocialCategoryList();
+        fetchInformationSourceList();
+        fetchUnitTypeData();
+        fetchGenderList();
+        fetchBankList();
+
+
     }
 
+    private void fetchStateList() {
+        apiService.getStateList().enqueue(new Callback<List<StateModel>>() {
+            @Override
+            public void onResponse(Call<List<StateModel>> call, Response<List<StateModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<StateModel> states = response.body();
+                    System.out.println("sttatelist" +states.size());
+
+                    stateNamesList = new ArrayList<>();
+                    stateNamesList.add(0,"--Select state--");
+                    for (StateModel state : states) {
+                        stateNamesList.add(state.getStateName());
+
+
+                    }
+
+                    adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, stateNamesList);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_state_spinner.setAdapter(adapter);
+//                    setSpinnerToAadharState();
+
+                    ArrayAdapter<String> stateadapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, stateNamesList);
+                    stateadapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_iastateSpinner.setAdapter(stateadapter);
+
+
+                    app_state_spinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                            if (position > 0) {
+                                StateModel selectedState = states.get(position - 1);
+                                selectedStateCode = selectedState.getStateCode();
+                                System.out.println("Selected stateCode: " + selectedStateCode);
+                                ApplicantDataModel applicant = new ApplicantDataModel();
+
+                                state_shortCode = selectedState.getStateShortCode(); // "MH"
+                                state_code = String.valueOf(selectedState.getStateId());
+
+                            } else {
+                                selectedStateCode = null;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                            selectedStateCode = null;
+                        }
+                    });
+                    app_iastateSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                            if (position > 0) {
+                                StateModel selectedState = states.get(position - 1);
+                                selectedStateCodeIa = selectedState.getStateCode();
+                                System.out.println("Selected stateCode: " + selectedStateCodeIa);
+                                stateId = states.get(position - 1).getStateId();
+                                statename = states.get(position -1).getStateName();
+                                state_zonal_code = states.get(position-1).getState_zone_code();
+
+                                fetchDistrictListforIA(selectedStateCodeIa);
+
+                            } else {
+                                selectedStateCodeIa = null;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                            selectedStateCode = null;
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<StateModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+    private void fetchDistrictListforIA(String selectedStateCode) {
+
+        DistrictModel request = new DistrictModel(selectedStateCode,"");
+        apiService.getDistrictList(request).enqueue(new Callback<List<DistrictModel>>() {
+            @Override
+            public void onResponse(Call<List<DistrictModel>> call, Response<List<DistrictModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    districtList = response.body();
+                    System.out.println("IA districtList size: " + districtList.size());
+
+                    List<String> districtNames = new ArrayList<>();
+                    districtNames.add(0, "--Select District--");
+                    for (DistrictModel district : districtList) {
+                        districtNames.add(district.getDistrictName());
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                            R.layout.spinner_selected_item, districtNames);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_agencydistrictSpinner.setAdapter(adapter);
+
+                    ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(
+                            getContext(),
+                            R.layout.spinner_selected_item,
+                            districtNames
+                    );
+                    unitAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_unitdistrictnameList.setAdapter(unitAdapter);
+
+
+
+                    app_agencydistrictSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                            if (position > 0) {
+                                DistrictModel selectedDistrict = districtList.get(position - 1);
+                                selectedDistrictCode = selectedDistrict.getDistrictCode();
+                                districtId = districtList.get(position - 1).getDistrictId();
+                                districtCode = districtList.get(position - 1).getDistrictCode();
+                                district_name = districtList.get(position - 1).getDistrictName();
+                                System.out.println("Selected IA districtCode: " + selectedDistrictCode+ district_name+districtCode+districtId);
+
+                                for (int i = 0; i < districtList.size(); i++) {
+                                    if (districtList.get(i).getDistrictCode().equals(selectedDistrictCode)) {
+                                        int finalI = i;
+                                        app_unitdistrictnameList.post(() -> {
+                                            app_unitdistrictnameList.setSelection(finalI + 1, true);
+                                            System.out.println("unitdistrictnameListspinner set to position: " + (finalI + 1));
+                                        });
+                                        break;
+                                    }
+                                }
+                                agencyRequestList = new ArrayList<>();
+                                implementing_type_agency_layout.setVisibility(View.VISIBLE);
+                                AgencyRequest agencyRequest = new AgencyRequest(1,stateId,districtId);
+                                agencyRequestList.add(agencyRequest);
+                                fetchSubdistrictList(String.valueOf(districtId));
+                                fetchAgencyOffDetails(agencyRequest);
+
+                            }
+                        }
+
+
+                        @Override
+                        public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<DistrictModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+
+    }
+
+    private void fetchAgencyOffDetails(AgencyRequest agencyRequest) {
+        apiService.getAgencyOffDetails(agencyRequest).enqueue(new Callback<List<AgencyResponse>>() {
+            @Override
+            public void onResponse(Call<List<AgencyResponse>> call, Response<List<AgencyResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<AgencyResponse> agencyResponses = response.body();
+                    System.out.println("agencyResponses" +agencyResponses.size());
+                    AgencyResponse agency = agencyResponses.get(0);
+
+                    selectedagencyoffId = agency.getAgencyOffId();
+                    for (int i = 0; i < agencyRequestList.size(); i++) {
+                        if (agencyRequestList.size()!=0){
+
+                            agency_type_mobile.setText(agencyResponses.get(i).getAgencyOffContactNo());
+                            agency_type_email.setText(agencyResponses.get(i).getAgencyOffContactEmail());
+
+                        }
+                    }
+
+                    agency_type.setText(agencyName+"-"+district_name+"-"+state_zonal_code);
+                    agency_type_state.setText(statename);
+                    agency_type_district.setText(district_name);
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AgencyResponse>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchSubdistrictList(String code) {
+        System.out.println("code_d"+code);
+        SubDistrictRequest request = new SubDistrictRequest(code);
+        apiService.GetSubDistricts(request).enqueue(
+                new Callback<List<SubDistrictResponce>>() {
+                    @Override
+                    public void onResponse(Call<List<SubDistrictResponce>> call, Response<List<SubDistrictResponce>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<SubDistrictResponce> subDistrictSource = response.body();
+                            List<String> subDistrictInfoList = new ArrayList<>();
+                            subDistrictInfoList.add(0, "--Select Sub-District--");
+
+                            for (SubDistrictResponce model : subDistrictSource) {
+                                subDistrictInfoList.add(model.getSubdistrict_name());
+
+                            }
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                    getContext(),
+                                    R.layout.spinner_selected_item,
+                                    subDistrictInfoList
+                            );
+                            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                            app_unitsubdistrictnameSpinner.setAdapter(adapter);
+
+                            app_unitsubdistrictnameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    if (position > 0){
+                                        SubDistrictResponce selectedDistrict = subDistrictSource.get(position - 1);
+                                        int subdistrictId = selectedDistrict.getDistrictId();
+                                        System.out.println("subdistrictId"+subdistrictId);
+                                        int selectedSubdistrictCode = subDistrictSource.get(position - 1).getSubdistrict_code();
+                                        subdistrictName = subDistrictSource.get(position - 1).getSubdistrict_name();
+                                        System.out.println("subdistrictId"+subdistrictId+selectedSubdistrictCode);
+                                        fetchVillageList(String.valueOf(selectedSubdistrictCode));
+                                    }
+
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<SubDistrictResponce>> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+        );
+    }
+
+    private void fetchVillageList(String code) {
+        VillageRequest request = new VillageRequest(code);
+
+        apiService.getVillages(request).enqueue(new Callback<List<VillageDetailModel>>() {
+            @Override
+            public void onResponse(Call<List<VillageDetailModel>> call, Response<List<VillageDetailModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<VillageDetailModel> villageList = response.body();
+
+
+                    List<String> villageNames = new ArrayList<>();
+                    for (VillageDetailModel village : villageList) {
+                        villageNames.add(village.getVillageName());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_spinner_item, villageNames);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    app_unitvillagenamespinner.setAdapter(adapter);
+
+                    app_unitvillagenamespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            if (position >= 0 && position < villageList.size()) {
+                                VillageDetailModel villageDetailModel= villageList.get(position);
+                                String villageCode = villageDetailModel.getVillageCode();
+                                System.out.println("villagecode"+villageCode);
+                                selectedVillageName = villageDetailModel.getVillageName();
+
+                                fetchVillageDetails(villageCode);
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                            app_pin_number.setText("");
+                            app_unitLoc.setText("");
+                            app_lgd_code.setText("");
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "No villages found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VillageDetailModel>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchVillageDetails(String villageCode) {
+        VillageDetailRequestModel request = new VillageDetailRequestModel(villageCode);
+        apiService.getVillageDetails(request).enqueue(new Callback<UnitDetailResponse>() {
+            @Override
+            public void onResponse(Call<UnitDetailResponse> call, Response<UnitDetailResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    VillageDetailResponse village = response.body().getData();
+                    Log.d("API_RESPONSE", new Gson().toJson(response.body()));
+
+                    app_lgd_code.setText(String.valueOf(village.getLgdCodeId()));
+                    app_pin_number.setText(village.getPincode());
+                    app_unitLoc.setText(village.getRuralUrban());
+                    selectedPincode = village.getPincode();
+                } else {
+                    Toast.makeText(getContext(), "Village details not found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UnitDetailResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchAgencyList() {
+        apiService.getAgencyList().enqueue(new Callback<List<AgencyModel>>() {
+            @Override
+            public void onResponse(Call<List<AgencyModel>> call, Response<List<AgencyModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<AgencyModel> agencyModelList = response.body();
+                    System.out.println("agencyList" +agencyModelList.size());
+
+                    List<String> agencyNames = new ArrayList<>();
+                    agencyNames.add(0,"--Select Agency--");
+                    for (AgencyModel agencyModel : agencyModelList) {
+                        agencyNames.add(agencyModel.getAgency_code());
+
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, agencyNames);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_implementing_agency_txt.setAdapter(adapter);
+
+                    app_implementing_agency_txt.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                            if (position > 0) {
+                                AgencyModel selectedAgency = agencyModelList.get(position - 1);
+                                selectedAgency_Code = selectedAgency.getAgency_code();
+                                agentId = Integer.valueOf(selectedAgency.getAgencyId());
+                                if (selectedAgencyCode != null && !selectedAgencyCode.isEmpty()) {
+                                    String filterAgencyCodeTxt = selectedAgencyCode.split("\\s|\\(")[0];
+                                    agencyName = filterAgencyCodeTxt;
+                                } else {
+                                    agencyName = ""; // Or handle appropriately
+                                }
+
+                                System.out.println("Selected agencyCode: " + selectedAgencyCode+" "+agentId);
+                                fetchAgencyShortCode(selectedAgency);
+
+
+                            } else {
+                                selectedAgencyCode = null;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                            selectedAgencyCode = null;
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AgencyModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchAgencyShortCode(AgencyModel agencyModel) {
+        System.out.println("agency id " + agencyModel.getAgencyId());
+        AgencyModel request = new AgencyModel(agencyModel.getAgencyId());
+
+        apiService.getAgencyShortCode(request).enqueue(new Callback<AgencyShortCodeResponse>() {
+            @Override
+            public void onResponse(Call<AgencyShortCodeResponse> call, Response<AgencyShortCodeResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    List<AgencyShortCodes> data = response.body().getData();
+                    if (!data.isEmpty()) {
+                        AgencyShortCodes agencyShortCodes = data.get(0);
+                        selectedAgencyCode = agencyShortCodes.getAgencyCode();
+                        selectedNodalCode = agencyShortCodes.getShortCode();
+                        System.out.println("nodal code " + selectedNodalCode + " " + selectedAgencyCode);
+                    }
+                } else {
+                    Log.e("DEBUG", "Failed to fetch nodal code");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AgencyShortCodeResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchBankList() {
+        apiService.getBankList().enqueue(new Callback<List<BankModel>>() {
+            @Override
+            public void onResponse(Call<List<BankModel>> call, Response<List<BankModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<BankModel> bankModelList = response.body();
+                    System.out.println("agencyList" + bankModelList.size());
+
+                    List<String> bankName = new ArrayList<>();
+                    bankName.add(0, "--Select Bank name--");
+                    for (BankModel bankModel : bankModelList) {
+                        bankName.add(bankModel.getBankName());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                            R.layout.spinner_selected_item, bankName);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+                    // Set adapter for primary bank spinner
+                    app_bank_spinner_list.setAdapter(adapter);
+                    app_bank_spinner_list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            if (position > 0) {
+                                BankModel bankModel = bankModelList.get(position - 1);
+                                selectedBankListID = bankModel.getBankListId();
+                                selectedCityName = district_name;
+                                selectedBankName1 = bankModel.getBankName();
+
+                                // Check if same bank is selected in alternate bank
+                                if (alt_selectedBankListID != 0 && selectedBankListID == alt_selectedBankListID) {
+                                    Toast.makeText(getContext(),
+                                            "Primary and Alternate Bank cannot be the same",
+                                            Toast.LENGTH_SHORT).show();
+                                    app_bank_spinner_list.setSelection(0); // reset selection
+                                    selectedBankListID = 0;
+                                    selectedBankName1 = null;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
+                    });
+
+                    // Set adapter for alternate bank spinner
+                    app_alt_bank_spinner_list.setAdapter(adapter);
+                    app_alt_bank_spinner_list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            if (position > 0) {
+                                BankModel bankModel = bankModelList.get(position - 1);
+                                alt_selectedBankListID = bankModel.getBankListId();
+                                alt_selectedCityName = district_name;
+                                selectedBankId2 = bankModel.getBankListId();
+                                selectedBankName2 = bankModel.getBankName();
+
+                                // Check if same bank is selected in primary bank
+                                if (selectedBankListID != 0 && selectedBankListID == alt_selectedBankListID) {
+                                    Toast.makeText(getContext(),
+                                            "Primary and Alternate Bank cannot be the same",
+                                            Toast.LENGTH_SHORT).show();
+                                    app_alt_bank_spinner_list.setSelection(0); // reset selection
+                                    alt_selectedBankListID = 0;
+                                    selectedBankName2 = null;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BankModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchQualificationList() {
+        apiService.getQualificationList("QUAL").enqueue(new Callback<List<QualificationModel>>() {
+            @Override
+            public void onResponse(Call<List<QualificationModel>> call, Response<List<QualificationModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<QualificationModel> qualificationModelList = response.body();
+                    System.out.println("qualificationModelList" +qualificationModelList.size());
+
+                    qualificationNameList = new ArrayList<>();
+                    qualificationNameList.add(0,"--Select Qualification--");
+                    for (QualificationModel qualificationModel : qualificationModelList) {
+                        qualificationNameList.add(qualificationModel.getLk_desc());
+
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, qualificationNameList);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_qualificationspinner.setAdapter(adapter);
+                    app_qualificationspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            QualificationModel qualificationModel = qualificationModelList.get(position);
+                            selectedQualCode = qualificationModel.getLk_shortCode();
+                            selectedQualDesc = qualificationModel.getLk_desc();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<QualificationModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchSocialCategoryList() {
+        apiService.getSocialCategory("SPCCT").enqueue(new Callback<List<SocialCategory>>() {
+            @Override
+            public void onResponse(Call<List<SocialCategory>> call, Response<List<SocialCategory>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<SocialCategory> socialCategoryList = response.body();
+                    System.out.println("socialCategoryList" +socialCategoryList.size());
+
+
+
+                    socialCatnameList = new ArrayList<>();
+                    socialCatnameList.add(0,"--Select Social Category--");
+                    for (SocialCategory socialCategorymodel : socialCategoryList) {
+                        socialCatnameList.add(socialCategorymodel.getLk_desc());
+
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, socialCatnameList);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_social_category_spinner.setAdapter(adapter);
+                    app_social_category_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            SocialCategory socialCategory = socialCategoryList.get(position);
+                            selectedSocialCatCode = socialCategory.getLk_shortCode();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SocialCategory>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+    private void fetchSpecialCategoryList() {
+        apiService.getSpecialCategory("SPCLCT").enqueue(new Callback<List<SpecialCategory>>() {
+            @Override
+            public void onResponse(Call<List<SpecialCategory>> call, Response<List<SpecialCategory>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<SpecialCategory> specialCategoryList = response.body();
+                    System.out.println("qualificationModelList" +specialCategoryList.size());
+
+                    specialCatnameList = new ArrayList<>();
+                    specialCatnameList.add(0,"--Select Special Category--");
+                    for (SpecialCategory specialCategorymodel : specialCategoryList) {
+                        specialCatnameList.add(specialCategorymodel.getLk_desc());
+
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, specialCatnameList);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_special_category_spinner.setAdapter(adapter);
+                    app_special_category_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            SpecialCategory specialCategory = specialCategoryList.get(position);
+                            selectedSpecialCatCode= specialCategory.getLk_shortCode();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SpecialCategory>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchInformationSourceList() {
+        apiService.getInformationSource("INFOSRC").enqueue(new Callback<List<InformationSource>>() {
+            @Override
+            public void onResponse(Call<List<InformationSource>> call, Response<List<InformationSource>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<InformationSource> informationSource = response.body();
+                    System.out.println("informationSourceList" +informationSource.size());
+
+                    informationSourceList = new ArrayList<>();
+                    informationSourceList.add(0,"--Select Information Source--");
+                    for (InformationSource informationSourceModel : informationSource) {
+                        informationSourceList.add(informationSourceModel.getLk_desc());
+
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, informationSourceList);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_spinner_about_us_spinner.setAdapter(adapter);
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<InformationSource>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+    }
+    private void fetchGenderList() {
+        apiService.getGender("GEND").enqueue(new Callback<List<GenderModel>>() {
+            @Override
+            public void onResponse(Call<List<GenderModel>> call, Response<List<GenderModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<GenderModel> genderSource = response.body();
+                    System.out.println("Gender" +genderSource.size());
+
+                    genderInfoList = new ArrayList<>();
+                    genderInfoList.add(0,"--Select Gender--");
+                    for (GenderModel genderModel : genderSource) {
+                        genderInfoList.add(genderModel.getLk_desc());
+
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, genderInfoList);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_spinner_gender.setAdapter(adapter);
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GenderModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+    private void fetchUnitTypeData() {
+        apiService.getUnitType().enqueue(new Callback<List<UnitTypeModel>>() {
+            @Override
+            public void onResponse(Call<List<UnitTypeModel>> call, Response<List<UnitTypeModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<UnitTypeModel> unittypeList = response.body();
+                    System.out.println("agencyList" +unittypeList.size());
+
+                    List<String> unitNameList = new ArrayList<>();
+                    unitNameList.add(0,"--Select Agency--");
+                    for (UnitTypeModel unitTypeModel : unittypeList) {
+                        unitNameList.add(unitTypeModel.getSchemeName());
+
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, unitNameList);
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_activityspinner.setAdapter(adapter);
+
+                    app_activityspinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                            if (position > 0) {
+                                UnitTypeModel selectedUnit = unittypeList.get(position - 1);
+                                selectedunittype = selectedUnit.getSchemeName();
+                                activityUnitType = selectedUnit.getActivityType();
+                                System.out.println("Selected unittype: " + selectedunittype+" "+activityUnitType);
+                            } else {
+                                selectedunittype = null;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                            selectedunittype = null;
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UnitTypeModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -274,6 +1104,7 @@ public class ApplicationFragment extends BaseFormFragment {
             int applicationId = Integer.parseInt(applIdStr);
         System.out.println("applicationId"+applicationId);
             getApplicantData(applicationId);
+
 
     }
 

@@ -25,6 +25,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.adapter.IndustryListAdapter
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.NICDevisionModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.NICGroupModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.UnitTypeIdModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UnitTypeModel;
 import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
 import com.trust.pmegpcustomeronboardingapp.activity.screens.NewApplicantUnitActivity;
@@ -51,8 +52,8 @@ public class IndustryDataDialogFragment extends DialogFragment {
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        activityUnitType = getArguments().getInt("unitType");
-//        System.out.println("Selected agencyCode:1"+activityUnitType);
+        activityUnitType = getArguments().getInt("unitType");
+        System.out.println("Selected agencyCode:1"+activityUnitType);
         View view = inflater.inflate(R.layout.fragment_dialog_industry_data, container, false);
 
         recyclerView = view.findViewById(R.id.recyslerview);
@@ -65,7 +66,7 @@ public class IndustryDataDialogFragment extends DialogFragment {
 
 
         apiService = ApiClient.getClient().create(ApiServices.class);
-        fetchDevisionData();
+        fetchDevisionData(activityUnitType);
 
 
         selectButton.setOnClickListener(new View.OnClickListener() {
@@ -119,9 +120,9 @@ public class IndustryDataDialogFragment extends DialogFragment {
         }
     }
 
-    private void fetchDevisionData() {
+    private void fetchDevisionData(int activityUnitType) {
 
-            UnitTypeModel request = new UnitTypeModel(1);
+            UnitTypeIdModel request = new UnitTypeIdModel(activityUnitType);
 
             apiService.getNICDevisionData(request).enqueue(new Callback<List<NICDevisionModel>>() {
                 @Override

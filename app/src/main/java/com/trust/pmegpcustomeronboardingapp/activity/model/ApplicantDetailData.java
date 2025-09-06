@@ -123,7 +123,7 @@ public class ApplicantDetailData {
     @SerializedName("FinalSubDate")
     private String FinalSubDate;
     @SerializedName("IsFinalSub")
-    private Boolean IsFinalSub;
+    private int IsFinalSub;
     @SerializedName("CreatedOn")
     private String CreatedOn;
     @SerializedName("ModifyOn")
@@ -702,11 +702,11 @@ public class ApplicantDetailData {
         FinalSubDate = finalSubDate;
     }
 
-    public Boolean getFinalSub() {
+    public int getFinalSub() {
         return IsFinalSub;
     }
 
-    public void setFinalSub(Boolean finalSub) {
+    public void setFinalSub(int finalSub) {
         IsFinalSub = finalSub;
     }
 

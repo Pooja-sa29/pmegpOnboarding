@@ -6,7 +6,7 @@ public class UnitTypeModel {
 
     @SerializedName("SchemeID")
     private int schemeId;
-    @SerializedName("ActivityType")
+    @SerializedName("ActivityTyp")
     private int activityType;
 
     @SerializedName("SchemeName")

@@ -33,6 +33,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.fragment.LoanSanctionFragme
 import com.trust.pmegpcustomeronboardingapp.activity.fragment.ScoreCardFragment;
 import com.trust.pmegpcustomeronboardingapp.activity.fragment.UnderProcessFragment;
 import com.trust.pmegpcustomeronboardingapp.activity.fragment.UploadDocumentsFragment;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDetailData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.LoginResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 
@@ -67,7 +68,8 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
             R.drawable.check_circle_24
     };
     TextView fragment_name;
-
+    TextView appId,appName,appDoc;
+    ApplicantDetailData applicantDetailData;
     HorizontalScrollView stepScrollView;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -79,7 +81,12 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
         setSupportActionBar(toolbar);
 
         AppConstant.loadFromPrefs(this);
+         applicantDetailData = new ApplicantDetailData();
+
         userId = findViewById(R.id.userId);
+        appId = findViewById(R.id.appId);
+        appName = findViewById(R.id.appName);
+        appDoc = findViewById(R.id.appDoc);
         stepLayout =findViewById(R.id.stepLayout);
         stepScrollView = findViewById(R.id.stepScrollView);
         fragment_name = findViewById(R.id.fragment_name);
@@ -91,6 +98,10 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
 //         if (AppConstant.getIsLoggedIn().equals(true)) {
              userId.setText("Welcome, Your Application ID is " + AppConstant.getUserID());
 //         }
+
+        appId.setText(AppConstant.getUserID());
+        appName.setText(applicantDetailData.getApplName());
+        appDoc.setText("");
         toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.menu_home) {

@@ -19,31 +19,31 @@ public class ApplicantInfoModel {
     private String applName;
 
     @SerializedName("AgencyID")
-    private String agencyID;
+    private int agencyID;
 
     @SerializedName("AgencyCode")
     private String agencyCode;
 
     @SerializedName("StateID")
-    private String stateID;
+    private int stateID;
 
     @SerializedName("StateName")
     private String stateName;
 
     @SerializedName("ComnStateID")
-    private String comnStateID;
+    private int comnStateID;
 
     @SerializedName("ComnStateName")
     private String comnStateName;
 
     @SerializedName("DistID")
-    private String distID;
+    private int distID;
 
     @SerializedName("DistrictName")
     private String districtName;
 
     @SerializedName("AgencyOffID")
-    private String agencyOffID;
+    private int agencyOffID;
 
     @SerializedName("LegalType")
     private String legalType;
@@ -55,7 +55,7 @@ public class ApplicantInfoModel {
     private String dateOfBirth; // keep as String for simplicity
 
     @SerializedName("Age")
-    private String age;
+    private int age;
 
     @SerializedName("SocialCatID")
     private String socialCatID;
@@ -106,13 +106,13 @@ public class ApplicantInfoModel {
     private String villageName;
 
     @SerializedName("lgdCodeId")
-    private String lgdCodeId;
+    private int lgdCodeId;
 
     @SerializedName("UnitDistrict")
     private String unitDistrict;
 
     @SerializedName("lgdCode")
-    private String lgdCode;
+    private int lgdCode;
 
     @SerializedName("UnitPin")
     private String unitPin;
@@ -121,28 +121,28 @@ public class ApplicantInfoModel {
     private String unitActivityTypeId;
 
     @SerializedName("IsEDPTraining")
-    private boolean isEDPTraining;
+    private int isEDPTraining;
 
     @SerializedName("IsUnitLocationSame")
-    private boolean isUnitLocationSame;
+    private int isUnitLocationSame;
 
     @SerializedName("EDPTrainingInst")
     private String edpTrainingInst;
 
     @SerializedName("CapitalExpd")
-    private String capitalExpd;
+    private double capitalExpd;
 
     @SerializedName("WorkingCapital")
-    private String workingCapital;
+    private double workingCapital;
 
     @SerializedName("TotalProjectCost")
-    private String totalProjectCost;
+    private double totalProjectCost;
 
     @SerializedName("Employment")
-    private String employment;
+    private int employment;
 
     @SerializedName("FinBankID1")
-    private String finBankID1;
+    private int finBankID1;
 
     @SerializedName("FinBank1")
     private String finBank1;
@@ -178,7 +178,7 @@ public class ApplicantInfoModel {
     private String bankDist2;
 
     @SerializedName("IsAvailCGTMSE")
-    private boolean isAvailCGTMSE;
+    private int isAvailCGTMSE;
 
     @SerializedName("PMEGPRef")
     private String pmegpRef;
@@ -190,13 +190,13 @@ public class ApplicantInfoModel {
     private int isPanVerified;
 
     @SerializedName("IsDeclrAccept")
-    private boolean isDeclrAccept;
+    private int isDeclrAccept;
 
     @SerializedName("SchemeID")
-    private String schemeID;
+    private int schemeID;
 
     @SerializedName("isCharAppliAccepted")
-    private boolean isCharAppliAccepted;
+    private int isCharAppliAccepted;
 
     @SerializedName("State_Code")
     private String stateCode;
@@ -244,11 +244,11 @@ public class ApplicantInfoModel {
         this.applName = applName;
     }
 
-    public String getAgencyID() {
+    public int getAgencyID() {
         return agencyID;
     }
 
-    public void setAgencyID(String agencyID) {
+    public void setAgencyID(int agencyID) {
         this.agencyID = agencyID;
     }
 
@@ -260,11 +260,11 @@ public class ApplicantInfoModel {
         this.agencyCode = agencyCode;
     }
 
-    public String getStateID() {
+    public int getStateID() {
         return stateID;
     }
 
-    public void setStateID(String stateID) {
+    public void setStateID(int stateID) {
         this.stateID = stateID;
     }
 
@@ -276,11 +276,11 @@ public class ApplicantInfoModel {
         this.stateName = stateName;
     }
 
-    public String getComnStateID() {
+    public int getComnStateID() {
         return comnStateID;
     }
 
-    public void setComnStateID(String comnStateID) {
+    public void setComnStateID(int comnStateID) {
         this.comnStateID = comnStateID;
     }
 
@@ -292,11 +292,11 @@ public class ApplicantInfoModel {
         this.comnStateName = comnStateName;
     }
 
-    public String getDistID() {
+    public int getDistID() {
         return distID;
     }
 
-    public void setDistID(String distID) {
+    public void setDistID(int distID) {
         this.distID = distID;
     }
 
@@ -308,11 +308,11 @@ public class ApplicantInfoModel {
         this.districtName = districtName;
     }
 
-    public String getAgencyOffID() {
+    public int getAgencyOffID() {
         return agencyOffID;
     }
 
-    public void setAgencyOffID(String agencyOffID) {
+    public void setAgencyOffID(int agencyOffID) {
         this.agencyOffID = agencyOffID;
     }
 
@@ -340,11 +340,11 @@ public class ApplicantInfoModel {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -476,11 +476,11 @@ public class ApplicantInfoModel {
         this.villageName = villageName;
     }
 
-    public String getLgdCodeId() {
+    public int getLgdCodeId() {
         return lgdCodeId;
     }
 
-    public void setLgdCodeId(String lgdCodeId) {
+    public void setLgdCodeId(int lgdCodeId) {
         this.lgdCodeId = lgdCodeId;
     }
 
@@ -492,11 +492,11 @@ public class ApplicantInfoModel {
         this.unitDistrict = unitDistrict;
     }
 
-    public String getLgdCode() {
+    public int getLgdCode() {
         return lgdCode;
     }
 
-    public void setLgdCode(String lgdCode) {
+    public void setLgdCode(int lgdCode) {
         this.lgdCode = lgdCode;
     }
 
@@ -516,19 +516,19 @@ public class ApplicantInfoModel {
         this.unitActivityTypeId = unitActivityTypeId;
     }
 
-    public boolean isEDPTraining() {
+    public int isEDPTraining() {
         return isEDPTraining;
     }
 
-    public void setEDPTraining(boolean EDPTraining) {
+    public void setEDPTraining(int EDPTraining) {
         isEDPTraining = EDPTraining;
     }
 
-    public boolean isUnitLocationSame() {
+    public int isUnitLocationSame() {
         return isUnitLocationSame;
     }
 
-    public void setUnitLocationSame(boolean unitLocationSame) {
+    public void setUnitLocationSame(int unitLocationSame) {
         isUnitLocationSame = unitLocationSame;
     }
 
@@ -540,43 +540,43 @@ public class ApplicantInfoModel {
         this.edpTrainingInst = edpTrainingInst;
     }
 
-    public String getCapitalExpd() {
+    public double getCapitalExpd() {
         return capitalExpd;
     }
 
-    public void setCapitalExpd(String capitalExpd) {
+    public void setCapitalExpd(double capitalExpd) {
         this.capitalExpd = capitalExpd;
     }
 
-    public String getWorkingCapital() {
+    public double getWorkingCapital() {
         return workingCapital;
     }
 
-    public void setWorkingCapital(String workingCapital) {
+    public void setWorkingCapital(double workingCapital) {
         this.workingCapital = workingCapital;
     }
 
-    public String getTotalProjectCost() {
+    public double getTotalProjectCost() {
         return totalProjectCost;
     }
 
-    public void setTotalProjectCost(String totalProjectCost) {
+    public void setTotalProjectCost(double totalProjectCost) {
         this.totalProjectCost = totalProjectCost;
     }
 
-    public String getEmployment() {
+    public int getEmployment() {
         return employment;
     }
 
-    public void setEmployment(String employment) {
+    public void setEmployment(int employment) {
         this.employment = employment;
     }
 
-    public String getFinBankID1() {
+    public int getFinBankID1() {
         return finBankID1;
     }
 
-    public void setFinBankID1(String finBankID1) {
+    public void setFinBankID1(int finBankID1) {
         this.finBankID1 = finBankID1;
     }
 
@@ -668,11 +668,11 @@ public class ApplicantInfoModel {
         this.bankDist2 = bankDist2;
     }
 
-    public boolean isAvailCGTMSE() {
-        return isAvailCGTMSE;
+    public int isAvailCGTMSE(int isAvailCGTMSE) {
+        return this.isAvailCGTMSE;
     }
 
-    public void setAvailCGTMSE(boolean availCGTMSE) {
+    public void setAvailCGTMSE(int availCGTMSE) {
         isAvailCGTMSE = availCGTMSE;
     }
 
@@ -700,27 +700,27 @@ public class ApplicantInfoModel {
         this.isPanVerified = isPanVerified;
     }
 
-    public boolean isDeclrAccept() {
+    public int isDeclrAccept() {
         return isDeclrAccept;
     }
 
-    public void setDeclrAccept(boolean declrAccept) {
+    public void setDeclrAccept(int declrAccept) {
         isDeclrAccept = declrAccept;
     }
 
-    public String getSchemeID() {
+    public int getSchemeID() {
         return schemeID;
     }
 
-    public void setSchemeID(String schemeID) {
+    public void setSchemeID(int schemeID) {
         this.schemeID = schemeID;
     }
 
-    public boolean isCharAppliAccepted() {
+    public int isCharAppliAccepted() {
         return isCharAppliAccepted;
     }
 
-    public void setCharAppliAccepted(boolean charAppliAccepted) {
+    public void setCharAppliAccepted(int charAppliAccepted) {
         isCharAppliAccepted = charAppliAccepted;
     }
 

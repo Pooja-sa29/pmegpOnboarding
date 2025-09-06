@@ -126,7 +126,7 @@
             android:background="@drawable/bg_card"
             android:padding="16dp"
             android:layout_margin="12dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:elevation="4dp">
 
             <LinearLayout
@@ -135,44 +135,30 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Application ID"
                     android:textSize="14sp"
+                    android:padding="5dp"
                     android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="KVMH-2025000415"
-                    android:textSize="14sp"
-                    android:textColor="@color/orange"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Applicant Name"
                     android:textSize="14sp"
+                    android:padding="5dp"
                     android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nilotpal Jain"
+                    android:text="Application Status"
+                    android:padding="5dp"
                     android:textSize="14sp"
-                    android:textColor="@color/orange"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -180,23 +166,39 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:gravity="center">
-
+                android:padding="5dp"
+                >
                 <TextView
+                    android:id="@+id/appId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Application Status"
+                    android:text="KVMH-2025000415"
+                    android:padding="5dp"
                     android:textSize="14sp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/orange"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/appName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nilotpal Jain"
+                    android:textSize="14sp"
+                    android:padding="5dp"
+                    android:textColor="@color/orange"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/appDoc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Document Uploaded"
                     android:textSize="14sp"
+                    android:padding="5dp"
                     android:textColor="@color/orange"
                     android:textStyle="bold" />
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

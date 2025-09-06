@@ -9,7 +9,9 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyShortCodeResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyShortCodes;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDataModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantInfoModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantUpdateResult;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicationResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailResponce;
@@ -35,6 +37,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.SubDistrictRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SubDistrictResponce;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UidRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UnitDetailResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.UnitTypeIdModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UnitTypeModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailRequestModel;
@@ -102,7 +105,7 @@ public interface ApiServices {
     Call<List<BankDetailResponce>> getBankDetailsData(@Body BankDetailRequest bankDetailRequest);
 
     @POST("MobileApp/GetNIC_DataLevelOne")
-    Call<List<NICDevisionModel>> getNICDevisionData(@Body UnitTypeModel unitActivityRequest);
+    Call<List<NICDevisionModel>> getNICDevisionData(@Body UnitTypeIdModel unitidRequest);
 
     @POST("MobileApp/GetNIC_DataLevelTwo")
     Call<List<NICGroupModel>> getNICGroupData(@Body NICDevisionModel nicCodeRequest);
@@ -138,4 +141,7 @@ public interface ApiServices {
 
     @POST("MobileApp/ScoreCard")
     Call<ScoreCard>  getScoreCardData(@Body ApplicantRequest applId);
+
+    @POST("MobileApp/UpdateApplicantData")
+    Call<ApplicantUpdateResult>  updateApplicantData(@Body ApplicantInfoModel applicantInfoModel);
 }
