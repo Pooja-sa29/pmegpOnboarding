@@ -1,6 +1,7 @@
 package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -68,6 +69,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.utils.TrustMethods;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,6 +77,7 @@ import retrofit2.Response;
 
 public class ApplicationFragment extends BaseFormFragment {
     private ApiServices apiService;
+    ApplicantDataModel applicantDataModel;
     private List<CardView> allCards;
     private List<TextView> allTextViews;
 
@@ -82,24 +85,33 @@ public class ApplicationFragment extends BaseFormFragment {
     TextView agency_type_state,agency_type_pin,agency_type_district,agency_type,agency_type_mobile,agency_type_email,txt_application_layout,app_txt_communicationLayout,txtimplementing_agency_layout,app_txt_unitlayout,app_txt_projectinfo_Layout,app_txt_primary_finance_bank_layout,app_txt_altfbank_Layout,app_txt_other_info_Layout;
     CardView cv_application,app_cv_communication_address,app_cv_implementing_agency,app_cv_unitAddress,app_cv_projectinfo,app_cv_primary_Financing_bank,app_cv_alternate_Financing_bank,app_cv_otherInfo;
     Button app_btn_district_change,app_alt_btn_ifsc_code,app_btn_ifsc_code,app_btn_updateform,app_btn_show_nic_code_list,app_btn_industry_activity,app_btn_edpSelection;
-    EditText  app_email,app_mobile_number,app_alternate_mobile_number,app_pin_number,app_adharcardno,app_district,app_taluka_block_name,app_pannumber,app_nameofapplicant,app_dob,app_age,app_communication_address,app_unitaddress,app_unitLoc,app_unitpincode,app_lgd_code,app_edp_training_insti_name,app_capital_exp,app_workingcapital,app_totalexp,app_employee_count,app_ifscbank_code,app_branch_name,app_primary_address,app_pf_districtEd,app_alt_ifscbank_code,app_alt_primary_address,app_alt_pf_districtEd;
+    EditText  app_email,app_mobile_number,app_alternate_mobile_number,app_pin_number,app_adharcardno,app_district,app_taluka_block_name,app_pannumber,app_nameofapplicant,app_dob,app_age,app_communication_address,app_unitaddress,app_unitLoc,app_unitpincode,app_lgd_code,app_edp_training_insti_name,app_capital_exp,app_workingcapital,app_totalexp,app_employee_count,app_ifscbank_code,app_branch_name,app_alt_branch_name,app_primary_address,app_pf_districtEd,app_alt_ifscbank_code,app_alt_primary_address,app_alt_pf_districtEd;
     Spinner app_implementing_agency_txt,app_titleSpinner,app_spinner_about_us_spinner,app_iastateSpinner,app_activityspinner,app_agencydistrictSpinner,app_unitvillagenamespinner,app_unitsubdistrictnameSpinner,app_unitdistrictnameList,app_spinner_gender,app_social_category_spinner,app_special_category_spinner,app_qualificationspinner,app_state_spinner,app_bank_spinner_list,app_alt_bank_spinner_list;
     CheckBox app_agencyTypecheck,app_checkbox_availt_note,app_form_check;
     TextView app_agencyTypeName;
     RecyclerView app_rv_product;
     RadioGroup app_edp_radioGrp,app_edp_subgrp_radioGrp,app_cgtmse_radioGrp;
     ArrayAdapter<String> adapter;
+    ArrayAdapter<String> socialCatAdapter;
+    List<AgencyModel> agencyModelList;
     List<String> stateNamesList;
     List<String> qualificationNameList;
     List<String> specialCatnameList;
     List<String> socialCatnameList;
+    List<UnitTypeModel> unittypeList;
+    List<SocialCategory> socialCategoryList;
+    List<SpecialCategory> specialCategoryList;
     List<String> informationSourceList;
     List<String> titleList = new ArrayList<String>();
     List<String> genderInfoList;
     List<DistrictModel> districtList;
     List<AgencyRequest> agencyRequestList;
+    private boolean isPreselecting = false;
+    private boolean isInitialLoad = true;
+    String comn_district;
+    String unit_district;
 
-    String selectedPincode,selectedVillageName,subdistrictName,selectedNodalCode,agencyName,selectedAgencyCode,selectedAgency_Code,selectedBankName2,alt_selectedCityName,selectedBankName1,selectedCityName,selectedQualDesc,selectedQualCode,selectedSocialCatCode,selectedSpecialCatCode,selectedunittype,selectedStateCode,state_shortCode,state_code,selectedStateCodeIa,statename,state_zonal_code,selectedDistrictCode,districtCode,district_name;
+    String selectedDistrictName,selectedPincode,selectedVillageName,subdistrictName,selectedNodalCode,agencyName,selectedAgencyCode,selectedAgency_Code,selectedBankName2,alt_selectedCityName,selectedBankName1,selectedCityName,selectedQualDesc,selectedQualCode,selectedSocialCatCode,selectedSpecialCatCode,selectedunittype,selectedStateCode,state_shortCode,state_code,selectedStateCodeIa,statename,state_zonal_code,selectedDistrictCode,districtCode,district_name;
     int selectedagencyoffId,agentId,stateId,districtId,activityUnitType,selectedBankListID,alt_selectedBankListID,selectedBankId2;
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -108,7 +120,7 @@ public class ApplicationFragment extends BaseFormFragment {
         View view =  inflater.inflate(R.layout.layout_application_fragment, container, false);
         apiService = ApiClient.getClient().create(ApiServices.class);
 
-        implementing_type_agency_layout = view.findViewById(R.id.implementing_type_agency_layout);
+        implementing_type_agency_layout = view.findViewById(R.id.app_implementing_type_agency_layout);
         app_adharcardno = view.findViewById(R.id.app_adharcardno);
         app_pannumber = view.findViewById(R.id.app_pannumber);
         app_titleSpinner = view.findViewById(R.id.app_titleSpinner);
@@ -162,6 +174,7 @@ public class ApplicationFragment extends BaseFormFragment {
         app_ifscbank_code = view.findViewById(R.id.app_ifscbank_code);
         app_btn_ifsc_code = view.findViewById(R.id.app_btn_ifsc_code);
         app_branch_name = view.findViewById(R.id.app_branch_name);
+        app_alt_branch_name = view.findViewById(R.id.app_alt_branch_name);
         app_primary_address = view.findViewById(R.id.app_primary_address);
         app_pf_districtEd = view.findViewById(R.id.app_pf_districtEd);
         app_alt_bank_spinner_list = view.findViewById(R.id.app_alt_bank_spinner_list);
@@ -183,7 +196,6 @@ public class ApplicationFragment extends BaseFormFragment {
         app_txt_primary_finance_bank_layout = view.findViewById(R.id.app_txt_primary_finance_bank_layout);
         app_txt_altfbank_Layout = view.findViewById(R.id.app_txt_altfbank_Layout);
         app_txt_other_info_Layout = view.findViewById(R.id.app_txt_other_info_Layout);
-
 
         cv_application = view.findViewById(R.id.cv_application);
         app_cv_communication_address = view.findViewById(R.id.app_cv_communication_address);
@@ -214,7 +226,11 @@ public class ApplicationFragment extends BaseFormFragment {
 
 
         closeAllCards();
-
+        app_btn_district_change.setOnClickListener(v -> {
+            if (selectedStateCode != null) {
+                fetchDistrictList(selectedStateCode);
+            }
+        });
 
         txt_application_layout.setOnClickListener(v -> toggleSection(cv_application, txt_application_layout));
         app_txt_communicationLayout.setOnClickListener(v -> toggleSection(app_cv_communication_address, app_txt_communicationLayout));
@@ -227,7 +243,7 @@ public class ApplicationFragment extends BaseFormFragment {
 
         app_btn_updateform.setOnClickListener(v -> {
             ApplicantInfoModel applicant = new ApplicantInfoModel();
-            ApplicantDataModel applicantDataModel = new ApplicantDataModel();
+             applicantDataModel = new ApplicantDataModel();
             ApplicantDetailData applicantDetailData = new ApplicantDetailData();
 
             applicant.setApplID(AppConstant.getApplId());
@@ -238,9 +254,12 @@ public class ApplicationFragment extends BaseFormFragment {
             applicant.setAgencyID(applicantDataModel.getAgencyID());
             applicant.setAgencyCode(applicantDataModel.getAgencyCode());
             applicant.setStateID(applicantDataModel.getStateID());
+
+
             applicant.setStateName(applicantDataModel.getStateName());
             applicant.setComnStateID(applicantDataModel.getComnStateID());
             applicant.setComnStateName(applicantDataModel.getComnStateName());
+            applicant.setComnDistrict(applicantDataModel.getComnDistrict());
             applicant.setDistID(applicantDataModel.getDistID());
             applicant.setDistrictName(applicantDataModel.getDistrictName());
             applicant.setAgencyOffID(applicantDataModel.getAgencyOffID());
@@ -302,9 +321,34 @@ public class ApplicationFragment extends BaseFormFragment {
             SaveApplicationForm(applicant);
 
         });
+
         initData();
 
         return view;
+    }
+
+    private void fetchDistrictList(String code) {
+        System.out.println("state_code"+code);
+        DistrictModel request = new DistrictModel(code,"");
+        apiService.getDistrictList(request).enqueue(new Callback<List<DistrictModel>>() {
+            @Override
+            public void onResponse(Call<List<DistrictModel>> call, Response<List<DistrictModel>> response) {
+                if (response.isSuccessful()) {
+                     applicantDataModel = new ApplicantDataModel();
+                    districtList = response.body();
+                    System.out.println("districtList"+districtList.size());
+
+                    showDistrictDialog(districtList);
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<DistrictModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private void SaveApplicationForm(ApplicantInfoModel applicant) {
@@ -316,14 +360,14 @@ public class ApplicationFragment extends BaseFormFragment {
 
                     Log.d("API_RESPONSE", new Gson().toJson(status));
 
-                    if (status.isSuccess()) {
-                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
-                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
-                        startActivity(i);
-
-                    } else {
-                        Toast.makeText(getContext(), "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+//                    if (status.isSuccess()) {
+//                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
+//                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
+//                        startActivity(i);
+//
+//                    } else {
+//                        Toast.makeText(getContext(), "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
                 } else {
                     Toast.makeText(getContext(), "Unexpected response", Toast.LENGTH_SHORT).show();
                 }
@@ -334,6 +378,38 @@ public class ApplicationFragment extends BaseFormFragment {
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void showDistrictDialog(List<DistrictModel> districtList) {
+        if (districtList == null || districtList.isEmpty()) {
+            Toast.makeText(getContext(), "No districts found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] districtItems = new String[districtList.size()];
+        for (int i = 0; i < districtList.size(); i++) {
+            districtItems[i] = districtList.get(i).getDistrictCode() + " ~ " + districtList.get(i).getDistrictName();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Select District");
+        builder.setItems(districtItems, (dialog, which) -> {
+            DistrictModel selected = districtList.get(which);
+
+
+
+            if (app_district == null) {
+                app_district = requireActivity().findViewById(R.id.district);
+            }
+
+            if (app_district != null) {
+                app_district.setText(selected.getDistrictName());
+                selectedDistrictName = selected.getDistrictName();
+            } else {
+                Log.e("DistrictDialog", "No EditText with id 'district' found in fragment or activity layout!");
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
     private void initData() {
@@ -348,12 +424,12 @@ public class ApplicationFragment extends BaseFormFragment {
         app_titleSpinner.setAdapter(adapter);
 
         fetchStateList();
-        fetchAgencyList();
+        fetchAgencyList("");
         fetchQualificationList();
         fetchSpecialCategoryList();
         fetchSocialCategoryList();
         fetchInformationSourceList();
-        fetchUnitTypeData();
+        fetchUnitTypeData("");
         fetchGenderList();
         fetchBankList();
 
@@ -381,6 +457,8 @@ public class ApplicationFragment extends BaseFormFragment {
                     app_state_spinner.setAdapter(adapter);
 //                    setSpinnerToAadharState();
 
+
+
                     ArrayAdapter<String> stateadapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, stateNamesList);
                     stateadapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     app_iastateSpinner.setAdapter(stateadapter);
@@ -393,7 +471,7 @@ public class ApplicationFragment extends BaseFormFragment {
                                 StateModel selectedState = states.get(position - 1);
                                 selectedStateCode = selectedState.getStateCode();
                                 System.out.println("Selected stateCode: " + selectedStateCode);
-                                ApplicantDataModel applicant = new ApplicantDataModel();
+                                applicantDataModel  = new ApplicantDataModel();
 
                                 state_shortCode = selectedState.getStateShortCode(); // "MH"
                                 state_code = String.valueOf(selectedState.getStateId());
@@ -419,8 +497,12 @@ public class ApplicationFragment extends BaseFormFragment {
                                 statename = states.get(position -1).getStateName();
                                 state_zonal_code = states.get(position-1).getState_zone_code();
 
-                                fetchDistrictListforIA(selectedStateCodeIa);
 
+                                if (isInitialLoad) {
+                                    fetchDistrictListforIA(selectedStateCodeIa,comn_district,unit_district);// keep Nagpur
+                                } else {
+                                    fetchDistrictListforIA(selectedStateCodeIa, "",""); // reset on user selection
+                                }
                             } else {
                                 selectedStateCodeIa = null;
                             }
@@ -440,85 +522,181 @@ public class ApplicationFragment extends BaseFormFragment {
             }
         });
     }
-    private void fetchDistrictListforIA(String selectedStateCode) {
+//    private void fetchDistrictListforIA(String selectedStateCode,String preSelectedDistrict) {
+//        System.out.println("preSelectedDistrict "+preSelectedDistrict);
+//        DistrictModel request = new DistrictModel(selectedStateCode,"");
+//        apiService.getDistrictList(request).enqueue(new Callback<List<DistrictModel>>() {
+//            @Override
+//            public void onResponse(Call<List<DistrictModel>> call, Response<List<DistrictModel>> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    districtList = response.body();
+//                    System.out.println("IA districtList size: " + districtList.size());
+//
+//                    List<String> districtNames = new ArrayList<>();
+//                    districtNames.add(0, "--Select District--");
+//                    for (DistrictModel district : districtList) {
+//                        districtNames.add(district.getDistrictName());
+//
+//                    }
+//
+//                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+//                            R.layout.spinner_selected_item, districtNames);
+//                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+//                    app_agencydistrictSpinner.setAdapter(adapter);
+//
+//                    ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(
+//                            getContext(),
+//                            R.layout.spinner_selected_item,
+//                            districtNames
+//                    );
+//                    unitAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+//                    app_unitdistrictnameList.setAdapter(unitAdapter);
+//
+//                    if (preSelectedDistrict != null && !preSelectedDistrict.trim().isEmpty()) {
+//                        app_agencydistrictSpinner.post(() -> {
+//                            setAgencyDistrictSelection(preSelectedDistrict); // e.g. "Nagpur"
+//                        });
+//                    }
+//                    app_agencydistrictSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+//                        @Override
+//                        public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+//                            if (position > 0) {
+//                                DistrictModel selectedDistrict = districtList.get(position - 1);
+//                                selectedDistrictCode = selectedDistrict.getDistrictCode();
+//                                districtId = districtList.get(position - 1).getDistrictId();
+//                                districtCode = districtList.get(position - 1).getDistrictCode();
+//                                district_name = districtList.get(position - 1).getDistrictName();
+//                                System.out.println("Selected IA districtCode: " + selectedDistrictCode+ district_name+districtCode+districtId);
+//
+//                                for (int i = 0; i < districtList.size(); i++) {
+//                                    if (districtList.get(i).getDistrictCode().equals(selectedDistrictCode)) {
+//                                        int finalI = i;
+//                                        app_unitdistrictnameList.post(() -> {
+//                                            app_unitdistrictnameList.setSelection(finalI + 1, true);
+//                                            System.out.println("unitdistrictnameListspinner set to position: " + (finalI + 1));
+//                                        });
+//                                        break;
+//                                    }
+//                                }
+//                                agencyRequestList = new ArrayList<>();
+//                                implementing_type_agency_layout.setVisibility(View.VISIBLE);
+//                                AgencyRequest agencyRequest = new AgencyRequest(1,stateId,districtId);
+//                                agencyRequestList.add(agencyRequest);
+//                                fetchSubdistrictList(String.valueOf(districtId));
+//                                fetchAgencyOffDetails(agencyRequest);
+//
+//                            }
+//                        }
+//
+//
+//                        @Override
+//                        public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+//                    });
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<DistrictModel>> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
+//
+//
+//    }
+private void fetchDistrictListforIA(String selectedStateCode, String preSelectedComnDistrict, String preSelectedUnitDistrict) {
 
-        DistrictModel request = new DistrictModel(selectedStateCode,"");
-        apiService.getDistrictList(request).enqueue(new Callback<List<DistrictModel>>() {
-            @Override
-            public void onResponse(Call<List<DistrictModel>> call, Response<List<DistrictModel>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    districtList = response.body();
-                    System.out.println("IA districtList size: " + districtList.size());
+    DistrictModel request = new DistrictModel(selectedStateCode, "");
 
-                    List<String> districtNames = new ArrayList<>();
-                    districtNames.add(0, "--Select District--");
-                    for (DistrictModel district : districtList) {
-                        districtNames.add(district.getDistrictName());
+    apiService.getDistrictList(request).enqueue(new Callback<List<DistrictModel>>() {
+        @Override
+        public void onResponse(Call<List<DistrictModel>> call, Response<List<DistrictModel>> response) {
+            if (response.isSuccessful() && response.body() != null) {
+                districtList = response.body();
+                Log.d("API", "IA districtList size: " + districtList.size());
 
+                // prepare district names for spinner
+                List<String> districtNames = new ArrayList<>();
+                districtNames.add("--Select District--");
+                for (DistrictModel district : districtList) {
+                    districtNames.add(district.getDistrictName());
+                }
+
+                // Agency spinner adapter
+                ArrayAdapter<String> agencyAdapter = new ArrayAdapter<>(
+                        getContext(),
+                        R.layout.spinner_selected_item,
+                        districtNames
+                );
+                agencyAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                app_agencydistrictSpinner.setAdapter(agencyAdapter);
+
+                // Unit spinner adapter
+                ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(
+                        getContext(),
+                        R.layout.spinner_selected_item,
+                        districtNames
+                );
+                unitAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                app_unitdistrictnameList.setAdapter(unitAdapter);
+
+                // --- Preselect agency district ---
+                if (preSelectedComnDistrict != null && !preSelectedComnDistrict.trim().isEmpty()) {
+                    int index = districtNames.indexOf(preSelectedComnDistrict);
+                    if (index >= 0) {
+                        isPreselecting = true;
+                        app_agencydistrictSpinner.setSelection(index, false);
+                        Log.i("SpinnerSelection", "Pre-selecting agency district: " + preSelectedComnDistrict + " at index " + index);
+                    }
+                }
+
+                // --- Preselect unit district ---
+                if (preSelectedUnitDistrict != null && !preSelectedUnitDistrict.trim().isEmpty()) {
+                    int index = districtNames.indexOf(preSelectedUnitDistrict);
+                    if (index >= 0) {
+                        app_unitdistrictnameList.setSelection(index, false);
+                        Log.i("SpinnerSelection", "Pre-selecting unit district: " + preSelectedUnitDistrict + " at index " + index);
+                    }
+                }
+
+                // Handle user selection for agency district
+                app_agencydistrictSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        if (position > 0) {
+                            DistrictModel selectedDistrict = districtList.get(position - 1);
+                            districtId = selectedDistrict.getDistrictId();
+                            districtCode = selectedDistrict.getDistrictCode();
+                            district_name = selectedDistrict.getDistrictName();
+
+                            Log.d("SpinnerSelection", "User selected: " + district_name);
+
+                            app_unitdistrictnameList.setSelection(position, false);
+
+                            agencyRequestList = new ArrayList<>();
+                            implementing_type_agency_layout.setVisibility(View.VISIBLE);
+                            AgencyRequest agencyRequest = new AgencyRequest(1, stateId, districtId);
+                            agencyRequestList.add(agencyRequest);
+
+                            fetchSubdistrictList(String.valueOf(districtId));
+                            fetchAgencyOffDetails(agencyRequest);
+                        }
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                            R.layout.spinner_selected_item, districtNames);
-                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-                    app_agencydistrictSpinner.setAdapter(adapter);
-
-                    ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(
-                            getContext(),
-                            R.layout.spinner_selected_item,
-                            districtNames
-                    );
-                    unitAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-                    app_unitdistrictnameList.setAdapter(unitAdapter);
-
-
-
-                    app_agencydistrictSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                            if (position > 0) {
-                                DistrictModel selectedDistrict = districtList.get(position - 1);
-                                selectedDistrictCode = selectedDistrict.getDistrictCode();
-                                districtId = districtList.get(position - 1).getDistrictId();
-                                districtCode = districtList.get(position - 1).getDistrictCode();
-                                district_name = districtList.get(position - 1).getDistrictName();
-                                System.out.println("Selected IA districtCode: " + selectedDistrictCode+ district_name+districtCode+districtId);
-
-                                for (int i = 0; i < districtList.size(); i++) {
-                                    if (districtList.get(i).getDistrictCode().equals(selectedDistrictCode)) {
-                                        int finalI = i;
-                                        app_unitdistrictnameList.post(() -> {
-                                            app_unitdistrictnameList.setSelection(finalI + 1, true);
-                                            System.out.println("unitdistrictnameListspinner set to position: " + (finalI + 1));
-                                        });
-                                        break;
-                                    }
-                                }
-                                agencyRequestList = new ArrayList<>();
-                                implementing_type_agency_layout.setVisibility(View.VISIBLE);
-                                AgencyRequest agencyRequest = new AgencyRequest(1,stateId,districtId);
-                                agencyRequestList.add(agencyRequest);
-                                fetchSubdistrictList(String.valueOf(districtId));
-                                fetchAgencyOffDetails(agencyRequest);
-
-                            }
-                        }
-
-
-                        @Override
-                        public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-                    });
-
-                }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
             }
+        }
 
-            @Override
-            public void onFailure(Call<List<DistrictModel>> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+        @Override
+        public void onFailure(Call<List<DistrictModel>> call, Throwable t) {
+            t.printStackTrace();
+        }
+    });
+}
 
-
-    }
 
     private void fetchAgencyOffDetails(AgencyRequest agencyRequest) {
         apiService.getAgencyOffDetails(agencyRequest).enqueue(new Callback<List<AgencyResponse>>() {
@@ -527,24 +705,29 @@ public class ApplicationFragment extends BaseFormFragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<AgencyResponse> agencyResponses = response.body();
                     System.out.println("agencyResponses" +agencyResponses.size());
-                    AgencyResponse agency = agencyResponses.get(0);
 
-                    selectedagencyoffId = agency.getAgencyOffId();
-                    for (int i = 0; i < agencyRequestList.size(); i++) {
-                        if (agencyRequestList.size()!=0){
 
+                    if (agencyResponses != null && !agencyResponses.isEmpty()) {
+                        AgencyResponse agency = agencyResponses.get(0);
+
+                        selectedagencyoffId = agency.getAgencyOffId();
+                        for (int i = 0; i < agencyResponses.size(); i++) {
                             agency_type_mobile.setText(agencyResponses.get(i).getAgencyOffContactNo());
                             agency_type_email.setText(agencyResponses.get(i).getAgencyOffContactEmail());
-
                         }
+
+                        app_agencyTypeName.setText(agencyName + "-" + district_name + "-" + state_zonal_code);
+                        agency_type_state.setText(statename);
+                        agency_type_district.setText(district_name);
+                        agency_type_pin.setText(selectedPincode);
+                    } else {
+                        Log.w("AgencyFetch", "Agency response list is empty!");
+                        Toast.makeText(getContext(), "No agency details found", Toast.LENGTH_SHORT).show();
                     }
-
-                    agency_type.setText(agencyName+"-"+district_name+"-"+state_zonal_code);
-                    agency_type_state.setText(statename);
-                    agency_type_district.setText(district_name);
-
-
+                } else {
+                    Log.e("AgencyFetch", "Response failed or body is null");
                 }
+
             }
 
             @Override
@@ -689,12 +872,12 @@ public class ApplicationFragment extends BaseFormFragment {
         });
     }
 
-    private void fetchAgencyList() {
+    private void fetchAgencyList(String preselectAgencyCode) {
         apiService.getAgencyList().enqueue(new Callback<List<AgencyModel>>() {
             @Override
             public void onResponse(Call<List<AgencyModel>> call, Response<List<AgencyModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<AgencyModel> agencyModelList = response.body();
+                     agencyModelList = response.body();
                     System.out.println("agencyList" +agencyModelList.size());
 
                     List<String> agencyNames = new ArrayList<>();
@@ -709,6 +892,10 @@ public class ApplicationFragment extends BaseFormFragment {
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     app_implementing_agency_txt.setAdapter(adapter);
 
+                    if (preselectAgencyCode != null) {
+                        setSpinnerSelection(app_implementing_agency_txt, preselectAgencyCode);
+                    }
+
                     app_implementing_agency_txt.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
@@ -720,7 +907,7 @@ public class ApplicationFragment extends BaseFormFragment {
                                     String filterAgencyCodeTxt = selectedAgencyCode.split("\\s|\\(")[0];
                                     agencyName = filterAgencyCodeTxt;
                                 } else {
-                                    agencyName = ""; // Or handle appropriately
+                                    agencyName = "";
                                 }
 
                                 System.out.println("Selected agencyCode: " + selectedAgencyCode+" "+agentId);
@@ -746,6 +933,7 @@ public class ApplicationFragment extends BaseFormFragment {
             }
         });
     }
+
 
     private void fetchAgencyShortCode(AgencyModel agencyModel) {
         System.out.println("agency id " + agencyModel.getAgencyId());
@@ -904,7 +1092,7 @@ public class ApplicationFragment extends BaseFormFragment {
             @Override
             public void onResponse(Call<List<SocialCategory>> call, Response<List<SocialCategory>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<SocialCategory> socialCategoryList = response.body();
+                     socialCategoryList = response.body();
                     System.out.println("socialCategoryList" +socialCategoryList.size());
 
 
@@ -917,14 +1105,19 @@ public class ApplicationFragment extends BaseFormFragment {
 
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, socialCatnameList);
-                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-                    app_social_category_spinner.setAdapter(adapter);
+                     socialCatAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, socialCatnameList);
+                    socialCatAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                    app_social_category_spinner.setAdapter(socialCatAdapter);
                     app_social_category_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            SocialCategory socialCategory = socialCategoryList.get(position);
-                            selectedSocialCatCode = socialCategory.getLk_shortCode();
+                            if (position == 0) {
+                                selectedSocialCatCode = null;
+                            } else {
+                                SocialCategory socialCategory = socialCategoryList.get(position - 1);
+                                selectedSocialCatCode = socialCategory.getLk_shortCode();
+                            }
+
                         }
 
                         @Override
@@ -948,7 +1141,7 @@ public class ApplicationFragment extends BaseFormFragment {
             @Override
             public void onResponse(Call<List<SpecialCategory>> call, Response<List<SpecialCategory>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<SpecialCategory> specialCategoryList = response.body();
+                     specialCategoryList = response.body();
                     System.out.println("qualificationModelList" +specialCategoryList.size());
 
                     specialCatnameList = new ArrayList<>();
@@ -965,8 +1158,14 @@ public class ApplicationFragment extends BaseFormFragment {
                     app_special_category_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            SpecialCategory specialCategory = specialCategoryList.get(position);
-                            selectedSpecialCatCode= specialCategory.getLk_shortCode();
+//                            SpecialCategory specialCategory = specialCategoryList.get(position);
+//                            selectedSpecialCatCode= specialCategory.getLk_shortCode();
+                            if (position == 0) {
+                                selectedSpecialCatCode = null;
+                            } else {
+                                SpecialCategory specialCategory = specialCategoryList.get(position - 1);
+                                selectedSpecialCatCode = specialCategory.getLk_shortCode();
+                            }
                         }
 
                         @Override
@@ -1046,12 +1245,12 @@ public class ApplicationFragment extends BaseFormFragment {
             }
         });
     }
-    private void fetchUnitTypeData() {
+    private void fetchUnitTypeData(String preSelectedUnitActivityName) {
         apiService.getUnitType().enqueue(new Callback<List<UnitTypeModel>>() {
             @Override
             public void onResponse(Call<List<UnitTypeModel>> call, Response<List<UnitTypeModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<UnitTypeModel> unittypeList = response.body();
+                    unittypeList = response.body();
                     System.out.println("agencyList" +unittypeList.size());
 
                     List<String> unitNameList = new ArrayList<>();
@@ -1065,6 +1264,12 @@ public class ApplicationFragment extends BaseFormFragment {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, unitNameList);
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     app_activityspinner.setAdapter(adapter);
+
+                    if (preSelectedUnitActivityName != null && !preSelectedUnitActivityName.trim().isEmpty()) {
+                        app_activityspinner.post(() -> {
+                            setUnitTypeSpinnerSelection(app_activityspinner, unitNameList, preSelectedUnitActivityName);
+                        });
+                    }
 
                     app_activityspinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
                         @Override
@@ -1117,6 +1322,8 @@ public class ApplicationFragment extends BaseFormFragment {
                 if (response.isSuccessful() && response.body() != null) {
                     ApplicantDetailData data = response.body().getData();
                     Log.d("API_RESPONSE", new Gson().toJson(data));
+
+
                     setDataToUI(data);
                 }
             }
@@ -1130,7 +1337,7 @@ public class ApplicationFragment extends BaseFormFragment {
 
     private void setDataToUI(ApplicantDetailData data) {
         if (data == null) return;
-
+        System.out.println("data_applicant "+new Gson().toJson(data));
 
         app_adharcardno.setText(data.getAadharNo());
         app_pannumber.setText(data.getPANNo());
@@ -1138,8 +1345,13 @@ public class ApplicationFragment extends BaseFormFragment {
         app_dob.setText(data.getDateofBirth().equals("null")?"": TrustMethods.convertUnixDateToDate(data.getDateofBirth()));
         app_age.setText(String.valueOf(data.getAge()));
         app_communication_address.setText(data.getComnAddress());
+        app_district.setText(data.getComnDistrict());
+        app_taluka_block_name.setText(data.getComnTaluka());
+        app_pin_number.setText(data.getComnPin());
         app_unitaddress.setText(data.getUnitAddress());
         app_unitpincode.setText(data.getUnitPin());
+        app_unitLoc.setText(data.getUnitLocation());
+
 
 
         app_mobile_number.setText(data.getMobileNo1());
@@ -1159,26 +1371,153 @@ public class ApplicationFragment extends BaseFormFragment {
         app_ifscbank_code.setText(data.getBankIFSC1());
         app_branch_name.setText(data.getBankBranch1());
         app_primary_address.setText(data.getBankAddress1());
+        app_pf_districtEd.setText(data.getBankDist1());
 
+        System.out.println("alt_bank"+data.getBankIFSC2()+ " "+data.getBankBranch2()+" "+data.getBankAddress2()+" "+data.getBankDist2());
+
+        app_alt_btn_ifsc_code.setText(data.getBankIFSC2() != null ? data.getBankIFSC2() : "");
+        app_alt_branch_name.setText(data.getBankBranch2() != null ? data.getBankBranch2() : "");
+        app_alt_primary_address.setText(data.getBankAddress2() != null ? data.getBankAddress2() :"");
+        app_alt_pf_districtEd.setText(data.getBankDist2() != null ? data.getBankDist2() : "");
 
         app_lgd_code.setText(String.valueOf(data.getLgdCodeId()));
 
-        setSpinnerSelection(app_spinner_gender, data.getGender());
-        setSpinnerSelection(app_social_category_spinner, data.getSocialCatID());
-        setSpinnerSelection(app_special_category_spinner, data.getSpecialCatID());
+        String genderCode = data.getGender();
+        String genderText = null;
+        if ("M".equalsIgnoreCase(genderCode)) genderText = "Male";
+        else if ("F".equalsIgnoreCase(genderCode)) genderText = "Female";
+        else if ("O".equalsIgnoreCase(genderCode)) genderText = "Other";
+
+
+        if(data.getComnStateName() != null){
+            setSpinnerSelection(app_state_spinner, data.getComnStateName());
+
+        }
+        if(data.getState_Name() != null){
+            setSpinnerSelection(app_iastateSpinner, data.getStateName());
+
+        }
+
+
+        System.out.println("Data---"+data.getComnDistrict() +" "+data.getUnitDistrict());
+         comn_district = data.getComnDistrict();
+         unit_district = data.getUnitDistrict();
+        if (data.getComnDistrict() != null) {
+            fetchDistrictListforIA(data.getState_Code(),data.getComnDistrict(),data.getUnitDistrict());
+            isInitialLoad = true;
+        }
+
+
+        if (data.getAgencyCode() != null) {
+            setAgencySelection(data.getAgencyCode());
+        }
+        if (genderText != null) {
+            setSpinnerSelection(app_spinner_gender, genderText);
+        }
+
+        if (data.getSocialCatID() != null) {
+            setSocialCategorySelection(data.getSocialCatID());
+        }
+
+        if (data.getSpecialCatID() != null) {
+            setSpecialCategorySelection(data.getSpecialCatID());
+        }
+
         setSpinnerSelection(app_qualificationspinner, data.getQualDesc());
+
+        System.out.println("activity_type "+data.getUnitActivityType());//type is null
+        if (data.getUnitActivityType()!= null) {
+            fetchUnitTypeData(data.getUnitActivityType());
+        }
     }
 
-    private void setSpinnerSelection(Spinner spinner, String value) {
-        if (value == null) return;
-        for (int i = 0; i < spinner.getCount(); i++) {
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(value)) {
-                spinner.setSelection(i);
+
+
+    private void setUnitActivityTypeSelection(String unit) {
+        if (unit == null || districtList == null || districtList.isEmpty()) return;
+
+        for (int i = 0; i < districtList.size(); i++) {
+            DistrictModel districtModel = districtList.get(i);
+            String target = unit.trim();
+            String item = districtModel.getDistrictName();
+            if (target.equalsIgnoreCase(unit.trim()) ||
+                    target.toUpperCase().startsWith(unit.trim().toUpperCase())) {
+                int spinnerIndex = i + 1;
+                Log.i("SpinnerSelection", "Pre-selecting unit district: " + item + " at index " + spinnerIndex);
+                app_unitdistrictnameList.setSelection(spinnerIndex, false);
+                return;
+            }
+        }
+    }
+
+    private void setAgencySelection(String agencyCode) {
+        if (agencyCode == null || agencyModelList == null) return;
+
+        for (int i = 0; i < agencyModelList.size(); i++) {
+            AgencyModel agency = agencyModelList.get(i);
+            String code = agency.getAgency_code();
+
+            if (code.equalsIgnoreCase(agencyCode.trim()) ||
+                    code.toUpperCase().startsWith(agencyCode.trim().toUpperCase())) {
+
+                app_implementing_agency_txt.setSelection(i + 1); // +1 for "--Select Agency--"
+                return;
+            }
+        }
+
+        Log.w("SpinnerSelection", "Agency not found in list: " + agencyCode);
+    }
+
+    private void setSocialCategorySelection(String code) {
+        if (code == null || socialCategoryList == null) return;
+
+        for (int i = 0; i < socialCategoryList.size(); i++) {
+            SocialCategory cat = socialCategoryList.get(i);
+            if (cat.getLk_shortCode().equalsIgnoreCase(code)) {
+                app_social_category_spinner.setSelection(i + 1);
+                break;
+            }
+        }
+    }
+    private void setSpecialCategorySelection(String code) {
+        if (code == null ||  specialCategoryList == null) return;
+
+        for (int i = 0; i < specialCategoryList.size(); i++) {
+            SpecialCategory cat = specialCategoryList.get(i);
+            if (cat.getLk_shortCode().equalsIgnoreCase(code)) {
+                app_special_category_spinner.setSelection(i + 1);
                 break;
             }
         }
     }
 
+    private void setSpinnerSelection(Spinner spinner, String value) {
+        if (value == null || spinner.getAdapter() == null) return;
+
+        for (int i = 0; i < spinner.getCount(); i++) {
+            String item = spinner.getItemAtPosition(i).toString().trim();
+            if (item.equalsIgnoreCase(value.trim())) {
+                spinner.setSelection(i);
+                return;
+            }
+        }
+
+        Log.w("SpinnerSelection", "Value not found in spinner: " + value);
+    }
+    private void setUnitTypeSpinnerSelection(Spinner spinner, List<String> items, String valueToSelect) {
+        if (valueToSelect == null || valueToSelect.trim().isEmpty()) return;
+
+        String target = valueToSelect.trim().toLowerCase(Locale.ROOT);
+        for (int i = 0; i < items.size(); i++) {
+            String item = items.get(i);
+            if (item != null && item.trim().toLowerCase(Locale.ROOT).equals(target)) {
+                spinner.setSelection(i, false);
+                Log.i("SpinnerSelection", "Pre-selecting: " + item + " at index " + i);
+                return;
+            }
+        }
+        Log.w("SpinnerSelection", "Value not found in spinner: " + valueToSelect);
+    }
     private void toggleSection(CardView selectedCard, TextView selectedText) {
         boolean isVisible = selectedCard.getVisibility() == View.VISIBLE;
 

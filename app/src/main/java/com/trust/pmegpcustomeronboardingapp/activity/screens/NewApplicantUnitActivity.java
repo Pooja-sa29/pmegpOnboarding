@@ -473,6 +473,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 calculateTotal();
             }
 
@@ -484,12 +485,26 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         workingcapital.addTextChangedListener(watcher);
     }
 
+    private boolean validate(double capVal, double workingVal) {
+
+        if (workingVal > capVal) {
+            workingcapital.setError("For Manufacturing, Working Capital must be less than or equal to 35% of Total Project Cost.");
+            return false;
+        }
+        return true;
+    }
     private void calculateTotal() {
         String cap = capital_exp.getText() != null ? capital_exp.getText().toString().trim() : "";
         String working_cap = workingcapital.getText() != null ? workingcapital.getText().toString().trim() : "";
 
         double capVal = cap.isEmpty() ? 0.0 : Double.parseDouble(cap);
         double workingVal = working_cap.isEmpty() ? 0.0 : Double.parseDouble(working_cap);
+
+        if (!validate(capVal, workingVal)) {
+            workingcapital.setText(""); // clear invalid input
+            totalexp.setText(String.valueOf(capVal)); // only cap value considered
+            return;
+        }
 
         double total_exp = capVal + workingVal;
         totalexp.setText(String.valueOf(total_exp));
