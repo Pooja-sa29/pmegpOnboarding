@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -70,6 +71,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,6 +90,9 @@ public class ApplicationFragment extends BaseFormFragment {
     EditText  app_email,app_mobile_number,app_alternate_mobile_number,app_pin_number,app_adharcardno,app_district,app_taluka_block_name,app_pannumber,app_nameofapplicant,app_dob,app_age,app_communication_address,app_unitaddress,app_unitLoc,app_unitpincode,app_lgd_code,app_edp_training_insti_name,app_capital_exp,app_workingcapital,app_totalexp,app_employee_count,app_ifscbank_code,app_branch_name,app_alt_branch_name,app_primary_address,app_pf_districtEd,app_alt_ifscbank_code,app_alt_primary_address,app_alt_pf_districtEd;
     Spinner app_implementing_agency_txt,app_titleSpinner,app_spinner_about_us_spinner,app_iastateSpinner,app_activityspinner,app_agencydistrictSpinner,app_unitvillagenamespinner,app_unitsubdistrictnameSpinner,app_unitdistrictnameList,app_spinner_gender,app_social_category_spinner,app_special_category_spinner,app_qualificationspinner,app_state_spinner,app_bank_spinner_list,app_alt_bank_spinner_list;
     CheckBox app_agencyTypecheck,app_checkbox_availt_note,app_form_check;
+    RadioGroup radioGroup;
+    RadioButton yesBtn,noBtn;
+    LinearLayout availLayout;
     TextView app_agencyTypeName;
     RecyclerView app_rv_product;
     RadioGroup app_edp_radioGrp,app_edp_subgrp_radioGrp,app_cgtmse_radioGrp;
@@ -187,6 +192,11 @@ public class ApplicationFragment extends BaseFormFragment {
         app_spinner_about_us_spinner = view.findViewById(R.id.app_spinner_about_us_spinner);
         app_form_check = view.findViewById(R.id.app_form_check);
         app_btn_updateform = view.findViewById(R.id.app_btn_updateform);
+
+         radioGroup = view.findViewById(R.id.app_cgtmse_radioGrp);
+         yesBtn = view.findViewById(R.id.app_yes_cgt);
+         noBtn = view.findViewById(R.id.app_No_cgt);
+         availLayout = view.findViewById(R.id.app_avail_layout);
 
         txt_application_layout = view.findViewById(R.id.txt_application_layout);
         app_txt_communicationLayout = view.findViewById(R.id.app_txt_communicationLayout);
@@ -1060,7 +1070,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
 
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_selected_item, qualificationNameList);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_selected_item, qualificationNameList);
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     app_qualificationspinner.setAdapter(adapter);
                     app_qualificationspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1429,6 +1439,26 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         if (data.getUnitActivityType()!= null) {
             fetchUnitTypeData(data.getUnitActivityType());
         }
+        System.out.println("app_checkbox "+data.isAvailCGTMSE());
+        if (data.isAvailCGTMSE()) {
+            yesBtn.setChecked(true);
+            availLayout.setVisibility(View.VISIBLE);
+            app_checkbox_availt_note.setChecked(true);
+        } else {
+            noBtn.setChecked(true);
+            availLayout.setVisibility(View.GONE);
+            app_checkbox_availt_note.setChecked(false);
+        }
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.app_yes_cgt) {
+                availLayout.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.app_No_cgt) {
+                availLayout.setVisibility(View.GONE);
+                app_checkbox_availt_note.setChecked(false); // optional
+            }
+        });
+
+
     }
 
 

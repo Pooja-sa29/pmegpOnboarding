@@ -93,27 +93,7 @@
                             android:textStyle="bold" />
                     </TableRow>
 
-                    <TableRow>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="Marks Secured"
-                            android:textColor="#000"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_marks_secured"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="97"
-                            android:textColor="#008000"
-                            android:textStyle="bold" />
-                    </TableRow>
 
                     <TableRow>
 
@@ -265,12 +245,6 @@
                                                     android:text="Selection"
                                                     android:textStyle="bold" />
 
-                                                <TextView
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:text="Marks Secured"
-                                                    android:textStyle="bold" />
 
                                                 <TextView
                                                     android:layout_width="0dp"
@@ -365,12 +339,7 @@
                                     android:text="Selection"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -468,13 +437,6 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -569,13 +531,6 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -673,13 +628,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -776,13 +725,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -879,13 +822,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -982,13 +919,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -1085,13 +1016,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -1219,12 +1144,6 @@
                                                     android:text="Selection"
                                                     android:textStyle="bold" />
 
-                                                <TextView
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:text="Marks Secured"
-                                                    android:textStyle="bold" />
 
                                                 <TextView
                                                     android:layout_width="0dp"
@@ -1320,12 +1239,7 @@
                                     android:text="Selection"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -1422,13 +1336,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -1525,13 +1433,6 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -1628,13 +1529,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -1730,13 +1625,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -1832,13 +1721,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -1934,13 +1817,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -2036,13 +1913,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -2139,13 +2010,7 @@
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marks Secured"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+
 
                                 <TextView
                                     android:layout_width="0dp"
@@ -2274,13 +2139,7 @@
                                                     android:text="Selection"
                                                     android:textStyle="bold" />
 
-                                                <TextView
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:text="Marks Secured"
-                                                    android:textStyle="bold" />
-
+                                               
                                                 <TextView
                                                     android:layout_width="0dp"
                                                     android:layout_height="wrap_content"

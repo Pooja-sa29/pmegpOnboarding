@@ -148,7 +148,7 @@ public class ScoreCardFragment extends BaseFormFragment {
         tv_name.setText(data.getApplicant().getApplName());
         tv_applicant_id.setText(data.getApplicant().getApplCode());
         tv_total_marks.setText(data.getMaximumMarks());
-        tv_marks_secured.setText(data.getMarksSecured());
+//        tv_marks_secured.setText(data.getMarksSecured());
         int m1 = Integer.parseInt(data.getMarksSecured());
         int m2 = Integer.parseInt(data.getMaximumMarks());
         if (m2 != 0) {
@@ -304,7 +304,6 @@ public class ScoreCardFragment extends BaseFormFragment {
         tv_name = view.findViewById(R.id.tv_name);
         tv_applicant_id = view.findViewById(R.id.tv_applicant_id);
         tv_total_marks = view.findViewById(R.id.tv_total_marks);
-        tv_marks_secured = view.findViewById(R.id.tv_marks_secured);
         tv_percentage = view.findViewById(R.id.tv_percentage);
 
 

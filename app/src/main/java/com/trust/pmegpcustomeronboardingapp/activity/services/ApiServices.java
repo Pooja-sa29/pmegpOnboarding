@@ -46,6 +46,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.VillageRequest;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -144,4 +145,7 @@ public interface ApiServices {
 
     @POST("MobileApp/UpdateApplicantData")
     Call<ApplicantUpdateResult>  updateApplicantData(@Body ApplicantInfoModel applicantInfoModel);
+
+//    @POST("aadhaar/face-auth")
+//    Call<ResponseBody> sendFaceAuthData(String number, String pidData);
 }
