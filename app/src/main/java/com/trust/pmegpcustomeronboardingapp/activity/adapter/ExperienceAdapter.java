@@ -39,7 +39,6 @@ public class ExperienceAdapter extends RecyclerView.Adapter<ExperienceAdapter.Cl
         ScoreCard.ScoreParameter scoreParameter = classList.get(position);
         holder.tvCriteria.setText(scoreParameter.getScrCriteria() != null ? scoreParameter.getScrCriteria() : "max");
         holder.tvMarks.setText( String.valueOf(scoreParameter.getMaxMarks()!= 0 ? scoreParameter.getMaxMarks() : 0));
-        holder.tvMarksSecured.setText("");
         holder.rbSelect.setChecked(position == selectedPosition);
 
         holder.rbSelect.setOnClickListener(v -> {
@@ -70,7 +69,6 @@ public class ExperienceAdapter extends RecyclerView.Adapter<ExperienceAdapter.Cl
             super(itemView);
             tvCriteria = itemView.findViewById(R.id.tvCriteria);
             tvMarks = itemView.findViewById(R.id.tvMarks);
-            tvMarksSecured = itemView.findViewById(R.id.tvMarksSecured);
             rbSelect = itemView.findViewById(R.id.rbSelect);
             btnUploadDoc = itemView.findViewById(R.id.btnUploadDoc);
             imgUploadedDoc = itemView.findViewById(R.id.imgUploadedDoc);

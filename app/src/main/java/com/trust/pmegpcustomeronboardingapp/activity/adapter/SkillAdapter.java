@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -39,7 +40,6 @@ public class SkillAdapter extends RecyclerView.Adapter<SkillAdapter.ClassViewHol
         ScoreCard.ScoreParameter scoreParameter = classList.get(position);
         holder.tvCriteria.setText(scoreParameter.getScrCriteria() != null ? scoreParameter.getScrCriteria() : "max");
         holder.tvMarks.setText( String.valueOf(scoreParameter.getMaxMarks()!= 0 ? scoreParameter.getMaxMarks() : 0));
-        holder.tvMarksSecured.setText("");
         holder.rbSelect.setChecked(position == selectedPosition);
 
         holder.rbSelect.setOnClickListener(v -> {
@@ -51,6 +51,10 @@ public class SkillAdapter extends RecyclerView.Adapter<SkillAdapter.ClassViewHol
         });
 
         holder.imgUploadedDoc.setVisibility(scoreParameter.isUpload() ? View.VISIBLE : View.GONE);
+        holder.btnUploadDoc.setVisibility(scoreParameter.isUpload() == false ? View.VISIBLE : View.GONE);
+        holder.imgUploadedDoc.setVisibility(scoreParameter.isUpload() ? View.VISIBLE : View.GONE);
+        holder.delete_scoreCard.setVisibility(scoreParameter.isUpload() == true ?View.VISIBLE :View.GONE);
+
     }
 
     @Override
@@ -65,15 +69,15 @@ public class SkillAdapter extends RecyclerView.Adapter<SkillAdapter.ClassViewHol
         RadioButton rbSelect;
         Button btnUploadDoc;
         ImageView imgUploadedDoc;
-
+        ImageButton delete_scoreCard;
         public ClassViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCriteria = itemView.findViewById(R.id.tvCriteria);
             tvMarks = itemView.findViewById(R.id.tvMarks);
-            tvMarksSecured = itemView.findViewById(R.id.tvMarksSecured);
             rbSelect = itemView.findViewById(R.id.rbSelect);
             btnUploadDoc = itemView.findViewById(R.id.btnUploadDoc);
             imgUploadedDoc = itemView.findViewById(R.id.imgUploadedDoc);
+            delete_scoreCard = itemView.findViewById(R.id.delete_score_data);
         }
     }
 
