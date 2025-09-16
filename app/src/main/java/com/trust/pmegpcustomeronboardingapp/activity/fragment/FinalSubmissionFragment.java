@@ -2,13 +2,21 @@ package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +27,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -74,8 +83,10 @@ import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.TrustMethods;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -85,9 +96,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FinalSubmissionFragment extends Fragment {
-    private static final int RD_SERVICE_REQUEST = 1001;
-    private ActivityResultLauncher<Intent> faceLauncher;
 
+    private static final int RD_SERVICE_REQUEST = 1001;
+    private static final String FACERD_PACKAGE = "in.gov.uidai.facerd";
+    private static final String FACERD_ACTION = "in.gov.uidai.rdservice.face.CAPTURE";
+    private ActivityResultLauncher<Intent> faceLauncher;
     private ApiServices apiService;
     ApplicantDataModel applicantDataModel;
     private List<CardView> allCards;
@@ -128,6 +141,7 @@ public class FinalSubmissionFragment extends Fragment {
     private boolean isInitialLoad = true;
     String comn_district;
     String unit_district;
+    private static final String FACE_RD_PACKAGE = "in.gov.uidai.facerd";
 
 
     String selectedDistrictName,selectedPincode,selectedVillageName,subdistrictName,selectedNodalCode,agencyName,selectedAgencyCode,selectedAgency_Code,selectedBankName2,alt_selectedCityName,selectedBankName1,selectedCityName,selectedQualDesc,selectedQualCode,selectedSocialCatCode,selectedSpecialCatCode,selectedunittype,selectedStateCode,state_shortCode,state_code,selectedStateCodeIa,statename,state_zonal_code,selectedDistrictCode,districtCode,district_name;
@@ -136,21 +150,6 @@ public class FinalSubmissionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        faceLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        String pidData = result.getData().getStringExtra("PID_DATA");
-                        System.out.println("pid "+pidData);
-                        if (pidData != null) {
-//                            sendPidDataToServer(pidData);
-                        }
-                    } else {
-                        Toast.makeText(requireContext(),
-                                "Face capture failed!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
     }
 
 //    private void sendPidDataToServer(String pidData) {
@@ -315,7 +314,7 @@ public class FinalSubmissionFragment extends Fragment {
 
         });
 
-        img_facedetection.setOnClickListener(v -> startFaceCapture());
+
 
         txt_application_layout.setOnClickListener(v -> toggleSection(cv_application, txt_application_layout));
         app_txt_communicationLayout.setOnClickListener(v -> toggleSection(app_cv_communication_address, app_txt_communicationLayout));
@@ -415,34 +414,7 @@ public class FinalSubmissionFragment extends Fragment {
         return view;
     }
 
-    private void startFaceCapture() {
-        String pidOptions =
-                "<PidOptions ver=\"1.0\">" +
-                        "<Opts " +
-                        "fCount=\"1\" fType=\"0\" " +   // capture 1 face
-                        "iCount=\"0\" iType=\"0\" " +
-                        "pCount=\"0\" pType=\"0\" " +
-                        "format=\"1\" " +               // XML format
-                        "pidVer=\"2.0\" " +
-                        "timeout=\"20000\" " +
-                        "env=\"P\" " +
-                        "posh=\"UNKNOWN\"/>" +
-                        "</PidOptions>";
 
-        try {
-            Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
-            intent.setPackage("in.gov.uidai.facerd");
-            intent.putExtra("PID_OPTIONS", pidOptions);
-            faceLauncher.launch(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(requireContext(), "FaceRD app not installed", Toast.LENGTH_LONG).show();
-
-            Intent storeIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=in.gov.uidai.facerd"));
-            startActivity(storeIntent);
-        }
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -455,21 +427,192 @@ public class FinalSubmissionFragment extends Fragment {
         int applicationId = Integer.parseInt(applIdStr);
         System.out.println("applicationId"+applicationId);
         getApplicantData(applicationId);
+        faceLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    Intent data = result.getData();
+
+                    if (result.getResultCode() == Activity.RESULT_OK && data != null) {
+                        String pidData = data.getStringExtra("PID_DATA");
+                        if (pidData != null) {
+                            Log.d("FaceRD", "PID_DATA: " + pidData);
+                            Toast.makeText(requireContext(), "FaceRD Success", Toast.LENGTH_LONG).show();
+                        } else {
+                            Log.e("FaceRD", "Result OK but PID_DATA missing");
+                        }
+                    } else {
+                        Log.e("FaceRD", "FaceRD cancelled/failed, resultCode=" + result.getResultCode()+" "+data);
+
+                        if (data != null) {
+                            String errorCode = data.getStringExtra("ERROR_CODE");
+                            String errorInfo = data.getStringExtra("ERR_INFO");
+                            String errCode = data.getStringExtra("ERR_CODE");
+                            String errInfo = data.getStringExtra("errInfo");
+                            String pidData = data.getStringExtra("PID_DATA");
+
+                            Log.e("FaceRD", "ERROR_CODE=" + errorCode +
+                                    ", ERR_INFO=" + errorInfo +
+                                    ", ERR_CODE=" + errCode +
+                                    ", errInfo=" + errInfo);
+
+                            if (pidData != null) {
+                                Log.e("FaceRD", "PID_DATA (may contain error XML): " + pidData);
+
+                                // Quick parse of <Resp> error attributes
+                                if (pidData.contains("<Resp")) {
+                                    try {
+                                        int codeStart = pidData.indexOf("errCode=\"");
+                                        int infoStart = pidData.indexOf("errInfo=\"");
+                                        String parsedCode = (codeStart > 0)
+                                                ? pidData.substring(codeStart + 9, pidData.indexOf("\"", codeStart + 9))
+                                                : null;
+                                        String parsedInfo = (infoStart > 0)
+                                                ? pidData.substring(infoStart + 9, pidData.indexOf("\"", infoStart + 9))
+                                                : null;
+
+                                        Log.e("FaceRD", "Parsed error: code=" + parsedCode + ", info=" + parsedInfo);
+                                        Toast.makeText(requireContext(),
+                                                "FaceRD Error: " + parsedInfo,
+                                                Toast.LENGTH_LONG).show();
+                                    } catch (Exception e) {
+                                        Log.e("FaceRD", "Failed to parse error XML", e);
+                                    }
+                                }
+                            }
+                        } else {
+                            Log.e("FaceRD", "No data returned at all");
+
+                        }
+                    }
+                }
+        );
+
+        img_facedetection.setOnClickListener(v -> checkAndLaunchFaceRD(requireContext()));
+    }
+
+    private void checkAndLaunchFaceRD(Context context) {
+        if (!isAppInstalled(context, FACE_RD_PACKAGE)) {
+            Toast.makeText(getContext(), "Aadhaar Face RD Service is NOT installed.", Toast.LENGTH_LONG).show();
+            openPlayStoreForFaceRD();
+        }
+
+        if (!hasCameraPermissionForFaceRD(context)) {
+            new AlertDialog.Builder(context)
+                    .setTitle("Camera Permission Required")
+                    .setMessage("FaceRD app needs camera permission to capture your face. Please allow it in Settings.")
+                    .setCancelable(false)
+                    .setPositiveButton("Open Settings", (dialog, which) -> {
+                        // Open FaceRD app settings
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:" + FACE_RD_PACKAGE));
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        dialog.dismiss();
+                        Toast.makeText(context, "Face capture cancelled", Toast.LENGTH_SHORT).show();
+                    })
+                    .show();
+            return;
+        }
+
+        launchFaceRD();
+    }
+
+    private void openPlayStoreForFaceRD() {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + FACE_RD_PACKAGE)));
+        } catch (android.content.ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + FACE_RD_PACKAGE)));
+        }
+    }
+
+    private void launchFaceRD() {
+        try {
+            String pidOptions = buildPidOptionsXml();
+
+            Intent intent = new Intent(FACERD_ACTION);
+            intent.setPackage(FACE_RD_PACKAGE);
+            intent.putExtra("PID_OPTIONS", pidOptions);
+
+            faceLauncher.launch(intent);
+
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(requireContext(),
+                    "FaceRD app not found. Please install Aadhaar FaceRD from Play Store.",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(),
+                    "Unable to launch FaceRD. Error: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private String buildPidOptionsXml() {
+        return "<PidOptions ver=\"1.0\">" +
+                "<Opts fCount=\"1\" fType=\"0\" format=\"1\" pidVer=\"2.0\" timeout=\"20000\" env=\"P\"/>" +
+                "</PidOptions>";
     }
 
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == RD_SERVICE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-//            String pidData = data.getStringExtra("PID_DATA");
-//            if (pidData != null) {
-//                Log.d("PID_DATA", pidData);
-//                // send to server
-//            }
-//        }
-//    }
+    private boolean isAppInstalled(Context context, String packageName) {
+        try {
+            context.getPackageManager().getPackageInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+
+    private boolean hasCameraPermissionForFaceRD(Context context) {
+        PackageManager pm = context.getPackageManager();
+        return pm.checkPermission(Manifest.permission.CAMERA, FACE_RD_PACKAGE)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RD_SERVICE_REQUEST) {
+            if (resultCode == RESULT_OK && data != null) {
+                String pidData = data.getStringExtra("PID_DATA");
+                if (pidData != null) {
+                    Log.d("FaceRD", "PID Data received: " + pidData);
+                    // TODO: send to server
+                } else {
+                    Log.e("FaceRD", "Result OK but no PID_DATA returned!");
+                }
+            } else {
+
+                Log.e("FaceRD", "Face capture failed/cancelled, resultCode=" + resultCode);
+
+                if (data != null) {
+                    // Try to fetch error details
+                    String errorCode = data.getStringExtra("ERROR_CODE");
+                    String errorInfo = data.getStringExtra("ERR_INFO");
+                    String errCode = data.getStringExtra("ERR_CODE");
+                    String errInfo = data.getStringExtra("errInfo");
+
+                    if (errorCode != null) Log.e("FaceRD", "ERROR_CODE: " + errorCode);
+                    if (errorInfo != null) Log.e("FaceRD", "ERR_INFO: " + errorInfo);
+                    if (errCode != null) Log.e("FaceRD", "ERR_CODE: " + errCode);
+                    if (errInfo != null) Log.e("FaceRD", "errInfo: " + errInfo);
+
+                    // Sometimes the RD service even returns XML with error
+                    String pidData = data.getStringExtra("PID_DATA");
+                    if (pidData != null) {
+                        Log.e("FaceRD", "Error PID XML: " + pidData);
+                    }
+                } else {
+                    Log.e("FaceRD", "No data returned in cancelled result.");
+                }
+            }
+        }
+    }
+
+
+
     private void initData() {
         titleList.add(0, "--Select title--");
         titleList.add(1, "Smt.");

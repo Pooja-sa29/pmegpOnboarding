@@ -379,7 +379,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Qty."
+                                android:text="Area"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
@@ -460,7 +460,7 @@
                 android:background="@drawable/top_curved_edge_rectangle"
                 android:drawableEnd="@drawable/arrow_up_24"
                 android:padding="8dp"
-                android:text="Working Capital"
+                android:text="WORKING CAPITAL"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -581,7 +581,7 @@
                 android:background="@drawable/top_curved_edge_rectangle"
                 android:drawableEnd="@drawable/arrow_up_24"
                 android:padding="8dp"
-                android:text="Means of Financing"
+                android:text="MEANS OF FINANCING"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -1540,7 +1540,7 @@
                 android:background="@drawable/top_curved_edge_rectangle"
                 android:drawableEnd="@drawable/arrow_up_24"
                 android:padding="8dp"
-                android:text="Depreciation "
+                android:text="DEPRICIATION "
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -1665,7 +1665,7 @@
                 android:background="@drawable/top_curved_edge_rectangle"
                 android:drawableEnd="@drawable/arrow_up_24"
                 android:padding="8dp"
-                android:text="Introduction Office"
+                android:text="INTRODUCTION OFFICE"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/black"
                 android:textStyle="bold" />

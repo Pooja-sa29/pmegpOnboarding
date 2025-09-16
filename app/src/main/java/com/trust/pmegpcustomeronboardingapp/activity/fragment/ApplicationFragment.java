@@ -634,7 +634,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
 
                 // Agency spinner adapter
                 ArrayAdapter<String> agencyAdapter = new ArrayAdapter<>(
-                        getContext(),
+                        requireContext(),
                         R.layout.spinner_selected_item,
                         districtNames
                 );
@@ -1385,7 +1385,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
 
         System.out.println("alt_bank"+data.getBankIFSC2()+ " "+data.getBankBranch2()+" "+data.getBankAddress2()+" "+data.getBankDist2());
 
-        app_alt_btn_ifsc_code.setText(data.getBankIFSC2() != null ? data.getBankIFSC2() : "");
+        app_alt_ifscbank_code.setText(data.getBankIFSC2() != null ? data.getBankIFSC2() : "");
         app_alt_branch_name.setText(data.getBankBranch2() != null ? data.getBankBranch2() : "");
         app_alt_primary_address.setText(data.getBankAddress2() != null ? data.getBankAddress2() :"");
         app_alt_pf_districtEd.setText(data.getBankDist2() != null ? data.getBankDist2() : "");

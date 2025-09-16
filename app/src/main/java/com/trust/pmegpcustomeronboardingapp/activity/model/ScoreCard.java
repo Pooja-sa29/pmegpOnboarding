@@ -1,5 +1,7 @@
 package com.trust.pmegpcustomeronboardingapp.activity.model;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -197,7 +199,20 @@ public class ScoreCard {
         @SerializedName("FileLable")
         private String FileLable;
 
+        private String uploadedFileName;
+        private Uri uploadedFileUri;
+
+
+
         // Getters and Setter
+
+        public Uri getUploadedFileUri() {
+            return uploadedFileUri;
+        }
+
+        public void setUploadedFileUri(Uri uploadedFileUri) {
+            this.uploadedFileUri = uploadedFileUri;
+        }
 
         public int getScrParamID() {
             return ScrParamID;
@@ -241,6 +256,14 @@ public class ScoreCard {
 
         public boolean isUpload() {
             return IsUpload;
+        }
+
+        public String getUploadedFileName() {
+            return uploadedFileName;
+        }
+
+        public void setUploadedFileName(String uploadedFileName) {
+            this.uploadedFileName = uploadedFileName;
         }
 
         public void setUpload(boolean upload) {

@@ -2,14 +2,23 @@ package com.trust.pmegpcustomeronboardingapp.activity.utils;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.trust.pmegpcustomeronboardingapp.R;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -144,5 +153,39 @@ public class TrustMethods extends Activity {
         }
 
         return result.toString();
+    }
+
+    public static void showFileDialog(Context context, Uri fileUri) {
+        String mimeType = context.getContentResolver().getType(fileUri);
+
+        if (mimeType != null && mimeType.startsWith("image/")) {
+            // Preview image inside dialog
+            Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.dialog_image_preview);
+
+            ImageView imageView = dialog.findViewById(R.id.imgPreview);
+            ImageButton btnClose = dialog.findViewById(R.id.btnClose);
+
+            imageView.setImageURI(fileUri);
+
+            btnClose.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.getWindow().setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            dialog.show();
+        } else {
+            // Non-image (PDF, DOC, etc.) → open in external viewer
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(fileUri, mimeType != null ? mimeType : "*/*");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            try {
+                context.startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(context, "No app found to open this file", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

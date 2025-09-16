@@ -1,7 +1,13 @@
 package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,7 +112,8 @@ public class ScoreCardFragment extends BaseFormFragment {
     List<ScoreCard.ScoreParameter> employmentList = new ArrayList<>();
     List<ScoreCard.ScoreParameter> dscrList = new ArrayList<>();
     List<ScoreCard.ScoreParameter> collateralList = new ArrayList<>();
-
+    private int lastSelectedUploadPosition = -1;
+    private String lastSelectedAdapter = null;
     RecyclerView rv_applicant, rv_dependency, rv_house, rv_residing, rv_acadamic, rv_exptrade, rv_income_tax, rv_insurance_policy, rv_otherSource,rv_security_covg,rv_lendingBank,rv_credit_history,rv_location,rv_skill,rv_marketing,rv_lineOfActivity,rv_salesReg,rv_repayment,rv_emp_generation,rv_dscr;
 
     @Override
@@ -226,68 +233,88 @@ public class ScoreCardFragment extends BaseFormFragment {
             }
 
 
-            applicantAgeAdapter = new ApplicantAgeAdapter(applicantList);
+            applicantAgeAdapter = new ApplicantAgeAdapter(applicantList,position -> {
+                selectDocFile("applicant",position);  });
             rv_applicant.setAdapter(applicantAgeAdapter);
 
-            depAdapter = new DependenciesAdapter(dependenciesList);
+            depAdapter = new DependenciesAdapter(dependenciesList,position -> {
+                selectDocFile("dependency",position);  });
             rv_dependency.setAdapter(depAdapter);
 
-            houseAdapter = new HouseAdapter(houseList);
+            houseAdapter = new HouseAdapter(houseList,position -> {
+                selectDocFile("house",position);  });
             rv_house.setAdapter(houseAdapter);
 
-            residingAdapter = new ResidingAdapter(residingList);
+            residingAdapter = new ResidingAdapter(residingList,position -> {
+                selectDocFile("residing",position);  });
             rv_residing.setAdapter(residingAdapter);
 
-            acadamicAdapter = new AcadamicAdapter(academicList);
+            acadamicAdapter = new AcadamicAdapter(academicList,position -> {
+                selectDocFile("acadamic",position);  });
             rv_acadamic.setAdapter(acadamicAdapter);
 
-            experienceAdapter = new ExperienceAdapter(experienceList);
+            experienceAdapter = new ExperienceAdapter(experienceList,position -> {
+                selectDocFile("experience",position);  });
             rv_exptrade.setAdapter(experienceAdapter);
 
-            otherResAdapter = new OtherResAdapter(otherResList);
+            otherResAdapter = new OtherResAdapter(otherResList,position -> {
+                selectDocFile("other",position);  });
             rv_otherSource.setAdapter(otherResAdapter);
 
-            incomeAdapter = new IncomeAdapter(incomeList);
+            incomeAdapter = new IncomeAdapter(incomeList,position -> {
+                selectDocFile("income",position);  });
             rv_income_tax.setAdapter(incomeAdapter);
 
-            insuranceAdapter = new InsuranceAdapter(insuranceList);
+            insuranceAdapter = new InsuranceAdapter(insuranceList,position -> {
+                selectDocFile("insurance",position);  });
             rv_insurance_policy.setAdapter(insuranceAdapter);
 
             // new venture/firm
 
-            bankRelationAdapter = new BankRelationAdapter(bankRelationList);
+            bankRelationAdapter = new BankRelationAdapter(bankRelationList,position -> {
+                selectDocFile("bank Relation",position);  });
             rv_lendingBank.setAdapter(bankRelationAdapter);
 
-            creditHistoryAdapter = new CreditHistoryAdapter(creditHistoryList);
+            creditHistoryAdapter = new CreditHistoryAdapter(creditHistoryList,position -> {
+                selectDocFile("credit History",position);  });
             rv_credit_history.setAdapter(creditHistoryAdapter);
 
-            locationadapter = new Locationadapter(locationList);
+            locationadapter = new Locationadapter(locationList,position -> {
+                selectDocFile("location",position);  });
             rv_location.setAdapter(locationadapter);
 
-            skillAdapter = new SkillAdapter(skillList);
+            skillAdapter = new SkillAdapter(skillList,position -> {
+                selectDocFile("skill",position);  });
             rv_skill.setAdapter(skillAdapter);
 
-            marketingAdapter = new MarketingAdapter(marketingList);
+            marketingAdapter = new MarketingAdapter(marketingList,position -> {
+                selectDocFile("marketing",position);  });
             rv_marketing.setAdapter(marketingAdapter);
 
-            activityAdapter = new ActivityAdapter(activityList);
+            activityAdapter = new ActivityAdapter(activityList,position -> {
+                selectDocFile("activity",position);  });
             rv_lineOfActivity.setAdapter(activityAdapter);
 
-            govtRegAdapter = new GovtRegAdapter(govtRegList);
+            govtRegAdapter = new GovtRegAdapter(govtRegList,position -> {
+                selectDocFile("govt",position);  });
             rv_salesReg.setAdapter(govtRegAdapter);
 
-            repaymentAdapter = new RepaymentAdapter(repaymentList);
+            repaymentAdapter = new RepaymentAdapter(repaymentList,position -> {
+                selectDocFile("repayment",position);  });
             rv_repayment.setAdapter(repaymentAdapter);
 
-            employementAdapter = new EmployementAdapter(employmentList);
+            employementAdapter = new EmployementAdapter(employmentList,position -> {
+                selectDocFile("employment",position);  });
             rv_emp_generation.setAdapter(employementAdapter);
 
-            decrAdapter = new DecrAdapter(dscrList);
+            decrAdapter = new DecrAdapter(dscrList,position -> {
+                selectDocFile("dscr",position);  });
             rv_dscr.setAdapter(decrAdapter);
 
 
             //security
-            colSecurityAdapter = new ColSecurityAdapter(collateralList);
+            colSecurityAdapter = new ColSecurityAdapter(collateralList,position -> {
+                selectDocFile("collateral",position);  });
             rv_security_covg.setAdapter(colSecurityAdapter);
 
 
@@ -296,6 +323,193 @@ public class ScoreCardFragment extends BaseFormFragment {
 
     }
 
+
+    public void selectDocFile(String adapterType,int position){
+        lastSelectedUploadPosition = position;
+        lastSelectedAdapter = adapterType;
+
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*"); // or "application/pdf" for PDF only
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, "Select Document"), 1001);
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1001 && resultCode == RESULT_OK && data != null) {
+            Uri fileUri = data.getData();
+            if (fileUri != null) {
+                Log.d("FileUpload", "Selected file: " + fileUri.toString());
+                String fileName = getFileName(fileUri);
+
+                switch (lastSelectedAdapter) {
+                    case "applicant":
+                        ScoreCard.ScoreParameter applicantParam = applicantList.get(lastSelectedUploadPosition);
+                        applicantParam.setUpload(true);
+                        applicantParam.setUploadedFileName(fileName);
+                        applicantParam.setUploadedFileUri(fileUri);
+                        applicantAgeAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "dependency":
+                        ScoreCard.ScoreParameter depParam = dependenciesList.get(lastSelectedUploadPosition);
+                        depParam.setUpload(true);
+                        depParam.setUploadedFileName(fileName);
+                        depAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "house":
+                        ScoreCard.ScoreParameter houseParam = houseList.get(lastSelectedUploadPosition);
+                        houseParam.setUpload(true);
+                        houseParam.setUploadedFileName(fileName);
+                        houseAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "residing":
+                        ScoreCard.ScoreParameter resideParam = residingList.get(lastSelectedUploadPosition);
+                        resideParam.setUpload(true);
+                        resideParam.setUploadedFileName(fileName);
+                        residingAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "acadamic":
+                        ScoreCard.ScoreParameter acadamicParam = academicList.get(lastSelectedUploadPosition);
+                        acadamicParam.setUpload(true);
+                        acadamicParam.setUploadedFileName(fileName);
+                        acadamicAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "experience":
+                        ScoreCard.ScoreParameter experienceParam = experienceList.get(lastSelectedUploadPosition);
+                        experienceParam.setUpload(true);
+                        experienceParam.setUploadedFileName(fileName);
+                        experienceAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "other":
+                        ScoreCard.ScoreParameter otherParam = otherResList.get(lastSelectedUploadPosition);
+                        otherParam.setUpload(true);
+                        otherParam.setUploadedFileName(fileName);
+                        otherResAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "income":
+                        ScoreCard.ScoreParameter incomeParam = incomeList.get(lastSelectedUploadPosition);
+                        incomeParam.setUpload(true);
+                        incomeParam.setUploadedFileName(fileName);
+                        incomeAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "insurance":
+                        ScoreCard.ScoreParameter insuranceParam = insuranceList.get(lastSelectedUploadPosition);
+                        insuranceParam.setUpload(true);
+                        insuranceParam.setUploadedFileName(fileName);
+                        insuranceAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "bank Relation":
+                        ScoreCard.ScoreParameter bankRelParam = bankRelationList.get(lastSelectedUploadPosition);
+                        bankRelParam.setUpload(true);
+                        bankRelParam.setUploadedFileName(fileName);
+                        bankRelationAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "credit History":
+                        ScoreCard.ScoreParameter creditHistoryParam = creditHistoryList.get(lastSelectedUploadPosition);
+                        creditHistoryParam.setUpload(true);
+                        creditHistoryParam.setUploadedFileName(fileName);
+                        creditHistoryAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "location":
+                        ScoreCard.ScoreParameter locParam = locationList.get(lastSelectedUploadPosition);
+                        locParam.setUpload(true);
+                        locParam.setUploadedFileName(fileName);
+                        locationadapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "skill":
+                        ScoreCard.ScoreParameter skillParam = skillList.get(lastSelectedUploadPosition);
+                        skillParam.setUpload(true);
+                        skillParam.setUploadedFileName(fileName);
+                        skillAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "marketing":
+                        ScoreCard.ScoreParameter marketingParam = marketingList.get(lastSelectedUploadPosition);
+                        marketingParam.setUpload(true);
+                        marketingParam.setUploadedFileName(fileName);
+                        marketingAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "activity":
+                        ScoreCard.ScoreParameter activityParam = activityList.get(lastSelectedUploadPosition);
+                        activityParam.setUpload(true);
+                        activityParam.setUploadedFileName(fileName);
+                        activityAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "govt":
+                        ScoreCard.ScoreParameter govtParam = govtRegList.get(lastSelectedUploadPosition);
+                        govtParam.setUpload(true);
+                        govtParam.setUploadedFileName(fileName);
+                        govtRegAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                    case "repayment":
+                        ScoreCard.ScoreParameter repaymentParam = repaymentList.get(lastSelectedUploadPosition);
+                        repaymentParam.setUpload(true);
+                        repaymentParam.setUploadedFileName(fileName);
+                        repaymentAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                        case "employment":
+                        ScoreCard.ScoreParameter employmentParam = employmentList.get(lastSelectedUploadPosition);
+                            employmentParam.setUpload(true);
+                            employmentParam.setUploadedFileName(fileName);
+                        employementAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                        case "dscr":
+                        ScoreCard.ScoreParameter dscrParam = dscrList.get(lastSelectedUploadPosition);
+                            dscrParam.setUpload(true);
+                            dscrParam.setUploadedFileName(fileName);
+                        decrAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                        case "collateral":
+                        ScoreCard.ScoreParameter collateralParam = collateralList.get(lastSelectedUploadPosition);
+                            collateralParam.setUpload(true);
+                            collateralParam.setUploadedFileName(fileName);
+                        colSecurityAdapter.notifyItemChanged(lastSelectedUploadPosition);
+                        break;
+
+                }
+//
+//                // reset
+//                lastSelectedAdapter = null;
+//                lastSelectedUploadPosition = -1;
+            }
+        }
+    }
+
+    private String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            try (Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getLastPathSegment();
+        }
+        return result;
+    }
     @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
