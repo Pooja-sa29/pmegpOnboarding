@@ -1,5 +1,6 @@
 package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
@@ -17,6 +18,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +91,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -98,6 +101,8 @@ import retrofit2.Response;
 public class FinalSubmissionFragment extends Fragment {
 
     private static final int RD_SERVICE_REQUEST = 1001;
+    private static final int LOCAL_MATCH_REQ = 1002;
+    private static final String TAG = "LocalFaceMatch";
     private static final String FACERD_PACKAGE = "in.gov.uidai.facerd";
     private static final String FACERD_ACTION = "in.gov.uidai.rdservice.face.CAPTURE";
     private ActivityResultLauncher<Intent> faceLauncher;
@@ -107,21 +112,21 @@ public class FinalSubmissionFragment extends Fragment {
     private List<TextView> allTextViews;
 
     LinearLayout implementing_type_agency_layout;
-    TextView agency_type_state,agency_type_pin,agency_type_district,agency_type,agency_type_mobile,agency_type_email,txt_application_layout,app_txt_communicationLayout,txtimplementing_agency_layout,app_txt_unitlayout,app_txt_projectinfo_Layout,app_txt_primary_finance_bank_layout,app_txt_altfbank_Layout,app_txt_other_info_Layout,app_txt_unload_doc_Layout,app_txt_score_card_Layout,app_txt_faceDetection_Layout;
-    CardView cv_application,app_cv_communication_address,app_cv_implementing_agency,app_cv_unitAddress,app_cv_projectinfo,app_cv_primary_Financing_bank,app_cv_alternate_Financing_bank,app_cv_otherInfo,app_cv_doc_upload,app_cv_score_card,app_cv_faceDetection_card;
-    Button app_btn_district_change,app_alt_btn_ifsc_code,app_btn_ifsc_code,app_btn_updateform,app_btn_show_nic_code_list,app_btn_industry_activity,app_btn_edpSelection;
-    EditText app_email,app_mobile_number,app_alternate_mobile_number,app_pin_number,app_adharcardno,app_district,app_taluka_block_name,app_pannumber,app_nameofapplicant,app_dob,app_age,app_communication_address,app_unitaddress,app_unitLoc,app_unitpincode,app_lgd_code,app_edp_training_insti_name,app_capital_exp,app_workingcapital,app_totalexp,app_employee_count,app_ifscbank_code,app_branch_name,app_alt_branch_name,app_primary_address,app_pf_districtEd,app_alt_ifscbank_code,app_alt_primary_address,app_alt_pf_districtEd;
-    Spinner app_implementing_agency_txt,app_titleSpinner,app_spinner_about_us_spinner,app_iastateSpinner,app_activityspinner,app_agencydistrictSpinner,app_unitvillagenamespinner,app_unitsubdistrictnameSpinner,app_unitdistrictnameList,app_spinner_gender,app_social_category_spinner,app_special_category_spinner,app_qualificationspinner,app_state_spinner,app_bank_spinner_list,app_alt_bank_spinner_list;
-    CheckBox app_agencyTypecheck,app_checkbox_availt_note,app_form_check;
-    ImageButton img_facedetection,img_biometrics;
+    TextView agency_type_state, agency_type_pin, agency_type_district, agency_type, agency_type_mobile, agency_type_email, txt_application_layout, app_txt_communicationLayout, txtimplementing_agency_layout, app_txt_unitlayout, app_txt_projectinfo_Layout, app_txt_primary_finance_bank_layout, app_txt_altfbank_Layout, app_txt_other_info_Layout, app_txt_unload_doc_Layout, app_txt_score_card_Layout, app_txt_faceDetection_Layout;
+    CardView cv_application, app_cv_communication_address, app_cv_implementing_agency, app_cv_unitAddress, app_cv_projectinfo, app_cv_primary_Financing_bank, app_cv_alternate_Financing_bank, app_cv_otherInfo, app_cv_doc_upload, app_cv_score_card, app_cv_faceDetection_card;
+    Button app_btn_district_change, app_alt_btn_ifsc_code, app_btn_ifsc_code, app_btn_updateform, app_btn_show_nic_code_list, app_btn_industry_activity, app_btn_edpSelection;
+    EditText app_email, app_mobile_number, app_alternate_mobile_number, app_pin_number, app_adharcardno, app_district, app_taluka_block_name, app_pannumber, app_nameofapplicant, app_dob, app_age, app_communication_address, app_unitaddress, app_unitLoc, app_unitpincode, app_lgd_code, app_edp_training_insti_name, app_capital_exp, app_workingcapital, app_totalexp, app_employee_count, app_ifscbank_code, app_branch_name, app_alt_branch_name, app_primary_address, app_pf_districtEd, app_alt_ifscbank_code, app_alt_primary_address, app_alt_pf_districtEd;
+    Spinner app_implementing_agency_txt, app_titleSpinner, app_spinner_about_us_spinner, app_iastateSpinner, app_activityspinner, app_agencydistrictSpinner, app_unitvillagenamespinner, app_unitsubdistrictnameSpinner, app_unitdistrictnameList, app_spinner_gender, app_social_category_spinner, app_special_category_spinner, app_qualificationspinner, app_state_spinner, app_bank_spinner_list, app_alt_bank_spinner_list;
+    CheckBox app_agencyTypecheck, app_checkbox_availt_note, app_form_check;
+    ImageButton img_facedetection, img_biometrics;
     RadioGroup radioGroup;
-    RadioButton yesBtn,noBtn;
+    RadioButton yesBtn, noBtn;
     LinearLayout availLayout;
     TextView app_agencyTypeName;
-    RecyclerView app_rv_product,rv_documents;
-    RadioGroup app_edp_radioGrp,app_edp_subgrp_radioGrp,app_cgtmse_radioGrp;
+    RecyclerView app_rv_product, rv_documents;
+    RadioGroup app_edp_radioGrp, app_edp_subgrp_radioGrp, app_cgtmse_radioGrp;
     DocumentAdapter documentAdapter;
-    List<Document> docList ;
+    List<Document> docList;
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> socialCatAdapter;
     List<AgencyModel> agencyModelList;
@@ -144,8 +149,9 @@ public class FinalSubmissionFragment extends Fragment {
     private static final String FACE_RD_PACKAGE = "in.gov.uidai.facerd";
 
 
-    String selectedDistrictName,selectedPincode,selectedVillageName,subdistrictName,selectedNodalCode,agencyName,selectedAgencyCode,selectedAgency_Code,selectedBankName2,alt_selectedCityName,selectedBankName1,selectedCityName,selectedQualDesc,selectedQualCode,selectedSocialCatCode,selectedSpecialCatCode,selectedunittype,selectedStateCode,state_shortCode,state_code,selectedStateCodeIa,statename,state_zonal_code,selectedDistrictCode,districtCode,district_name;
-    int selectedagencyoffId,agentId,stateId,districtId,activityUnitType,selectedBankListID,alt_selectedBankListID,selectedBankId2;
+    String selectedDistrictName, selectedPincode, selectedVillageName, subdistrictName, selectedNodalCode, agencyName, selectedAgencyCode, selectedAgency_Code, selectedBankName2, alt_selectedCityName, selectedBankName1, selectedCityName, selectedQualDesc, selectedQualCode, selectedSocialCatCode, selectedSpecialCatCode, selectedunittype, selectedStateCode, state_shortCode, state_code, selectedStateCodeIa, statename, state_zonal_code, selectedDistrictCode, districtCode, district_name;
+    int selectedagencyoffId, agentId, stateId, districtId, activityUnitType, selectedBankListID, alt_selectedBankListID, selectedBankId2;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,8 +207,8 @@ public class FinalSubmissionFragment extends Fragment {
         app_email = view.findViewById(R.id.app_email);
         agency_type_mobile = view.findViewById(R.id.agency_type_mobile);
         agency_type_email = view.findViewById(R.id.agency_type_email);
-        agency_type= view.findViewById(R.id.agencyTypeName);
-        agency_type_district= view.findViewById(R.id.agency_type_district);
+        agency_type = view.findViewById(R.id.agencyTypeName);
+        agency_type_district = view.findViewById(R.id.agency_type_district);
         agency_type_pin = view.findViewById(R.id.agency_type_pin);
         agency_type_state = view.findViewById(R.id.agency_type_state);
         app_implementing_agency_txt = view.findViewById(R.id.app_implementing_agency_txt);
@@ -295,12 +301,11 @@ public class FinalSubmissionFragment extends Fragment {
         app_cv_faceDetection_card.setVisibility(View.GONE);
 
 
-
         allCards = Arrays.asList(cv_application, app_cv_communication_address, app_cv_implementing_agency,
-                app_cv_unitAddress, app_cv_projectinfo, app_cv_primary_Financing_bank, app_cv_alternate_Financing_bank,app_cv_otherInfo,app_cv_doc_upload,app_cv_score_card,app_cv_faceDetection_card);
+                app_cv_unitAddress, app_cv_projectinfo, app_cv_primary_Financing_bank, app_cv_alternate_Financing_bank, app_cv_otherInfo, app_cv_doc_upload, app_cv_score_card, app_cv_faceDetection_card);
 
-        allTextViews = Arrays.asList(txt_application_layout,app_txt_communicationLayout, txtimplementing_agency_layout,app_txt_unitlayout,
-                app_txt_projectinfo_Layout,app_txt_primary_finance_bank_layout,app_txt_altfbank_Layout,app_txt_other_info_Layout,app_txt_unload_doc_Layout,app_txt_score_card_Layout,app_txt_faceDetection_Layout);
+        allTextViews = Arrays.asList(txt_application_layout, app_txt_communicationLayout, txtimplementing_agency_layout, app_txt_unitlayout,
+                app_txt_projectinfo_Layout, app_txt_primary_finance_bank_layout, app_txt_altfbank_Layout, app_txt_other_info_Layout, app_txt_unload_doc_Layout, app_txt_score_card_Layout, app_txt_faceDetection_Layout);
 
 
         closeAllCards();
@@ -313,7 +318,6 @@ public class FinalSubmissionFragment extends Fragment {
         img_biometrics.setOnClickListener(v -> {
 
         });
-
 
 
         txt_application_layout.setOnClickListener(v -> toggleSection(cv_application, txt_application_layout));
@@ -415,7 +419,6 @@ public class FinalSubmissionFragment extends Fragment {
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -425,7 +428,7 @@ public class FinalSubmissionFragment extends Fragment {
 
 
         int applicationId = Integer.parseInt(applIdStr);
-        System.out.println("applicationId"+applicationId);
+        System.out.println("applicationId" + applicationId);
         getApplicantData(applicationId);
         faceLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -441,7 +444,7 @@ public class FinalSubmissionFragment extends Fragment {
                             Log.e("FaceRD", "Result OK but PID_DATA missing");
                         }
                     } else {
-                        Log.e("FaceRD", "FaceRD cancelled/failed, resultCode=" + result.getResultCode()+" "+data);
+                        Log.e("FaceRD", "FaceRD cancelled/failed, resultCode=" + result.getResultCode() + " " + data);
 
                         if (data != null) {
                             String errorCode = data.getStringExtra("ERROR_CODE");
@@ -487,36 +490,78 @@ public class FinalSubmissionFragment extends Fragment {
                 }
         );
 
-        img_facedetection.setOnClickListener(v -> checkAndLaunchFaceRD(requireContext()));
+//        img_facedetection.setOnClickListener(v -> checkAndLaunchFaceRD(requireContext()));
+        img_facedetection.setOnClickListener(v -> startFaceCapture());
+
     }
 
-    private void checkAndLaunchFaceRD(Context context) {
-        if (!isAppInstalled(context, FACE_RD_PACKAGE)) {
-            Toast.makeText(getContext(), "Aadhaar Face RD Service is NOT installed.", Toast.LENGTH_LONG).show();
+    private void startFaceCapture() {
+        String pidOptions = buildPidOptionsXml();
+        Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
+        intent.putExtra("request", pidOptions);
+
+        try {
+            startActivityForResult(intent, RD_SERVICE_REQUEST);
+        } catch (Exception e) {
+            Log.e(TAG, "FaceRD not available", e);
+            Toast.makeText(getContext(), "Aadhaar Face RD Service is NOT installed. Please Install", Toast.LENGTH_LONG).show();
             openPlayStoreForFaceRD();
         }
-
-        if (!hasCameraPermissionForFaceRD(context)) {
-            new AlertDialog.Builder(context)
-                    .setTitle("Camera Permission Required")
-                    .setMessage("FaceRD app needs camera permission to capture your face. Please allow it in Settings.")
-                    .setCancelable(false)
-                    .setPositiveButton("Open Settings", (dialog, which) -> {
-                        // Open FaceRD app settings
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.parse("package:" + FACE_RD_PACKAGE));
-                        startActivity(intent);
-                    })
-                    .setNegativeButton("Cancel", (dialog, which) -> {
-                        dialog.dismiss();
-                        Toast.makeText(context, "Face capture cancelled", Toast.LENGTH_SHORT).show();
-                    })
-                    .show();
-            return;
-        }
-
-        launchFaceRD();
     }
+
+
+    private void startLocalFaceMatch() {
+        String xmlRequest = buildLocalFaceMatchXml();
+        Intent intent = new Intent("in.gov.uidai.rdservice.face.LOCAL_FACE_MATCH");
+        intent.putExtra("request", xmlRequest);
+
+        try {
+            startActivityForResult(intent, LOCAL_MATCH_REQ);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Install FaceRD app from Play Store", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "FaceRD not available", e);
+            openPlayStoreForFaceRD();
+        }
+    }
+
+    private String buildLocalFaceMatchXml() {
+        String requestId = UUID.randomUUID().toString().replace("-", "");
+        String doc1 = "RHVtbXlEb2Mx";
+        String doc2 = "RHVtbXlEb2My";
+        return "<localFaceMatchRequest requestId=\"" + requestId + "\" language=\"en\" enableAutoCapture=\"true\" encryptResponse=\"n\">" +
+                "<Document1 docType=\"AADHAAR\" auaCode=\"\">" + doc1 + "</Document1>" +
+                "<Document2 docType=\"PHOTO\" auaCode=\"123456\">" + doc2 + "</Document2>" +
+                "<Signature>DummySignature</Signature>" +
+                "</localFaceMatchRequest>";
+    }
+
+//    private void checkAndLaunchFaceRD(Context context) {
+//        if (!isAppInstalled(context, FACE_RD_PACKAGE)) {
+//            Toast.makeText(getContext(), "Aadhaar Face RD Service is NOT installed.", Toast.LENGTH_LONG).show();
+//            openPlayStoreForFaceRD();
+//        }
+//
+//        if (!hasCameraPermissionForFaceRD(context)) {
+//            new AlertDialog.Builder(context)
+//                    .setTitle("Camera Permission Required")
+//                    .setMessage("FaceRD app needs camera permission to capture your face. Please allow it in Settings.")
+//                    .setCancelable(false)
+//                    .setPositiveButton("Open Settings", (dialog, which) -> {
+//                        // Open FaceRD app settings
+//                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+//                                Uri.parse("package:" + FACE_RD_PACKAGE));
+//                        startActivity(intent);
+//                    })
+//                    .setNegativeButton("Cancel", (dialog, which) -> {
+//                        dialog.dismiss();
+//                        Toast.makeText(context, "Face capture cancelled", Toast.LENGTH_SHORT).show();
+//                    })
+//                    .show();
+//            return;
+//        }
+//
+//        launchFaceRD();
+//    }
 
     private void openPlayStoreForFaceRD() {
         try {
@@ -527,89 +572,175 @@ public class FinalSubmissionFragment extends Fragment {
     }
 
     private void launchFaceRD() {
-        try {
+
             String pidOptions = buildPidOptionsXml();
 
-            Intent intent = new Intent(FACERD_ACTION);
-            intent.setPackage(FACE_RD_PACKAGE);
-            intent.putExtra("PID_OPTIONS", pidOptions);
+            Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
+            intent.putExtra("request", pidOptions);
 
-            faceLauncher.launch(intent);
+            try {
+                startActivityForResult(intent, RD_SERVICE_REQUEST);
+            } catch (Exception e) {
+                Toast.makeText(requireContext(), "FaceRD app not installed!", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Error launching FaceRD app", e);
+            }
 
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(requireContext(),
-                    "FaceRD app not found. Please install Aadhaar FaceRD from Play Store.",
-                    Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(requireContext(),
-                    "Unable to launch FaceRD. Error: " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     private String buildPidOptionsXml() {
-        return "<PidOptions ver=\"1.0\">" +
-                "<Opts fCount=\"1\" fType=\"0\" format=\"1\" pidVer=\"2.0\" timeout=\"20000\" env=\"P\"/>" +
+        String txnId = UUID.randomUUID().toString().replace("-", "");
+        return "<PidOptions ver=\"1.0\" env=\"P\">" +
+                "<Opts fCount=\"1\" fType=\"0\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\" wadh=\"\"/>" +
+                "<CustOpts>" +
+                "<Param name=\"txnId\" value=\"" + txnId + "\"/>" +
+                "<Param name=\"language\" value=\"en\"/>" +
+                "<Param name=\"auaCode\" value=\"123456\"/>" +
+                "<Param name=\"callBackUrl\" value=\"\"/>" +
+                "<Param name=\"auaAuthToken\" value=\"DUMMY_TOKEN\"/>" +
+                "<Param name=\"cameraUsage\" value=\"front\"/>" +
+                "</CustOpts>" +
+                "<BioData/>" +
+                "<Signature/>" +
                 "</PidOptions>";
     }
 
 
-    private boolean isAppInstalled(Context context, String packageName) {
-        try {
-            context.getPackageManager().getPackageInfo(packageName, 0);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-    }
+//    private boolean isAppInstalled(Context context, String packageName) {
+//        try {
+//            context.getPackageManager().getPackageInfo(packageName, 0);
+//            return true;
+//        } catch (PackageManager.NameNotFoundException e) {
+//            return false;
+//        }
+//    }
+//
+//
+//    private boolean hasCameraPermissionForFaceRD(Context context) {
+//        PackageManager pm = context.getPackageManager();
+//        return pm.checkPermission(Manifest.permission.CAMERA, FACE_RD_PACKAGE)
+//                == PackageManager.PERMISSION_GRANTED;
+//    }
 
-
-    private boolean hasCameraPermissionForFaceRD(Context context) {
-        PackageManager pm = context.getPackageManager();
-        return pm.checkPermission(Manifest.permission.CAMERA, FACE_RD_PACKAGE)
-                == PackageManager.PERMISSION_GRANTED;
-    }
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RD_SERVICE_REQUEST) {
             if (resultCode == RESULT_OK && data != null) {
-                String pidData = data.getStringExtra("PID_DATA");
-                if (pidData != null) {
-                    Log.d("FaceRD", "PID Data received: " + pidData);
-                    // TODO: send to server
-                } else {
-                    Log.e("FaceRD", "Result OK but no PID_DATA returned!");
-                }
+                String pidData = data.getStringExtra("response");
+                Log.d(TAG, "Capture Response: " + pidData);
+                Toast.makeText(getContext(), "PID Data: " + pidData, Toast.LENGTH_SHORT).show();
             } else {
+                String error = (data != null) ? data.getStringExtra("response") : "No response";
+                Log.e(TAG, "Capture failed: " + error);
+            }
+        }
 
-                Log.e("FaceRD", "Face capture failed/cancelled, resultCode=" + resultCode);
-
-                if (data != null) {
-                    // Try to fetch error details
-                    String errorCode = data.getStringExtra("ERROR_CODE");
-                    String errorInfo = data.getStringExtra("ERR_INFO");
-                    String errCode = data.getStringExtra("ERR_CODE");
-                    String errInfo = data.getStringExtra("errInfo");
-
-                    if (errorCode != null) Log.e("FaceRD", "ERROR_CODE: " + errorCode);
-                    if (errorInfo != null) Log.e("FaceRD", "ERR_INFO: " + errorInfo);
-                    if (errCode != null) Log.e("FaceRD", "ERR_CODE: " + errCode);
-                    if (errInfo != null) Log.e("FaceRD", "errInfo: " + errInfo);
-
-                    // Sometimes the RD service even returns XML with error
-                    String pidData = data.getStringExtra("PID_DATA");
-                    if (pidData != null) {
-                        Log.e("FaceRD", "Error PID XML: " + pidData);
-                    }
-                } else {
-                    Log.e("FaceRD", "No data returned in cancelled result.");
-                }
+        if (requestCode == LOCAL_MATCH_REQ) {
+            if (resultCode == RESULT_OK && data != null) {
+                String response = data.getStringExtra("RESPONSE");
+                Log.d(TAG, "Match Response: " + response);
+                Toast.makeText(getContext(), "Match Response: " + response, Toast.LENGTH_SHORT).show();
+            } else {
+                String error = (data != null) ? data.getStringExtra("RESPONSE") : "No response";
+                Log.e(TAG, "Local Match failed: " + error);
             }
         }
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == RD_SERVICE_REQUEST) {
+//            if (resultCode == RESULT_OK && data != null) {
+//                String response = data.getStringExtra("RESPONSE");
+//                Log.d(TAG, "Face Match Response: " + response);
+//
+//                if (response != null && response.contains("|||")) {
+//                    String[] parts = response.split("\\|\\|\\|");
+//                    String txnId = parts[0];
+//                    String base64PidData = parts[1];
+//
+//                    Log.d(TAG, "Transaction ID: " + txnId);
+//                    Log.d(TAG, "PID Data (Base64): " + base64PidData);
+//
+//                    // TODO: send txnId + PID data to your backend for verification
+//                } else {
+//                    Log.e(TAG, "Invalid response from FaceRD");
+//                }
+//            } else if (resultCode == RESULT_CANCELED && data != null) {
+//                String error = data.getStringExtra("RESPONSE");
+//                Log.e(TAG, "Face Match cancelled or error: " + error);
+//            } else {
+//                Log.e(TAG, "Face Match failed: no response received");
+//            }
+//        }
+//    }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == RD_SERVICE_REQUEST) {
+//            if (resultCode == RESULT_OK && data != null) {
+//                String response = data.getStringExtra("RESPONSE");
+//                Log.d(TAG, "Face Match Response: " + response);
+//
+//                if (response != null && response.contains("|||")) {
+//                    String[] parts = response.split("\\|\\|\\|");
+//                    String txnId = parts[0];
+//                    String base64PidData = parts[1];
+//
+//                    Log.d(TAG, "Transaction ID: " + txnId);
+//                    Log.d(TAG, "PID Data (Base64): " + base64PidData);
+//
+//                    // TODO: send txnId + PID data to your backend for verification
+//                } else {
+//                    Log.e(TAG, "Invalid response from FaceRD");
+//                }
+//            } else {
+//                Log.e(TAG, "Face Match failed or cancelled");
+//            }
+//        }
+//
+//
+////        if (requestCode == RD_SERVICE_REQUEST) {
+////            if (resultCode == RESULT_OK && data != null) {
+////                String pidData = data.getStringExtra("PID_DATA");
+////                if (pidData != null) {
+////                    Log.d("FaceRD", "PID Data received: " + pidData);
+////                    // TODO: send to server
+////                } else {
+////                    Log.e("FaceRD", "Result OK but no PID_DATA returned!");
+////                }
+////            } else {
+////
+////                Log.e("FaceRD", "Face capture failed/cancelled, resultCode=" + resultCode);
+////
+////                if (data != null) {
+////                    // Try to fetch error details
+////                    String errorCode = data.getStringExtra("ERROR_CODE");
+////                    String errorInfo = data.getStringExtra("ERR_INFO");
+////                    String errCode = data.getStringExtra("ERR_CODE");
+////                    String errInfo = data.getStringExtra("errInfo");
+////
+////                    if (errorCode != null) Log.e("FaceRD", "ERROR_CODE: " + errorCode);
+////                    if (errorInfo != null) Log.e("FaceRD", "ERR_INFO: " + errorInfo);
+////                    if (errCode != null) Log.e("FaceRD", "ERR_CODE: " + errCode);
+////                    if (errInfo != null) Log.e("FaceRD", "errInfo: " + errInfo);
+////
+////                    // Sometimes the RD service even returns XML with error
+////                    String pidData = data.getStringExtra("PID_DATA");
+////                    if (pidData != null) {
+////                        Log.e("FaceRD", "Error PID XML: " + pidData);
+////                    }
+////                } else {
+////                    Log.e("FaceRD", "No data returned in cancelled result.");
+////                }
+////            }
+////        }
+//    }
 
 
 

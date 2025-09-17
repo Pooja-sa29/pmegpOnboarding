@@ -9,6 +9,11 @@ public class NICGroupModel {
     @SerializedName("NicDesc")
     private String nic_desc;
 
+    public NICGroupModel(String nic_code, String nic_desc) {
+        this.nic_code = nic_code;
+        this.nic_desc = nic_desc;
+    }
+
     private boolean isChecked = false;
 
     public boolean isChecked() {

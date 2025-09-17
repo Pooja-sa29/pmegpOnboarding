@@ -26,11 +26,13 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.trust.pmegpcustomeronboardingapp.R;
+import com.trust.pmegpcustomeronboardingapp.activity.adapter.ProjectInfoAdapter;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyResponse;
@@ -46,6 +48,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.BankModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DistrictModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.GenderModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.InformationSource;
+import com.trust.pmegpcustomeronboardingapp.activity.model.NICGroupModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.QualificationModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ResultModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SocialCategory;
@@ -91,7 +94,7 @@ public class ApplicationFragment extends BaseFormFragment {
     Spinner app_implementing_agency_txt,app_titleSpinner,app_spinner_about_us_spinner,app_iastateSpinner,app_activityspinner,app_agencydistrictSpinner,app_unitvillagenamespinner,app_unitsubdistrictnameSpinner,app_unitdistrictnameList,app_spinner_gender,app_social_category_spinner,app_special_category_spinner,app_qualificationspinner,app_state_spinner,app_bank_spinner_list,app_alt_bank_spinner_list;
     CheckBox app_agencyTypecheck,app_checkbox_availt_note,app_form_check;
     RadioGroup radioGroup;
-    RadioButton yesBtn,noBtn;
+    RadioButton yesBtn,noBtn,app_yes_radio,app_No_radio;
     LinearLayout availLayout;
     TextView app_agencyTypeName;
     RecyclerView app_rv_product;
@@ -197,6 +200,8 @@ public class ApplicationFragment extends BaseFormFragment {
          yesBtn = view.findViewById(R.id.app_yes_cgt);
          noBtn = view.findViewById(R.id.app_No_cgt);
          availLayout = view.findViewById(R.id.app_avail_layout);
+        app_yes_radio = view.findViewById(R.id.app_yes_radio);
+        app_No_radio = view.findViewById(R.id.app_No_radio);
 
         txt_application_layout = view.findViewById(R.id.txt_application_layout);
         app_txt_communicationLayout = view.findViewById(R.id.app_txt_communicationLayout);
@@ -216,6 +221,7 @@ public class ApplicationFragment extends BaseFormFragment {
         app_cv_alternate_Financing_bank = view.findViewById(R.id.app_cv_alternate_Financing_bank);
         app_cv_otherInfo = view.findViewById(R.id.app_cv_otherInfo);
 
+        app_rv_product.setLayoutManager(new LinearLayoutManager(getContext()));
 
         cv_application.setVisibility(View.GONE);
         app_cv_communication_address.setVisibility(View.GONE);
@@ -423,7 +429,7 @@ public class ApplicationFragment extends BaseFormFragment {
     }
 
     private void initData() {
-        titleList.add(0, "--Select title--");
+        titleList.add(0, "Shri");
         titleList.add(1, "Smt.");
         titleList.add(2, "Kum.");
         titleList.add(3, "Ms.");
@@ -442,7 +448,6 @@ public class ApplicationFragment extends BaseFormFragment {
         fetchUnitTypeData("");
         fetchGenderList();
         fetchBankList();
-
 
     }
 
@@ -1439,6 +1444,38 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         if (data.getUnitActivityType()!= null) {
             fetchUnitTypeData(data.getUnitActivityType());
         }
+        List<NICGroupModel> selectedList   = new ArrayList<>();
+        selectedList.add(new NICGroupModel(data.getUnitActivityName(), data.getProdDescr()));
+        selectedList.add(new NICGroupModel(data.getUnitActivityName2(), data.getProdDescr2()));
+        selectedList.add(new NICGroupModel(data.getUnitActivityName3(), data.getProdDescr3()));
+
+
+
+
+        ProjectInfoAdapter projectInfoAdapter = new ProjectInfoAdapter(selectedList);
+        app_rv_product.setAdapter(projectInfoAdapter);
+
+        app_yes_radio.setChecked(data.isEDPTraining());
+        if (data.isEDPTraining() == true) {
+            app_yes_radio.setVisibility(View.VISIBLE);
+        } else {
+            app_No_radio.setVisibility(View.GONE);
+        }
+
+
+
+//            if (checkedId == R.id.yes_radio) {
+//                findViewById(R.id.edp_subgrp_radioGrp).setVisibility(View.VISIBLE);
+//                findViewById(R.id.edp_training_insti_name).setVisibility(View.VISIBLE);
+//
+//
+//            }else if(checkedId == R.id.No_radio){
+//                findViewById(R.id.edp_subgrp_radioGrp).setVisibility(View.GONE);
+//                findViewById(R.id.edp_training_insti_name).setVisibility(View.GONE);
+//
+//            }
+
+
         System.out.println("app_checkbox "+data.isAvailCGTMSE());
         if (data.isAvailCGTMSE()) {
             yesBtn.setChecked(true);
