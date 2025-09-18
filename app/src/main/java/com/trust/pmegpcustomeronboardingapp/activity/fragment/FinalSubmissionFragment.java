@@ -504,7 +504,9 @@ public class FinalSubmissionFragment extends Fragment {
             startActivityForResult(intent, RD_SERVICE_REQUEST);
         } catch (Exception e) {
             Log.e(TAG, "FaceRD not available", e);
-            Toast.makeText(getContext(), "Aadhaar Face RD Service is NOT installed. Please Install", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),
+                    "Aadhaar Face RD Service is NOT installed. Please install from Play Store.",
+                    Toast.LENGTH_LONG).show();
             openPlayStoreForFaceRD();
         }
     }
@@ -648,99 +650,7 @@ public class FinalSubmissionFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == RD_SERVICE_REQUEST) {
-//            if (resultCode == RESULT_OK && data != null) {
-//                String response = data.getStringExtra("RESPONSE");
-//                Log.d(TAG, "Face Match Response: " + response);
-//
-//                if (response != null && response.contains("|||")) {
-//                    String[] parts = response.split("\\|\\|\\|");
-//                    String txnId = parts[0];
-//                    String base64PidData = parts[1];
-//
-//                    Log.d(TAG, "Transaction ID: " + txnId);
-//                    Log.d(TAG, "PID Data (Base64): " + base64PidData);
-//
-//                    // TODO: send txnId + PID data to your backend for verification
-//                } else {
-//                    Log.e(TAG, "Invalid response from FaceRD");
-//                }
-//            } else if (resultCode == RESULT_CANCELED && data != null) {
-//                String error = data.getStringExtra("RESPONSE");
-//                Log.e(TAG, "Face Match cancelled or error: " + error);
-//            } else {
-//                Log.e(TAG, "Face Match failed: no response received");
-//            }
-//        }
-//    }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == RD_SERVICE_REQUEST) {
-//            if (resultCode == RESULT_OK && data != null) {
-//                String response = data.getStringExtra("RESPONSE");
-//                Log.d(TAG, "Face Match Response: " + response);
-//
-//                if (response != null && response.contains("|||")) {
-//                    String[] parts = response.split("\\|\\|\\|");
-//                    String txnId = parts[0];
-//                    String base64PidData = parts[1];
-//
-//                    Log.d(TAG, "Transaction ID: " + txnId);
-//                    Log.d(TAG, "PID Data (Base64): " + base64PidData);
-//
-//                    // TODO: send txnId + PID data to your backend for verification
-//                } else {
-//                    Log.e(TAG, "Invalid response from FaceRD");
-//                }
-//            } else {
-//                Log.e(TAG, "Face Match failed or cancelled");
-//            }
-//        }
-//
-//
-////        if (requestCode == RD_SERVICE_REQUEST) {
-////            if (resultCode == RESULT_OK && data != null) {
-////                String pidData = data.getStringExtra("PID_DATA");
-////                if (pidData != null) {
-////                    Log.d("FaceRD", "PID Data received: " + pidData);
-////                    // TODO: send to server
-////                } else {
-////                    Log.e("FaceRD", "Result OK but no PID_DATA returned!");
-////                }
-////            } else {
-////
-////                Log.e("FaceRD", "Face capture failed/cancelled, resultCode=" + resultCode);
-////
-////                if (data != null) {
-////                    // Try to fetch error details
-////                    String errorCode = data.getStringExtra("ERROR_CODE");
-////                    String errorInfo = data.getStringExtra("ERR_INFO");
-////                    String errCode = data.getStringExtra("ERR_CODE");
-////                    String errInfo = data.getStringExtra("errInfo");
-////
-////                    if (errorCode != null) Log.e("FaceRD", "ERROR_CODE: " + errorCode);
-////                    if (errorInfo != null) Log.e("FaceRD", "ERR_INFO: " + errorInfo);
-////                    if (errCode != null) Log.e("FaceRD", "ERR_CODE: " + errCode);
-////                    if (errInfo != null) Log.e("FaceRD", "errInfo: " + errInfo);
-////
-////                    // Sometimes the RD service even returns XML with error
-////                    String pidData = data.getStringExtra("PID_DATA");
-////                    if (pidData != null) {
-////                        Log.e("FaceRD", "Error PID XML: " + pidData);
-////                    }
-////                } else {
-////                    Log.e("FaceRD", "No data returned in cancelled result.");
-////                }
-////            }
-////        }
-//    }
 
 
 
