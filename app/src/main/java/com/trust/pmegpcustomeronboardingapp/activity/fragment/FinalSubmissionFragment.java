@@ -7,6 +7,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.MediaRouteButton;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -85,6 +86,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.TrustMethods;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -461,7 +463,6 @@ public class FinalSubmissionFragment extends Fragment {
                             if (pidData != null) {
                                 Log.e("FaceRD", "PID_DATA (may contain error XML): " + pidData);
 
-                                // Quick parse of <Resp> error attributes
                                 if (pidData.contains("<Resp")) {
                                     try {
                                         int codeStart = pidData.indexOf("errCode=\"");
@@ -490,12 +491,26 @@ public class FinalSubmissionFragment extends Fragment {
                 }
         );
 
-//        img_facedetection.setOnClickListener(v -> checkAndLaunchFaceRD(requireContext()));
         img_facedetection.setOnClickListener(v -> startFaceCapture());
 
     }
 
     private void startFaceCapture() {
+
+        if (isDebuggingEnabled(requireContext())) {
+            Toast.makeText(requireContext(),
+                    "Please disable USB/Wireless debugging before Aadhaar face capture.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (isDeviceRooted()) {
+            Toast.makeText(requireContext(),
+                    "Face capture is not allowed on rooted devices.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String pidOptions = buildPidOptionsXml();
         Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
         intent.putExtra("request", pidOptions);
@@ -511,7 +526,20 @@ public class FinalSubmissionFragment extends Fragment {
         }
     }
 
+    private boolean isDebuggingEnabled(Context context) {
+        return (Settings.Secure.getInt(context.getContentResolver(),
+                Settings.Secure.ADB_ENABLED, 0) == 1);
+    }
 
+    private boolean isDeviceRooted() {
+        String[] paths = {"/system/app/Superuser.apk", "/sbin/su", "/system/bin/su",
+                "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su",
+                "/system/sd/xbin/su", "/system/bin/failsafe/su", "/data/local/su"};
+        for (String path : paths) {
+            if (new File(path).exists()) return true;
+        }
+        return false;
+    }
     private void startLocalFaceMatch() {
         String xmlRequest = buildLocalFaceMatchXml();
         Intent intent = new Intent("in.gov.uidai.rdservice.face.LOCAL_FACE_MATCH");
@@ -537,33 +565,6 @@ public class FinalSubmissionFragment extends Fragment {
                 "</localFaceMatchRequest>";
     }
 
-//    private void checkAndLaunchFaceRD(Context context) {
-//        if (!isAppInstalled(context, FACE_RD_PACKAGE)) {
-//            Toast.makeText(getContext(), "Aadhaar Face RD Service is NOT installed.", Toast.LENGTH_LONG).show();
-//            openPlayStoreForFaceRD();
-//        }
-//
-//        if (!hasCameraPermissionForFaceRD(context)) {
-//            new AlertDialog.Builder(context)
-//                    .setTitle("Camera Permission Required")
-//                    .setMessage("FaceRD app needs camera permission to capture your face. Please allow it in Settings.")
-//                    .setCancelable(false)
-//                    .setPositiveButton("Open Settings", (dialog, which) -> {
-//                        // Open FaceRD app settings
-//                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-//                                Uri.parse("package:" + FACE_RD_PACKAGE));
-//                        startActivity(intent);
-//                    })
-//                    .setNegativeButton("Cancel", (dialog, which) -> {
-//                        dialog.dismiss();
-//                        Toast.makeText(context, "Face capture cancelled", Toast.LENGTH_SHORT).show();
-//                    })
-//                    .show();
-//            return;
-//        }
-//
-//        launchFaceRD();
-//    }
 
     private void openPlayStoreForFaceRD() {
         try {
@@ -573,21 +574,7 @@ public class FinalSubmissionFragment extends Fragment {
         }
     }
 
-    private void launchFaceRD() {
 
-            String pidOptions = buildPidOptionsXml();
-
-            Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
-            intent.putExtra("request", pidOptions);
-
-            try {
-                startActivityForResult(intent, RD_SERVICE_REQUEST);
-            } catch (Exception e) {
-                Toast.makeText(requireContext(), "FaceRD app not installed!", Toast.LENGTH_LONG).show();
-                Log.e(TAG, "Error launching FaceRD app", e);
-            }
-
-    }
 
     private String buildPidOptionsXml() {
         String txnId = UUID.randomUUID().toString().replace("-", "");
@@ -630,11 +617,22 @@ public class FinalSubmissionFragment extends Fragment {
         if (requestCode == RD_SERVICE_REQUEST) {
             if (resultCode == RESULT_OK && data != null) {
                 String pidData = data.getStringExtra("response");
-                Log.d(TAG, "Capture Response: " + pidData);
-                Toast.makeText(getContext(), "PID Data: " + pidData, Toast.LENGTH_SHORT).show();
+
+                if (pidData != null && pidData.contains("PID_CREATED")) {
+                    Toast.makeText(getContext(), "Face captured successfully!", Toast.LENGTH_SHORT).show();
+
+
+//                    progressBar.setVisibility(View.VISIBLE);
+
+//                    sendPidDataToBackend(pidData);
+                } else {
+                    Log.e(TAG, "Capture failed: " + pidData);
+                    Toast.makeText(getContext(), "Face capture failed. Please try again.", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 String error = (data != null) ? data.getStringExtra("response") : "No response";
                 Log.e(TAG, "Capture failed: " + error);
+                Toast.makeText(getContext(), "Face capture failed.", Toast.LENGTH_SHORT).show();
             }
         }
 

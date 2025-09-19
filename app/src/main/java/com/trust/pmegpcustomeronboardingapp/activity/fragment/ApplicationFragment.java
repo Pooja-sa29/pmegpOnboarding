@@ -1455,23 +1455,26 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         ProjectInfoAdapter projectInfoAdapter = new ProjectInfoAdapter(selectedList);
         app_rv_product.setAdapter(projectInfoAdapter);
 
-        app_yes_radio.setChecked(data.isEDPTraining());
-        if (data.isEDPTraining() == true) {
-            app_yes_radio.setVisibility(View.VISIBLE);
+
+
+        if (data.isEDPTraining()) {
+            app_yes_radio.setChecked(true);
+            app_No_radio.setChecked(false);
         } else {
-            app_No_radio.setVisibility(View.GONE);
+            app_yes_radio.setChecked(false);
+            app_No_radio.setChecked(true);
         }
 
 
-
-//            if (checkedId == R.id.yes_radio) {
-//                findViewById(R.id.edp_subgrp_radioGrp).setVisibility(View.VISIBLE);
-//                findViewById(R.id.edp_training_insti_name).setVisibility(View.VISIBLE);
+//            if (app_yes_radio.isChecked()) {
+//                app_edp_subgrp_radioGrp.setVisibility(View.VISIBLE);
+//               app_edp_training_insti_name.setVisibility(View.VISIBLE);
 //
 //
-//            }else if(checkedId == R.id.No_radio){
-//                findViewById(R.id.edp_subgrp_radioGrp).setVisibility(View.GONE);
-//                findViewById(R.id.edp_training_insti_name).setVisibility(View.GONE);
+//            }else if(app_No_radio.isChecked()){
+//                app_edp_subgrp_radioGrp.setVisibility(View.VISIBLE);
+//                app_edp_training_insti_name.setVisibility(View.VISIBLE);
+//                app_btn_edpSelection.setVisibility(View.VISIBLE);
 //
 //            }
 
