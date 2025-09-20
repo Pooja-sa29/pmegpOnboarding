@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -282,55 +283,57 @@ public class ApplicationFragment extends BaseFormFragment {
             applicant.setLegalType(applicantDataModel.getLegalType());
             applicant.setGender(applicantDataModel.getGender());
             applicant.setDateOfBirth(applicantDataModel.getDateofBirth());
-            applicant.setAge(applicantDataModel.getAge());
-            applicant.setSocialCatID(applicantDataModel.getSocialCatID());
-            applicant.setSpecialCatID(applicantDataModel.getSpecialCatID());
-            applicant.setQualID(applicantDataModel.getQualID());
-            applicant.setQualDesc(applicantDataModel.getQualDesc());
-            applicant.setComnAddress(applicantDataModel.getComnAddress());
-            applicant.setComnTaluka(applicantDataModel.getComnTaluka());
-            applicant.setComnDistrict(applicantDataModel.getComnDistrict());
-            applicant.setComnPin(applicantDataModel.getComnPin());
-            applicant.setMobileNo1(applicantDataModel.getMobileNo1());
-            applicant.setMobileNo2(applicantDataModel.getMobileNo2());
-            applicant.setEmail(applicantDataModel.geteMail());
-            applicant.setPanNo(applicantDataModel.getPanNo());
-            applicant.setUnitLocation(applicantDataModel.getUnitLocation());
-            applicant.setUnitAddress(applicantDataModel.getUnitAddress());
-            applicant.setUnitTaluka(applicantDataModel.getUnitTaluka());
-            applicant.setVillageName(applicantDataModel.getVillageName());
-            applicant.setLgdCodeId(applicantDataModel.getLgdCodeId());
-            applicant.setUnitDistrict(applicantDataModel.getUnitDistrict());
+            applicant.setAge(Integer.parseInt(app_age.getText().toString()));
+            applicant.setSocialCatID(selectedSocialCatCode!= null ? selectedSocialCatCode : "");
+            applicant.setSpecialCatID(selectedSpecialCatCode != null ? selectedSpecialCatCode : "");
+            applicant.setQualID(selectedQualCode != null ? selectedQualCode : "");
+            applicant.setQualDesc(selectedQualDesc != null ? selectedQualDesc : "");
+            applicant.setComnAddress(app_communication_address.getText().toString());
+            applicant.setComnTaluka(app_taluka_block_name.getText().toString());
+            applicant.setComnDistrict(selectedDistrictName);
+            applicant.setComnPin(app_pin_number.getText().toString());
+            applicant.setMobileNo1(app_mobile_number.getText().toString());
+            applicant.setMobileNo2(app_alternate_mobile_number.getText().toString());
+            applicant.setEmail(app_email.getText().toString());
+            applicant.setPanNo(app_pannumber.getText().toString());
+            applicant.setUnitLocation(app_unitLoc.getText().toString());
+            applicant.setUnitAddress(app_unitaddress.getText().toString());
+            applicant.setUnitTaluka(subdistrictName);
+            applicant.setVillageName(selectedVillageName);
+            applicant.setLgdCodeId(Integer.parseInt(app_lgd_code.getText().toString()));
+            applicant.setUnitDistrict(district_name);
             applicant.setLgdCode(applicantDataModel.getLgdCode());
-            applicant.setUnitPin(applicantDataModel.getUnitPin());
+            applicant.setUnitPin(app_unitpincode.getText().toString());
             applicant.setUnitActivityTypeId("");
-            applicant.setEDPTraining(applicantDataModel.getIsEDPTraining());
+            applicant.setEDPTraining(applicant.isEDPTraining());
             applicant.setUnitLocationSame(applicantDataModel.getIsUnitLocationSame());
-            applicant.setEdpTrainingInst(applicantDataModel.getEdpTrainingInst());
-            applicant.setCapitalExpd(applicantDataModel.getCapitalExpd());
-            applicant.setWorkingCapital(applicantDataModel.getWorkingCapital());
-            applicant.setTotalProjectCost(applicantDataModel.getTotalProjectCost());
-            applicant.setEmployment(applicantDataModel.getEmployment());
-            applicant.setFinBankID1(applicantDataModel.getFinBankID1());
-            applicant.setFinBank1(applicantDataModel.getFinBank1());
-            applicant.setBankIFSC1(applicantDataModel.getBankIFSC1());
-            applicant.setBankBranch1(applicantDataModel.getBankBranch1());
-            applicant.setBankAddress1(applicantDataModel.getBankAddress1());
-            applicant.setBankDist1(applicantDataModel.getBankDist1());
-            applicant.setFinBankID1(applicantDataModel.getFinBankID1());
-            applicant.setFinBank1(applicantDataModel.getFinBank1());
-            applicant.setBankIFSC2(applicantDataModel.getBankIFSC2());
-            applicant.setBankBranch2(applicantDataModel.getBankBranch2());
-            applicant.setBankDist2(applicantDataModel.getBankDist2());
+            applicant.setEdpTrainingInst(app_edp_training_insti_name.getText().toString());
+            applicant.setCapitalExpd(Double.parseDouble(app_capital_exp.getText().toString()));
+            applicant.setWorkingCapital(Double.parseDouble(app_workingcapital.getText().toString()));
+            applicant.setTotalProjectCost(Double.parseDouble(app_totalexp.getText().toString()));
+            applicant.setEmployment(Integer.parseInt(app_employee_count.getText().toString()));
+            applicant.setFinBankID1(selectedBankListID);
+            applicant.setFinBank1(app_branch_name.getText().toString());
+            applicant.setBankIFSC1(app_ifscbank_code.getText().toString());
+            applicant.setBankBranch1(app_branch_name.getText().toString());
+            applicant.setBankAddress1(app_primary_address.getText().toString());
+            applicant.setBankDist1(app_pf_districtEd.getText().toString());
+
+            applicant.setFinBankID2(String.valueOf(alt_selectedBankListID));
+            applicant.setFinBank2(app_alt_branch_name.getText().toString());
+            applicant.setBankIFSC2(app_alt_btn_ifsc_code.getText().toString());
+            applicant.setBankBranch2(app_alt_branch_name.getText().toString());
+            applicant.setBankAddress2(app_alt_primary_address.getText().toString());
+            applicant.setBankDist2(app_alt_pf_districtEd.getText().toString());
             applicant.isAvailCGTMSE(applicantDataModel.getIsAvailCGTMSE());
             applicant.setPmegpRef(applicantDataModel.getPmegpRef());
-            applicant.setIsAadharVerified(applicantDataModel.getIsAadharVerified());
+            applicant.setIsAadharVerified(applicantDetailData.getIsAadharVerified());
             applicant.setIsPanVerified(applicantDataModel.getIsPanVerified());
             applicant.setDeclrAccept(applicantDataModel.getIsDeclrAccept());
             applicant.setSchemeID(applicantDataModel.getSchemeID());
             applicant.setCharAppliAccepted(applicantDataModel.getIsCharAppliAccepted());
-            applicant.setStateCode(applicantDataModel.getStateCode());
-            applicant.setState_Name(applicantDataModel.getState_Name());
+            applicant.setStateCode(state_code);
+            applicant.setState_Name(statename);
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Log.d("FINAL_JSON", gson.toJson(applicant));
 
@@ -376,14 +379,14 @@ public class ApplicationFragment extends BaseFormFragment {
 
                     Log.d("API_RESPONSE", new Gson().toJson(status));
 
-//                    if (status.isSuccess()) {
-//                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
-//                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
-//                        startActivity(i);
-//
-//                    } else {
-//                        Toast.makeText(getContext(), "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
+                    if (status.isSuccess()) {
+                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
+                        startActivity(i);
+
+                    } else {
+                        Toast.makeText(getContext(), "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(getContext(), "Unexpected response", Toast.LENGTH_SHORT).show();
                 }
@@ -1381,7 +1384,10 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         app_totalexp.setText(String.valueOf(data.getTotalProjectCost()));
 
         app_employee_count.setText(String.valueOf(data.getEmployment()));
-
+        System.out.println("finbank1 "+data.getFinBank1()+","+data.getFinBank2());
+        if(data.getFinBank1() != null){
+            setSpinnerSelection(app_bank_spinner_list,data.getFinBank1());
+        }
 
         app_ifscbank_code.setText(data.getBankIFSC1());
         app_branch_name.setText(data.getBankBranch1());
@@ -1390,6 +1396,10 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
 
         System.out.println("alt_bank"+data.getBankIFSC2()+ " "+data.getBankBranch2()+" "+data.getBankAddress2()+" "+data.getBankDist2());
 
+
+        if(data.getFinBank2() != null){
+            setSpinnerSelection(app_alt_bank_spinner_list,data.getFinBank2());
+        }
         app_alt_ifscbank_code.setText(data.getBankIFSC2() != null ? data.getBankIFSC2() : "");
         app_alt_branch_name.setText(data.getBankBranch2() != null ? data.getBankBranch2() : "");
         app_alt_primary_address.setText(data.getBankAddress2() != null ? data.getBankAddress2() :"");
@@ -1562,18 +1572,22 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
     }
 
     private void setSpinnerSelection(Spinner spinner, String value) {
-        if (value == null || spinner.getAdapter() == null) return;
+        if (value == null || value.trim().isEmpty()) return;
+        SpinnerAdapter adapter = spinner.getAdapter();
+        if (adapter == null) return;
 
-        for (int i = 0; i < spinner.getCount(); i++) {
-            String item = spinner.getItemAtPosition(i).toString().trim();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            String item = adapter.getItem(i).toString().trim();
             if (item.equalsIgnoreCase(value.trim())) {
                 spinner.setSelection(i);
                 return;
             }
         }
 
-        Log.w("SpinnerSelection", "Value not found in spinner: " + value);
+        // Debug if not found
+        Log.w("Spinner", "Value not found in spinner: " + value);
     }
+
     private void setUnitTypeSpinnerSelection(Spinner spinner, List<String> items, String valueToSelect) {
         if (valueToSelect == null || valueToSelect.trim().isEmpty()) return;
 
