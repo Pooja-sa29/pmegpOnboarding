@@ -1,7 +1,10 @@
 package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -82,6 +85,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ApplicationFragment extends BaseFormFragment {
+    private ProgressDialog progressDialog;
+
     private ApiServices apiService;
     ApplicantDataModel applicantDataModel;
     private List<CardView> allCards;
@@ -119,7 +124,7 @@ public class ApplicationFragment extends BaseFormFragment {
     private boolean isInitialLoad = true;
     String comn_district;
     String unit_district;
-
+    int selectedSubdistrictCode;
     String selectedDistrictName,selectedPincode,selectedVillageName,subdistrictName,selectedNodalCode,agencyName,selectedAgencyCode,selectedAgency_Code,selectedBankName2,alt_selectedCityName,selectedBankName1,selectedCityName,selectedQualDesc,selectedQualCode,selectedSocialCatCode,selectedSpecialCatCode,selectedunittype,selectedStateCode,state_shortCode,state_code,selectedStateCodeIa,statename,state_zonal_code,selectedDistrictCode,districtCode,district_name;
     int selectedagencyoffId,agentId,stateId,districtId,activityUnitType,selectedBankListID,alt_selectedBankListID,selectedBankId2;
     @SuppressLint("MissingInflatedId")
@@ -394,7 +399,7 @@ public class ApplicationFragment extends BaseFormFragment {
 
             @Override
             public void onFailure(Call<ApplicantUpdateResult> call, Throwable t) {
-                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error1: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -519,7 +524,7 @@ public class ApplicationFragment extends BaseFormFragment {
                                 if (isInitialLoad) {
                                     fetchDistrictListforIA(selectedStateCodeIa,comn_district,unit_district);// keep Nagpur
                                 } else {
-                                    fetchDistrictListforIA(selectedStateCodeIa, "",""); // reset on user selection
+                                    fetchDistrictListforIA(selectedStateCodeIa, "","");// reset on user selection
                                 }
                             } else {
                                 selectedStateCodeIa = null;
@@ -640,6 +645,9 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
                     districtNames.add(district.getDistrictName());
                 }
 
+
+
+
                 // Agency spinner adapter
                 ArrayAdapter<String> agencyAdapter = new ArrayAdapter<>(
                         requireContext(),
@@ -677,6 +685,16 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
                     }
                 }
 
+                if (preSelectedUnitDistrict != null && !preSelectedUnitDistrict.trim().isEmpty()) {
+                    int index = districtNames.indexOf(preSelectedUnitDistrict);
+                    if (index >= 0) {
+                        app_unitdistrictnameList.setSelection(index, false);
+                        Log.i("SpinnerSelection", "Pre-selecting unit district: " + preSelectedUnitDistrict + " at index " + index);
+                    }
+                }
+
+
+
                 // Handle user selection for agency district
                 app_agencydistrictSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -688,16 +706,17 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
                             districtCode = selectedDistrict.getDistrictCode();
                             district_name = selectedDistrict.getDistrictName();
 
-                            Log.d("SpinnerSelection", "User selected: " + district_name);
+                            Log.d("SpinnerSelection", "User selected: " + district_name +" "+districtId);
 
                             app_unitdistrictnameList.setSelection(position, false);
+
 
                             agencyRequestList = new ArrayList<>();
                             implementing_type_agency_layout.setVisibility(View.VISIBLE);
                             AgencyRequest agencyRequest = new AgencyRequest(1, stateId, districtId);
                             agencyRequestList.add(agencyRequest);
 
-                            fetchSubdistrictList(String.valueOf(districtId));
+                            fetchSubdistrictList(String.valueOf(districtId),"");
                             fetchAgencyOffDetails(agencyRequest);
                         }
                     }
@@ -755,7 +774,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         });
     }
 
-    private void fetchSubdistrictList(String code) {
+    private void fetchSubdistrictList(String code,String preSelectedSubdistrictDistrict) {
         System.out.println("code_d"+code);
         SubDistrictRequest request = new SubDistrictRequest(code);
         apiService.GetSubDistricts(request).enqueue(
@@ -780,6 +799,18 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
                             adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                             app_unitsubdistrictnameSpinner.setAdapter(adapter);
 
+                            int selectedIndex = 0;
+                            if (preSelectedSubdistrictDistrict != null && !preSelectedSubdistrictDistrict.isEmpty()) {
+                                for (int i = 1; i < subDistrictInfoList.size(); i++) { // start at 1
+                                    if (subDistrictInfoList.get(i).equalsIgnoreCase(preSelectedSubdistrictDistrict.trim())) {
+                                        selectedIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            app_unitsubdistrictnameSpinner.setSelection(selectedIndex, false);
+
+
                             app_unitsubdistrictnameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -787,7 +818,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
                                         SubDistrictResponce selectedDistrict = subDistrictSource.get(position - 1);
                                         int subdistrictId = selectedDistrict.getDistrictId();
                                         System.out.println("subdistrictId"+subdistrictId);
-                                        int selectedSubdistrictCode = subDistrictSource.get(position - 1).getSubdistrict_code();
+                                         selectedSubdistrictCode = subDistrictSource.get(position - 1).getSubdistrict_code();
                                         subdistrictName = subDistrictSource.get(position - 1).getSubdistrict_name();
                                         System.out.println("subdistrictId"+subdistrictId+selectedSubdistrictCode);
                                         fetchVillageList(String.valueOf(selectedSubdistrictCode));
@@ -813,6 +844,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
     }
 
     private void fetchVillageList(String code) {
+        System.out.println("code 1"+code );
         VillageRequest request = new VillageRequest(code);
 
         apiService.getVillages(request).enqueue(new Callback<List<VillageDetailModel>>() {
@@ -831,6 +863,22 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
                             android.R.layout.simple_spinner_item, villageNames);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     app_unitvillagenamespinner.setAdapter(adapter);
+
+
+//                    if (preSelectedVillage != null && !preSelectedVillage.trim().isEmpty()) {
+//                        int index = -1;
+//                        for (int i = 0; i < villageList.size(); i++) {
+//                            if (villageList.get(i).getVillageName().equalsIgnoreCase(preSelectedVillage)) {
+//                                index = i;
+//                                break;
+//                            }
+//                        }
+//                        if (index >= 0) {
+//                            app_unitvillagenamespinner.setSelection(index, false);
+//                            Log.i("SpinnerSelection", "Pre-selecting village: "
+//                                    + preSelectedVillage + " at index " + index);
+//                        }
+//                    }
 
                     app_unitvillagenamespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
@@ -860,7 +908,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
 
             @Override
             public void onFailure(Call<List<VillageDetailModel>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error2: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -885,7 +933,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
 
             @Override
             public void onFailure(Call<UnitDetailResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error3: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1334,11 +1382,22 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
     private void getApplicantData(int applId) {
         ApplicantRequest request = new ApplicantRequest(applId);
 
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait, Loading Application data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         apiService.getApplicantData(request).enqueue(new retrofit2.Callback<ApplicationResponse>() {
             @Override
             public void onResponse(Call<ApplicationResponse> call, retrofit2.Response<ApplicationResponse> response) {
+                progressDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
                     ApplicantDetailData data = response.body().getData();
+                    SharedPreferences prefs = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("ApplName", data.getApplName());
+                    editor.apply();
+
                     Log.d("API_RESPONSE", new Gson().toJson(data));
 
 
@@ -1348,6 +1407,8 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
 
             @Override
             public void onFailure(Call<ApplicationResponse> call, Throwable t) {
+                progressDialog.dismiss();
+                System.out.println("print "+t.getMessage());
                 t.printStackTrace();
             }
         });
@@ -1364,6 +1425,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         app_age.setText(String.valueOf(data.getAge()));
         app_communication_address.setText(data.getComnAddress());
         app_district.setText(data.getComnDistrict());
+
         app_taluka_block_name.setText(data.getComnTaluka());
         app_pin_number.setText(data.getComnPin());
         app_unitaddress.setText(data.getUnitAddress());
@@ -1384,10 +1446,12 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         app_totalexp.setText(String.valueOf(data.getTotalProjectCost()));
 
         app_employee_count.setText(String.valueOf(data.getEmployment()));
-        System.out.println("finbank1 "+data.getFinBank1()+","+data.getFinBank2());
+        System.out.println("finbank1 "+data.getFinBank1()+","+data.getFinBank2()+" "+data.getUnitTaluka()+" "+data.getVillage_Name());
+
         if(data.getFinBank1() != null){
             setSpinnerSelection(app_bank_spinner_list,data.getFinBank1());
         }
+
 
         app_ifscbank_code.setText(data.getBankIFSC1());
         app_branch_name.setText(data.getBankBranch1());
@@ -1424,7 +1488,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         }
 
 
-        System.out.println("Data---"+data.getComnDistrict() +" "+data.getUnitDistrict());
+        System.out.println("Data---"+data.getComnDistrict() +" "+data.getUnitDistrict() +" "+data.getDistID());
          comn_district = data.getComnDistrict();
          unit_district = data.getUnitDistrict();
         if (data.getComnDistrict() != null) {
@@ -1432,7 +1496,14 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
             isInitialLoad = true;
         }
 
+        if(data.getUnitTaluka() != null){
+            fetchSubdistrictList(String.valueOf(data.getDistID()),data.getUnitTaluka());
+        }
 
+        if(data.getVillage_Name()!=null){
+//            fetchVillageList("",data.getVillage_Name());
+            setSpinnerSelection(app_unitvillagenamespinner,data.getVillage_Name());
+        }
         if (data.getAgencyCode() != null) {
             setAgencySelection(data.getAgencyCode());
         }

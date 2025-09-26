@@ -52,6 +52,9 @@ public class LaunchScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (android.os.Debug.isDebuggerConnected()) {
+            android.os.Debug.waitForDebugger(); // this causes the waiting
+        }
         setContentView(R.layout.activity_launch_screen);
         imageView = findViewById(R.id.bg_imgview);
         imageView.setImageResource(imageList[currentIndex]);

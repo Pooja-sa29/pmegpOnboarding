@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.MediaRouteButton;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -109,6 +110,7 @@ public class FinalSubmissionFragment extends Fragment {
     private static final String FACERD_ACTION = "in.gov.uidai.rdservice.face.CAPTURE";
     private ActivityResultLauncher<Intent> faceLauncher;
     private ApiServices apiService;
+    private ProgressDialog progressDialog;
     ApplicantDataModel applicantDataModel;
     private List<CardView> allCards;
     private List<TextView> allTextViews;
@@ -439,6 +441,7 @@ public class FinalSubmissionFragment extends Fragment {
 
                     if (result.getResultCode() == Activity.RESULT_OK && data != null) {
                         String pidData = data.getStringExtra("PID_DATA");
+
                         if (pidData != null) {
                             Log.d("FaceRD", "PID_DATA: " + pidData);
                             Toast.makeText(requireContext(), "FaceRD Success", Toast.LENGTH_LONG).show();
@@ -1607,9 +1610,16 @@ public class FinalSubmissionFragment extends Fragment {
     private void getApplicantData(int applId) {
         ApplicantRequest request = new ApplicantRequest(applId);
 
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait, Loading DPR Data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         apiService.getApplicantData(request).enqueue(new retrofit2.Callback<ApplicationResponse>() {
             @Override
             public void onResponse(Call<ApplicationResponse> call, retrofit2.Response<ApplicationResponse> response) {
+                progressDialog.dismiss();
+
                 if (response.isSuccessful() && response.body() != null) {
                     ApplicantDetailData data = response.body().getData();
                     Log.d("API_RESPONSE", new Gson().toJson(data));
@@ -1621,6 +1631,8 @@ public class FinalSubmissionFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ApplicationResponse> call, Throwable t) {
+                progressDialog.dismiss();
+
                 t.printStackTrace();
             }
         });

@@ -3,6 +3,7 @@ package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -63,6 +64,8 @@ import retrofit2.Callback;
 
 public class ScoreCardFragment extends BaseFormFragment {
     private ApiServices apiService;
+    private ProgressDialog progressDialog;
+
     TextView tv_name, tv_applicant_id, tv_total_marks, tv_marks_secured, tv_percentage;
     ApplicantAgeAdapter applicantAgeAdapter;
     DependenciesAdapter depAdapter;
@@ -131,10 +134,15 @@ public class ScoreCardFragment extends BaseFormFragment {
     private void getScoreCard(int appId) {
         ApplicantRequest request = new ApplicantRequest(appId);
 
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait, Loading DPR Data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         apiService.getScoreCardData(request).enqueue(new Callback<ScoreCard>() {
             @Override
             public void onResponse(Call<ScoreCard> call, retrofit2.Response<ScoreCard> response) {
+               progressDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
                     ScoreCard data = response.body();
                     Log.d("SCORE_master_API_RESPONSE", new Gson().toJson(data));
@@ -144,6 +152,7 @@ public class ScoreCardFragment extends BaseFormFragment {
 
             @Override
             public void onFailure(Call<ScoreCard> call, Throwable t) {
+                progressDialog.dismiss();
                 t.printStackTrace();
             }
         });

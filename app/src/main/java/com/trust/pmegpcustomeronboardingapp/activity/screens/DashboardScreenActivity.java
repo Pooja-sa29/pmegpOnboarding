@@ -68,7 +68,7 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
             R.drawable.check_circle_24
     };
     TextView fragment_name;
-    TextView appId,appName,appDoc;
+    TextView appId,appName,appDoc,welcome_txt;
     ApplicantDetailData applicantDetailData;
     HorizontalScrollView stepScrollView;
     @SuppressLint("MissingInflatedId")
@@ -79,14 +79,17 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         AppConstant.loadFromPrefs(this);
-         applicantDetailData = new ApplicantDetailData();
+
+        applicantDetailData = new ApplicantDetailData();
+
+
 
         userId = findViewById(R.id.userId);
         appId = findViewById(R.id.appId);
         appName = findViewById(R.id.appName);
         appDoc = findViewById(R.id.appDoc);
+        welcome_txt = findViewById(R.id.welcome_txt);
         stepLayout =findViewById(R.id.stepLayout);
         stepScrollView = findViewById(R.id.stepScrollView);
         fragment_name = findViewById(R.id.fragment_name);
@@ -97,10 +100,11 @@ public class DashboardScreenActivity extends AppCompatActivity implements Fragme
         linearLayout2.setVisibility(View.VISIBLE);
 //         if (AppConstant.getIsLoggedIn().equals(true)) {
              userId.setText("Welcome, Your Application ID is " + AppConstant.getUserID());
+        welcome_txt.setText(AppConstant.getApplName() != null ? "Hi, " +  AppConstant.getApplName() + " WELCOME TO PMEGP PORTAL" : "Hi,WELCOME TO PMEGP PORTAL");
 //         }
 
         appId.setText(AppConstant.getUserID());
-        appName.setText(applicantDetailData.getApplName());
+        appName.setText(AppConstant.getApplName());
         appDoc.setText("");
         toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();

@@ -3,6 +3,7 @@ package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 import static android.content.Intent.getIntent;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -62,8 +64,10 @@ import retrofit2.Response;
 
 public class DPRFragment extends BaseFormFragment {
     private ApiServices apiService;
+    private ProgressDialog progressDialog;
     private TextView txtDprApplicationLayout, txtBuildingLayout, txt_MACHINERY_layout,txt_working_capitallayout,txt_financing_details_Layout,txt_salesDetails_layout,txt_raw_material_Layout,txt_beneficiary_Layout,txt_introduction_Layout,txt_imp_agency_Layout,txt_promoter_details_Layout,txt_ofc_intro_Layout,txt_depreciation_Layout,txt_power_estimate_Layout,txt_working_capital_Layout,txt_salary_details_Layout,txt_wages_Layout,txtAddbuildingRow,txt_add_machinery_row,txt_wages_row,txt_salary_row,txt_raw_material_row,txt_add_sales_row, landTotal,machinery_total,workingCapitalTotal,salesTotal,wagesTotal,rawTotal,salartTotal,rate_of_interest_power;
     private Spinner activitySpinner;
+    Button btn_updateform;
 
     CardView cv_dpr,cv_building_details,cv_machinery_details,cv_working_capital,cv_means_of_financing,cv_sales_details,cv_raw_material_details,cv_wages_details,cv_salary_details,cv_workking_capital_details,cv_power_estimates,cv_depreciation,cv_intro_ofc,cv_promoter,cv_implementing_agency,cv_intro,cv_abt_beneficiary;
     private RecyclerView rvProduct, rvLandEntry, rvMachineryEntry, rvWorkingCapital,
@@ -149,7 +153,7 @@ public class DPRFragment extends BaseFormFragment {
         aboutBeneficiary = view.findViewById(R.id.beneficiary_details);
 
         activitySpinner = view.findViewById(R.id.activityspinner);
-
+        btn_updateform = view.findViewById(R.id.btn_updateform);
         rvProduct = view.findViewById(R.id.rv_product);
         rvLandEntry = view.findViewById(R.id.rv_land_entry);
         rvMachineryEntry = view.findViewById(R.id.rv_machinery_entry);
@@ -245,8 +249,17 @@ public class DPRFragment extends BaseFormFragment {
         txt_introduction_Layout.setOnClickListener(v -> toggleSection(cv_intro,txt_introduction_Layout ));
         txt_beneficiary_Layout.setOnClickListener(v -> toggleSection(cv_abt_beneficiary,txt_beneficiary_Layout ));
 
+
+        btn_updateform.setOnClickListener(v -> {
+            SaveApplicationForm();
+        });
         initData();
         return view;
+    }
+
+    private void SaveApplicationForm() {
+
+
     }
 
     private void initData() {
@@ -403,6 +416,7 @@ public class DPRFragment extends BaseFormFragment {
 
             @Override
             public void onFailure(Call<DRPMasterData> call, Throwable t) {
+
                 t.printStackTrace();
             }
         });
@@ -588,10 +602,15 @@ public class DPRFragment extends BaseFormFragment {
     private void getDPRData(int applicationId) {
 
         ApplicantRequest request = new ApplicantRequest(applicationId);
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait, Loading DPR Data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         apiService.getDprData(request).enqueue(new retrofit2.Callback<DPRResponse>() {
             @Override
             public void onResponse(Call<DPRResponse> call, retrofit2.Response<DPRResponse> response) {
+                progressDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
                     DPRDetailData data = response.body().getData();
                     Log.d("DRP_API_RESPONSE", new Gson().toJson(data));
@@ -601,6 +620,7 @@ public class DPRFragment extends BaseFormFragment {
 
             @Override
             public void onFailure(Call<DPRResponse> call, Throwable t) {
+                progressDialog.dismiss();
                 t.printStackTrace();
             }
         });

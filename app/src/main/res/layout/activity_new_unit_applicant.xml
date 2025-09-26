@@ -26,16 +26,14 @@
             app:titleTextAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="10dp">
+
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:layout_marginTop="?attr/actionBarSize">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1615,7 +1613,7 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-    </FrameLayout>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

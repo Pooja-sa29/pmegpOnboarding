@@ -109,12 +109,14 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/welcome_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hi, Nilotpal Jain WELCOME TO PMEGP PORTAL"
                 android:textSize="18sp"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="2"/>
         </LinearLayout>
 
 

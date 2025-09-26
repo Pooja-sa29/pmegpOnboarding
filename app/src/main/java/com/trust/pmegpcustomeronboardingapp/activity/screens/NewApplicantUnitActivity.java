@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +75,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailResponse
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
+import com.trust.pmegpcustomeronboardingapp.activity.utils.Validator;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -91,18 +93,19 @@ import retrofit2.Response;
 
 public class NewApplicantUnitActivity extends AppCompatActivity {
 
-    CardView cv_basicInfo,cv_correspondenceadd,cv_ImplementingAgency,cv_unitAddress,cv_projectInfo,cv_primaryfbanking,cv_alt_fbanking,cv_otherInfo;
-    TextView txt_basic_info, txt_communication_address,txt_imp_agency,txt_unit_add,txt_project_info,txt_primary_fbanking,txt_alt_fbanking,cv_other_info_layout;
+    ScrollView scrollView;
+    CardView cv_basicInfo, cv_correspondenceadd, cv_ImplementingAgency, cv_unitAddress, cv_projectInfo, cv_primaryfbanking, cv_alt_fbanking, cv_otherInfo;
+    TextView txt_basic_info, txt_communication_address, txt_imp_agency, txt_unit_add, txt_project_info, txt_primary_fbanking, txt_alt_fbanking, cv_other_info_layout;
     private List<CardView> allCards;
     private List<TextView> allTextViews;
     RecyclerView rv_product_recyclerview;
     ArrayAdapter<String> adapter;
     String apiState = null;
-    Spinner state_spinner,implementing_agency_spinner,bankNameSpinner,alternate_finance_spinner,unit_type_spinner,iastateSpinner,iaDistrictSpinner,unitlocationspinner,unitdistrictnameListspinner,qualificationspinner,specialCategorySpinner,socialCategorySpinner,informationSourceSpinner,spinner_gender,titleSpinner,spinner_subdistrict,spinnerVillage;
-    Button changeDistrict,btn_edpSelection,btn_submitform,btn_validateaddhar,btn_ifsc_code,alt_btn_ifsc_code,btn_industry_activity;
+    Spinner state_spinner, implementing_agency_spinner, bankNameSpinner, alternate_finance_spinner, unit_type_spinner, iastateSpinner, iaDistrictSpinner, unitlocationspinner, unitdistrictnameListspinner, qualificationspinner, specialCategorySpinner, socialCategorySpinner, informationSourceSpinner, spinner_gender, titleSpinner, spinner_subdistrict, spinnerVillage;
+    Button changeDistrict, btn_edpSelection, btn_submitform, btn_validateaddhar, btn_ifsc_code, alt_btn_ifsc_code, btn_industry_activity;
     ApiServices apiService;
     private ProgressDialog progressDialog;
-    String selectedStateCode,  state_shortCode,selectedStateCodeIa,selectedAgencyCode,selectedAgency_Code,selectedNodalCode,selectedunittype,selectedDistrictCode;
+    String selectedStateCode, state_shortCode, selectedStateCodeIa, selectedAgencyCode, selectedAgency_Code, selectedNodalCode, selectedunittype, selectedDistrictCode;
     List<DistrictModel> districts;
     List<String> stateNamesList;
     List<String> qualificationNameList;
@@ -116,14 +119,14 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     List<EDPDetails> EdpDetailList;
     List<AgencyRequest> agencyRequestList;
     List<String> titleList = new ArrayList<String>();
-    EditText email,lgd_code,edp_training_insti,pin_code,unit_loc,adharcardno,nameofapplicant,uid_dob,uid_age,communication_address,district,taluka_block_name,pin_number,mobile_number,alternate_mobile_number,panNumber,unitlocation,unitaddress,unitPin,capital_exp,workingcapital,totalexp,employee_count;
+    EditText   ifsc_code,alt_ifscbank_code,address,alt_primary_address,districtName,alt_pf_districtEd,branchName,alt_branch_name,email, lgd_code, edp_training_insti, pin_code, unit_loc, adharcardno, nameofapplicant, uid_dob, uid_age, communication_address, district, taluka_block_name, pin_number, mobile_number, alternate_mobile_number, panNumber, unitlocation, unitaddress, unitPin, capital_exp, workingcapital, totalexp, employee_count;
     CheckBox agency_type_check;
-    TextView agency_type,agency_type_district,agency_type_pin,agency_type_state, agency_type_mobile,agency_type_email;
+    TextView agency_type, agency_type_district, agency_type_pin, agency_type_state, agency_type_mobile, agency_type_email;
     LinearLayout implementing_type_agency_layout;
-    String agencyName, edp_name,district_name,statename, subdistrictName,state_zonal_code,nodalCode,  gender;
-    String districtCode,pinCode,unitLocation,selectedCityName,alt_selectedCityName,selectedSocialCatCode,selectedBankName1,selectedBankName2,selectedNicDesc,selectedNicDesc2,selectedNicDesc3,selectedNicCode,selectedNicCode2,selectedNicCode3,selectedIfsc1,selectedIfsc2,selectedBankDistrict2,selectedBankDistrict1,selectedBankAddress2,selectedBankAddress1,selectedBranch1,selectedBranch2,selectedSpecialCatCode,selectedQualCode,selectedQualDesc,selectedDistrictName,selectedVillageName,selectedPincode;
-    int stateId,districtId,state_code,lgdCode,activityUnitType,alt_selectedBankListID,selectedBankListID,selectedBankId2,selectedagencyoffId;
-    RadioGroup cgtmse_radioGrp,edp_radioGrp,edp_subgrp_radioGrp;
+    String agencyName, edp_name, district_name, statename, subdistrictName, state_zonal_code, nodalCode, gender;
+    String districtCode, pinCode, unitLocation, selectedCityName, alt_selectedCityName, selectedSocialCatCode, selectedBankName1, selectedBankName2, selectedNicDesc, selectedNicDesc2, selectedNicDesc3, selectedNicCode, selectedNicCode2, selectedNicCode3, selectedIfsc1, selectedIfsc2, selectedBankDistrict2, selectedBankDistrict1, selectedBankAddress2, selectedBankAddress1, selectedBranch1, selectedBranch2, selectedSpecialCatCode, selectedQualCode, selectedQualDesc, selectedDistrictName, selectedVillageName, selectedPincode;
+    int stateId, districtId, state_code, lgdCode, activityUnitType, alt_selectedBankListID, selectedBankListID, selectedBankId2, selectedagencyoffId;
+    RadioGroup cgtmse_radioGrp, edp_radioGrp, edp_subgrp_radioGrp;
     CheckBox checkbox_availt_note;
     int cgtmseFlag = 0, agentId;
 
@@ -136,6 +139,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
         apiService = ApiClient.getClient().create(ApiServices.class);
 
+        scrollView = findViewById(R.id.scrollView);
         cv_basicInfo = findViewById(R.id.cv_basic_info);
         cv_correspondenceadd = findViewById(R.id.cv_communication_address);
         cv_ImplementingAgency = findViewById(R.id.cv_implementing_agency);
@@ -184,20 +188,20 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         nameofapplicant = findViewById(R.id.nameofapplicant);
         uid_dob = findViewById(R.id.dob);
         uid_age = findViewById(R.id.age);
-        communication_address= findViewById(R.id.communication_address);
-        district= findViewById(R.id.district);
-        taluka_block_name= findViewById(R.id.taluka_block_name);
-        pin_number= findViewById(R.id.pin_number);
-        mobile_number= findViewById(R.id.mobile_number);
-        alternate_mobile_number= findViewById(R.id.alternate_mobile_number);
-        panNumber= findViewById(R.id.pannumber);
-        unitlocation= findViewById(R.id.unitLoc);
-        unitaddress= findViewById(R.id.unitaddress);
-        unitPin= findViewById(R.id.unitpincode);
-        capital_exp= findViewById(R.id.capital_exp);
-        workingcapital= findViewById(R.id.workingcapital);
-        totalexp= findViewById(R.id.totalexp);
-        employee_count= findViewById(R.id.employee_count);
+        communication_address = findViewById(R.id.communication_address);
+        district = findViewById(R.id.district);
+        taluka_block_name = findViewById(R.id.taluka_block_name);
+        pin_number = findViewById(R.id.pin_number);
+        mobile_number = findViewById(R.id.mobile_number);
+        alternate_mobile_number = findViewById(R.id.alternate_mobile_number);
+        panNumber = findViewById(R.id.pannumber);
+        unitlocation = findViewById(R.id.unitLoc);
+        unitaddress = findViewById(R.id.unitaddress);
+        unitPin = findViewById(R.id.unitpincode);
+        capital_exp = findViewById(R.id.capital_exp);
+        workingcapital = findViewById(R.id.workingcapital);
+        totalexp = findViewById(R.id.totalexp);
+        employee_count = findViewById(R.id.employee_count);
         checkbox_availt_note = findViewById(R.id.checkbox_availt_note);
 
         email = findViewById(R.id.email);
@@ -206,12 +210,12 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         unit_loc = findViewById(R.id.unitLoc);
 
         edp_training_insti = findViewById(R.id.edp_training_insti_name);
-        agency_type= findViewById(R.id.agencyTypeName);
-        agency_type_district= findViewById(R.id.agency_type_district);
+        agency_type = findViewById(R.id.agencyTypeName);
+        agency_type_district = findViewById(R.id.agency_type_district);
         agency_type_pin = findViewById(R.id.agency_type_pin);
         agency_type_state = findViewById(R.id.agency_type_state);
         agency_type_mobile = findViewById(R.id.agency_type_mobile);
-        agency_type_email =  findViewById(R.id.agency_type_email);
+        agency_type_email = findViewById(R.id.agency_type_email);
         cgtmse_radioGrp = findViewById(R.id.cgtmse_radioGrp);
         edp_radioGrp = findViewById(R.id.edp_radioGrp);
         edp_subgrp_radioGrp = findViewById(R.id.edp_subgrp_radioGrp);
@@ -246,40 +250,77 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         btn_submitform.setOnClickListener(v -> {
             ApplicantDataModel applicant = new ApplicantDataModel();
 
+            if (!Validator.isEmpty(adharcardno, "Enter Aadhaar number",scrollView)) return;
+            if (!Validator.isEmpty(panNumber, "Enter Pan number",scrollView)) return;
+            if (!Validator.isEmpty(nameofapplicant, "Enter applicant name",scrollView)) return;
+            if (!Validator.isSpinnerSelected(spinner_gender, "Select gender")) return;
+            if (!Validator.isSpinnerSelected(socialCategorySpinner, "Select Category spinner")) return;
+            if (!Validator.isSpinnerSelected(specialCategorySpinner, "Select Special spinner")) return;
+            if (!Validator.isSpinnerSelected(qualificationspinner, "Select Qualification")) return;
+
+            if (!Validator.isEmpty(communication_address, "Enter Address",scrollView)) return;
+            if (!Validator.isSpinnerSelected(state_spinner, "Select State")) return;
+            if (!Validator.isEmpty(district, "Enter District",scrollView)) return;
+            if (!Validator.isEmpty(taluka_block_name, "Enter Taluka/Block",scrollView)) return;
+            if (!Validator.isEmpty(pin_number, "Enter Pin number",scrollView)) return;
+            if (!Validator.isEmpty(mobile_number, "Enter Mobile number",scrollView)) return;
+
+            if (!Validator.isSpinnerSelected(implementing_agency_spinner, "Select agency")) return;
+            if (!Validator.isSpinnerSelected(iastateSpinner, "Select state")) return;
+            if (!Validator.isSpinnerSelected(iaDistrictSpinner, "Select district")) return;
+
+            if (!Validator.isSpinnerSelected(unitdistrictnameListspinner, "Select district")) return;
+            if (!Validator.isSpinnerSelected(spinner_subdistrict, "Select sub-district")) return;
+            if (!Validator.isSpinnerSelected(spinnerVillage, "Select village")) return;
+            if (!Validator.isEmpty(lgd_code, "Enter lgd code",scrollView)) return;
+            if (!Validator.isNumber(pin_code, "Enter valid Pin code",scrollView)) return;
+            if (!Validator.isNumber(unit_loc, "Enter valid unit location",scrollView)) return;
+
+            if (!Validator.isSpinnerSelected(unit_type_spinner, "Select Unit Type")) return;
+
+            if (!Validator.isNumber(capital_exp, "Enter Capital Expenditure",scrollView)) return;
+            if (!Validator.isNumber(workingcapital, "Enter Working Capital",scrollView)) return;
+            if (!Validator.isNumber(employee_count, "Enter Employment count",scrollView)) return;
+
+            if (!Validator.isSpinnerSelected(bankNameSpinner, "Select Bank")) return;
+            if (!Validator.isEmpty(ifsc_code, "Enter ifsc code",scrollView)) return;
+            if (!Validator.isEmpty(branchName, "Enter branch name",scrollView)) return;
+            if (!Validator.isEmpty(address, "Enter address",scrollView)) return;
+            if (!Validator.isEmpty(districtName, "Enter address",scrollView)) return;
 
             applicant.setAadharNo(adharcardno.getText().toString().trim());
             applicant.setApplTitle(0);
             applicant.setApplName(nameofapplicant.getText().toString().trim());
             applicant.setAgencyID(agentId);
-            System.out.println("agentId"+agentId);
+            System.out.println("agentId" + agentId);
             applicant.setAgencyCode(selectedAgencyCode);
-            System.out.println("selectedAgencyCode"+selectedAgencyCode);
+            System.out.println("selectedAgencyCode" + selectedAgencyCode);
             applicant.setNodalCode(selectedNodalCode);
-            System.out.println("selectedNodalCode"+selectedNodalCode);
+            System.out.println("selectedNodalCode" + selectedNodalCode);
             applicant.setStateID(stateId);
-            System.out.println("stateId"+stateId);
+            System.out.println("stateId" + stateId);
             applicant.setDistID(districtId);
-            System.out.println("districtId"+districtId);
+            System.out.println("districtId" + districtId);
             applicant.setStateCode(selectedStateCode);
-            System.out.println("selectedStateCode"+selectedStateCode);
+            System.out.println("selectedStateCode" + selectedStateCode);
             applicant.setAgencyOffID(selectedagencyoffId > 0 ? selectedagencyoffId : 0);
-            System.out.println("selectedagencyoffId"+selectedagencyoffId);
+            System.out.println("selectedagencyoffId" + selectedagencyoffId);
             applicant.setLegalType("INDIVIDUAL");
             applicant.setGender(gender != null ? gender : "");
-            System.out.println("gender"+gender);
+            System.out.println("gender" + gender);
             applicant.setDateofBirth(uid_dob.getText().toString().trim());
-            System.out.println("uid_dob"+uid_dob.getText().toString());
+            System.out.println("uid_dob" + uid_dob.getText().toString());
 
             applicant.setAge(Integer.parseInt(uid_age.getText().toString()));
             applicant.setSocialCatID(selectedSocialCatCode != null ? selectedSocialCatCode : "");
-            System.out.println("selectedSocialCatCode"+selectedSocialCatCode);
+            System.out.println("selectedSocialCatCode" + selectedSocialCatCode);
             applicant.setSpecialCatID(selectedSpecialCatCode != null ? selectedSpecialCatCode : "");
-            System.out.println("selectedSpecialCatCode"+selectedSpecialCatCode);
+            System.out.println("selectedSpecialCatCode" + selectedSpecialCatCode);
             applicant.setQualID(selectedQualCode != null ? selectedQualCode : "");
-            System.out.println("selectedQualCode"+selectedQualCode);
+            System.out.println("selectedQualCode" + selectedQualCode);
 
             applicant.setQualDesc(selectedQualDesc != null ? selectedQualDesc : "");
-            System.out.println("selectedQualDesc"+selectedQualDesc);
+            System.out.println("selectedQualDesc" + selectedQualDesc);
 
 
             applicant.setComnAddress(communication_address.getText().toString());
@@ -371,8 +412,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         btn_ifsc_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selectedBankListID != 0 && selectedCityName != null){
-                    showBankIfscDetails(selectedBankListID,selectedCityName,true);
+                if (selectedBankListID != 0 && selectedCityName != null) {
+                    showBankIfscDetails(selectedBankListID, selectedCityName, true);
                 }
 
             }
@@ -392,7 +433,6 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         btn_industry_activity.setOnClickListener(new View.OnClickListener() {
@@ -433,10 +473,6 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
         allCards = Arrays.asList(cv_basicInfo, cv_correspondenceadd, cv_ImplementingAgency,
                 cv_unitAddress, cv_projectInfo, cv_primaryfbanking, cv_alt_fbanking, cv_otherInfo);
 
@@ -469,7 +505,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     private void setupAutoCalculation() {
         TextWatcher watcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -478,7 +515,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         };
 
         capital_exp.addTextChangedListener(watcher);
@@ -493,6 +531,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         }
         return true;
     }
+
     private void calculateTotal() {
         String cap = capital_exp.getText() != null ? capital_exp.getText().toString().trim() : "";
         String working_cap = workingcapital.getText() != null ? workingcapital.getText().toString().trim() : "";
@@ -509,15 +548,23 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         double total_exp = capVal + workingVal;
         totalexp.setText(String.valueOf(total_exp));
     }
+
     private double parseDoubleSafe(String s) {
-        try { return Double.parseDouble(s.trim()); }
-        catch (Exception e) { return 0.0; }
+        try {
+            return Double.parseDouble(s.trim());
+        } catch (Exception e) {
+            return 0.0;
+        }
     }
 
     private int parseIntSafe(String s) {
-        try { return Integer.parseInt(s.trim()); }
-        catch (Exception e) { return 0; }
+        try {
+            return Integer.parseInt(s.trim());
+        } catch (Exception e) {
+            return 0;
+        }
     }
+
     private void getAdharOtp(String adhharno) {
         UidRequest uidNo = new UidRequest(adhharno);
 
@@ -544,9 +591,9 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
                         if (status.getData().getCode().equals("952")) {
                             Toast.makeText(NewApplicantUnitActivity.this, "Too many OTP requests. Please wait a while before retrying.", Toast.LENGTH_LONG).show();
-                        }else  if (status.getData().getCode().equals("953")) {
+                        } else if (status.getData().getCode().equals("953")) {
                             Toast.makeText(NewApplicantUnitActivity.this, "Exceeded Maximum OTP generation Limit.", Toast.LENGTH_LONG).show();
-                        }else{
+                        } else {
                             Toast.makeText(NewApplicantUnitActivity.this,
                                     "Error : Unable to Connect to Remote Server",
                                     Toast.LENGTH_LONG).show();
@@ -566,6 +613,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             }
         });
     }
+
     @SuppressLint("MissingInflatedId")
     private void showOtpDialog(String key) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -632,14 +680,14 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         int age = calculateAge(dob);
                         uid_age.setText(String.valueOf(age));
                         Log.d("AGE", "Age = " + age);
-                         gender = status.getData().getGender();
-                         communication_address.setText(status.getData().getHouse() +" ,"+status.getData().getLandmark()+","+status.getData().getLoc());
-                         apiState = status.getData().getState(); // "Maharashtra"
+                        gender = status.getData().getGender();
+                        communication_address.setText(status.getData().getHouse() + " ," + status.getData().getLandmark() + "," + status.getData().getLoc());
+                        apiState = status.getData().getState(); // "Maharashtra"
                         setSpinnerToAadharState();
 
-                         district.setText(status.getData().getDist());
-                         taluka_block_name.setText(status.getData().getSubdist());
-                         pin_code.setText(status.getData().getPincode());
+                        district.setText(status.getData().getDist());
+                        taluka_block_name.setText(status.getData().getSubdist());
+                        pin_code.setText(status.getData().getPincode());
 
                         if (gender != null) {
                             if (gender.equalsIgnoreCase("M")) {
@@ -709,14 +757,14 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
 
     private void fetchDistrictList(String code) {
-        System.out.println("state_code"+code);
-        DistrictModel request = new DistrictModel(code,"");
+        System.out.println("state_code" + code);
+        DistrictModel request = new DistrictModel(code, "");
         apiService.getDistrictList(request).enqueue(new Callback<List<DistrictModel>>() {
             @Override
             public void onResponse(Call<List<DistrictModel>> call, Response<List<DistrictModel>> response) {
                 if (response.isSuccessful()) {
                     districts = response.body();
-                    System.out.println("districtList"+districts.size());
+                    System.out.println("districtList" + districts.size());
                     showDistrictDialog(districts);
 
 
@@ -788,13 +836,11 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                 findViewById(R.id.edp_radioGrp).setVisibility(View.GONE);
                 findViewById(R.id.txt_inputlayout).setVisibility(View.GONE);
 
-            }else if(checkedId == R.id.No_cgt){
-                cgtmseFlag =0;
+            } else if (checkedId == R.id.No_cgt) {
+                cgtmseFlag = 0;
                 findViewById(R.id.avail_layout).setVisibility(View.GONE);
                 findViewById(R.id.edp_radioGrp).setVisibility(View.GONE);
                 findViewById(R.id.txt_inputlayout).setVisibility(View.GONE);
-
-
 
 
             }
@@ -806,7 +852,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                 findViewById(R.id.edp_training_insti_name).setVisibility(View.VISIBLE);
 
 
-            }else if(checkedId == R.id.No_radio){
+            } else if (checkedId == R.id.No_radio) {
                 findViewById(R.id.edp_subgrp_radioGrp).setVisibility(View.GONE);
                 findViewById(R.id.edp_training_insti_name).setVisibility(View.GONE);
 
@@ -818,7 +864,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                 findViewById(R.id.txt_inputlayout).setVisibility(View.VISIBLE);
                 edp_training_insti.setText("UDYAMI- Samadhan Portal");
                 btn_edpSelection.setVisibility(View.GONE);
-            }else if(checkedId == R.id.offline_radio){
+            } else if (checkedId == R.id.offline_radio) {
                 findViewById(R.id.txt_inputlayout).setVisibility(View.VISIBLE);
                 edp_training_insti.setText("EDP training Instn. name");
                 btn_edpSelection.setVisibility(View.VISIBLE);
@@ -861,7 +907,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
 
     private void fetchSubdistrictList(String code) {
-        System.out.println("code_d"+code);
+        System.out.println("code_d" + code);
         SubDistrictRequest request = new SubDistrictRequest(code);
         apiService.GetSubDistricts(request).enqueue(
                 new Callback<List<SubDistrictResponce>>() {
@@ -888,13 +934,13 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                             spinner_subdistrict.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    if (position > 0){
+                                    if (position > 0) {
                                         SubDistrictResponce selectedDistrict = subDistrictSource.get(position - 1);
                                         int subdistrictId = selectedDistrict.getDistrictId();
-                                        System.out.println("subdistrictId"+subdistrictId);
+                                        System.out.println("subdistrictId" + subdistrictId);
                                         int selectedSubdistrictCode = subDistrictSource.get(position - 1).getSubdistrict_code();
-                                         subdistrictName = subDistrictSource.get(position - 1).getSubdistrict_name();
-                                        System.out.println("subdistrictId"+subdistrictId+selectedSubdistrictCode);
+                                        subdistrictName = subDistrictSource.get(position - 1).getSubdistrict_name();
+                                        System.out.println("subdistrictId" + subdistrictId + selectedSubdistrictCode);
                                         fetchVillageList(String.valueOf(selectedSubdistrictCode));
                                     }
 
@@ -916,6 +962,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                 }
         );
     }
+
     private void fetchVillageList(String code) {
         VillageRequest request = new VillageRequest(code);
 
@@ -940,9 +987,9 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if (position >= 0 && position < villageList.size()) {
-                                VillageDetailModel villageDetailModel= villageList.get(position);
+                                VillageDetailModel villageDetailModel = villageList.get(position);
                                 String villageCode = villageDetailModel.getVillageCode();
-                                System.out.println("villagecode"+villageCode);
+                                System.out.println("villagecode" + villageCode);
                                 selectedVillageName = villageDetailModel.getVillageName();
 
                                 fetchVillageDetails(villageCode);
@@ -954,7 +1001,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
                             pin_code.setText("");
                             unit_loc.setText("");
-                             lgd_code.setText("");
+                            lgd_code.setText("");
                         }
                     });
                 } else {
@@ -995,8 +1042,6 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     }
 
 
-
-
     private void showEdpDialog() {
         apiService.getEDPData(new EDPRequest(String.valueOf(stateId)))
                 .enqueue(new Callback<EDPResponse>() {
@@ -1019,7 +1064,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                             rvEdpList.setLayoutManager(new LinearLayoutManager(NewApplicantUnitActivity.this));
                             EDPAdapter adapter = new EDPAdapter(edpList, selected -> {
                                 TextInputEditText etEdpName = findViewById(R.id.edp_training_insti_name);
-                               etEdpName.setText(selected.getOff_name());
+                                etEdpName.setText(selected.getOff_name());
                                 edp_name = selected.getOff_name();
                                 dialog.dismiss();
                             });
@@ -1041,17 +1086,16 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     }
 
 
-
     private void fetchGenderList() {
         apiService.getGender("GEND").enqueue(new Callback<List<GenderModel>>() {
             @Override
             public void onResponse(Call<List<GenderModel>> call, Response<List<GenderModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<GenderModel> genderSource = response.body();
-                    System.out.println("Gender" +genderSource.size());
+                    System.out.println("Gender" + genderSource.size());
 
                     genderInfoList = new ArrayList<>();
-                    genderInfoList.add(0,"--Select Gender--");
+                    genderInfoList.add(0, "--Select Gender--");
                     for (GenderModel genderModel : genderSource) {
                         genderInfoList.add(genderModel.getLk_desc());
 
@@ -1079,10 +1123,10 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             public void onResponse(Call<List<InformationSource>> call, Response<List<InformationSource>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<InformationSource> informationSource = response.body();
-                    System.out.println("informationSourceList" +informationSource.size());
+                    System.out.println("informationSourceList" + informationSource.size());
 
                     informationSourceList = new ArrayList<>();
-                    informationSourceList.add(0,"--Select Information Source--");
+                    informationSourceList.add(0, "--Select Information Source--");
                     for (InformationSource informationSourceModel : informationSource) {
                         informationSourceList.add(informationSourceModel.getLk_desc());
 
@@ -1111,12 +1155,12 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             public void onResponse(Call<List<AgencyResponse>> call, Response<List<AgencyResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<AgencyResponse> agencyResponses = response.body();
-                    System.out.println("agencyResponses" +agencyResponses.size());
+                    System.out.println("agencyResponses" + agencyResponses.size());
                     AgencyResponse agency = agencyResponses.get(0);
 
                     selectedagencyoffId = agency.getAgencyOffId();
                     for (int i = 0; i < agencyRequestList.size(); i++) {
-                        if (agencyRequestList.size()!=0){
+                        if (agencyRequestList.size() != 0) {
 
                             agency_type_mobile.setText(agencyResponses.get(i).getAgencyOffContactNo());
                             agency_type_email.setText(agencyResponses.get(i).getAgencyOffContactEmail());
@@ -1124,7 +1168,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         }
                     }
 
-                    agency_type.setText(agencyName+"-"+district_name+"-"+state_zonal_code);
+                    agency_type.setText(agencyName + "-" + district_name + "-" + state_zonal_code);
                     agency_type_state.setText(statename);
                     agency_type_district.setText(district_name);
 
@@ -1138,18 +1182,18 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             }
         });
     }
+
     private void fetchSocialCategoryList() {
         apiService.getSocialCategory("SPCCT").enqueue(new Callback<List<SocialCategory>>() {
             @Override
             public void onResponse(Call<List<SocialCategory>> call, Response<List<SocialCategory>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<SocialCategory> socialCategoryList = response.body();
-                    System.out.println("socialCategoryList" +socialCategoryList.size());
-
+                    System.out.println("socialCategoryList" + socialCategoryList.size());
 
 
                     socialCatnameList = new ArrayList<>();
-                    socialCatnameList.add(0,"--Select Social Category--");
+                    socialCatnameList.add(0, "--Select Social Category--");
                     for (SocialCategory socialCategorymodel : socialCategoryList) {
                         socialCatnameList.add(socialCategorymodel.getLk_desc());
 
@@ -1182,16 +1226,17 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             }
         });
     }
+
     private void fetchSpecialCategoryList() {
         apiService.getSpecialCategory("SPCLCT").enqueue(new Callback<List<SpecialCategory>>() {
             @Override
             public void onResponse(Call<List<SpecialCategory>> call, Response<List<SpecialCategory>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<SpecialCategory> specialCategoryList = response.body();
-                    System.out.println("qualificationModelList" +specialCategoryList.size());
+                    System.out.println("qualificationModelList" + specialCategoryList.size());
 
                     specialCatnameList = new ArrayList<>();
-                    specialCatnameList.add(0,"--Select Special Category--");
+                    specialCatnameList.add(0, "--Select Special Category--");
                     for (SpecialCategory specialCategorymodel : specialCategoryList) {
                         specialCatnameList.add(specialCategorymodel.getLk_desc());
 
@@ -1205,7 +1250,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             SpecialCategory specialCategory = specialCategoryList.get(position);
-                            selectedSpecialCatCode= specialCategory.getLk_shortCode();
+                            selectedSpecialCatCode = specialCategory.getLk_shortCode();
                         }
 
                         @Override
@@ -1223,16 +1268,17 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             }
         });
     }
+
     private void fetchQualificationList() {
         apiService.getQualificationList("QUAL").enqueue(new Callback<List<QualificationModel>>() {
             @Override
             public void onResponse(Call<List<QualificationModel>> call, Response<List<QualificationModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<QualificationModel> qualificationModelList = response.body();
-                    System.out.println("qualificationModelList" +qualificationModelList.size());
+                    System.out.println("qualificationModelList" + qualificationModelList.size());
 
                     qualificationNameList = new ArrayList<>();
-                    qualificationNameList.add(0,"--Select Qualification--");
+                    qualificationNameList.add(0, "--Select Qualification--");
                     for (QualificationModel qualificationModel : qualificationModelList) {
                         qualificationNameList.add(qualificationModel.getLk_desc());
 
@@ -1242,19 +1288,19 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, qualificationNameList);
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     qualificationspinner.setAdapter(adapter);
-                     qualificationspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                         @Override
-                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                             QualificationModel qualificationModel = qualificationModelList.get(position);
-                             selectedQualCode = qualificationModel.getLk_shortCode();
-                             selectedQualDesc = qualificationModel.getLk_desc();
-                         }
+                    qualificationspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            QualificationModel qualificationModel = qualificationModelList.get(position);
+                            selectedQualCode = qualificationModel.getLk_shortCode();
+                            selectedQualDesc = qualificationModel.getLk_desc();
+                        }
 
-                         @Override
-                         public void onNothingSelected(AdapterView<?> parent) {
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
 
-                         }
-                     });
+                        }
+                    });
 
                 }
             }
@@ -1272,10 +1318,10 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             public void onResponse(Call<List<AgencyModel>> call, Response<List<AgencyModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<AgencyModel> agencyModelList = response.body();
-                    System.out.println("agencyList" +agencyModelList.size());
+                    System.out.println("agencyList" + agencyModelList.size());
 
                     List<String> agencyNames = new ArrayList<>();
-                    agencyNames.add(0,"--Select Agency--");
+                    agencyNames.add(0, "--Select Agency--");
                     for (AgencyModel agencyModel : agencyModelList) {
                         agencyNames.add(agencyModel.getAgency_code());
 
@@ -1300,7 +1346,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                     agencyName = ""; // Or handle appropriately
                                 }
 
-                                System.out.println("Selected agencyCode: " + selectedAgencyCode+" "+agentId);
+                                System.out.println("Selected agencyCode: " + selectedAgencyCode + " " + agentId);
                                 fetchAgencyShortCode(selectedAgency);
 
 
@@ -1366,7 +1412,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onNothingSelected(AdapterView<?> parent) {}
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
                     });
 
                     // Set adapter for alternate bank spinner
@@ -1394,7 +1441,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onNothingSelected(AdapterView<?> parent) {}
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
                     });
                 }
             }
@@ -1471,15 +1519,15 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 //        });
 //    }
 
-    private void showBankIfscDetails(int b_id,String b_name, boolean isPrimary) {
-        BankDetailRequest request = new BankDetailRequest(b_id,b_name);
+    private void showBankIfscDetails(int b_id, String b_name, boolean isPrimary) {
+        BankDetailRequest request = new BankDetailRequest(b_id, b_name);
         apiService.getBankDetailsData(request).enqueue(new Callback<List<BankDetailResponce>>() {
             @Override
             public void onResponse(Call<List<BankDetailResponce>> call, Response<List<BankDetailResponce>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body() != null) {
                     List<BankDetailResponce> bankDetailResponceList = response.body();
                     Log.d("API_RESPONSE", new Gson().toJson(response.body()));
-                    showDialogForBankDetails(bankDetailResponceList,isPrimary);
+                    showDialogForBankDetails(bankDetailResponceList, isPrimary);
 
                 } else {
                     Toast.makeText(NewApplicantUnitActivity.this, "bank details not found", Toast.LENGTH_SHORT).show();
@@ -1510,14 +1558,14 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         builder.setTitle("Select District");
         builder.setItems(bankItems, (dialog, which) -> {
             BankDetailResponce selected = bankDetailResponceList.get(which);
-            EditText branchName = findViewById(R.id.branch_name);
-            EditText alt_branch_name = findViewById(R.id.alt_branch_name);
-            EditText ifsc_code = findViewById(R.id.ifscbank_code);
-            EditText alt_ifscbank_code = findViewById(R.id.alt_ifscbank_code);
-            EditText address = findViewById(R.id.primary_address);
-            EditText alt_primary_address = findViewById(R.id.alt_primary_address);
-            EditText districtName = findViewById(R.id.pf_districtEd);
-            EditText alt_pf_districtEd = findViewById(R.id.alt_pf_districtEd);
+             branchName = findViewById(R.id.branch_name);
+             alt_branch_name = findViewById(R.id.alt_branch_name);
+             ifsc_code = findViewById(R.id.ifscbank_code);
+             alt_ifscbank_code = findViewById(R.id.alt_ifscbank_code);
+             address = findViewById(R.id.primary_address);
+             alt_primary_address = findViewById(R.id.alt_primary_address);
+             districtName = findViewById(R.id.pf_districtEd);
+             alt_pf_districtEd = findViewById(R.id.alt_pf_districtEd);
 
 
             if (isPrimary) {
@@ -1568,10 +1616,10 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             public void onResponse(Call<List<UnitTypeModel>> call, Response<List<UnitTypeModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<UnitTypeModel> unittypeList = response.body();
-                    System.out.println("agencyList" +unittypeList.size());
+                    System.out.println("agencyList" + unittypeList.size());
 
                     List<String> unitNameList = new ArrayList<>();
-                    unitNameList.add(0,"--Select Agency--");
+                    unitNameList.add(0, "--Select Agency--");
                     for (UnitTypeModel unitTypeModel : unittypeList) {
                         unitNameList.add(unitTypeModel.getSchemeName());
 
@@ -1589,7 +1637,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                 UnitTypeModel selectedUnit = unittypeList.get(position - 1);
                                 selectedunittype = selectedUnit.getSchemeName();
                                 activityUnitType = selectedUnit.getActivityType();
-                                System.out.println("Selected unittype: " + selectedunittype+" "+activityUnitType);
+                                System.out.println("Selected unittype: " + selectedunittype + " " + activityUnitType);
                             } else {
                                 selectedunittype = null;
                             }
@@ -1617,17 +1665,17 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             public void onResponse(Call<List<StateModel>> call, Response<List<StateModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<StateModel> states = response.body();
-                    System.out.println("sttatelist" +states.size());
+                    System.out.println("sttatelist" + states.size());
 
                     stateNamesList = new ArrayList<>();
-                    stateNamesList.add(0,"--Select state--");
+                    stateNamesList.add(0, "--Select state--");
                     for (StateModel state : states) {
                         stateNamesList.add(state.getStateName());
 
 
                     }
 
-                     adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, stateNamesList);
+                    adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, stateNamesList);
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     state_spinner.setAdapter(adapter);
                     setSpinnerToAadharState();
@@ -1646,8 +1694,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                 System.out.println("Selected stateCode: " + selectedStateCode);
                                 ApplicantDataModel applicant = new ApplicantDataModel();
 
-                                 state_shortCode = selectedState.getStateShortCode(); // "MH"
-                                 state_code = selectedState.getStateId();
+                                state_shortCode = selectedState.getStateShortCode(); // "MH"
+                                state_code = selectedState.getStateId();
 
                             } else {
                                 selectedStateCode = null;
@@ -1667,8 +1715,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                 selectedStateCodeIa = selectedState.getStateCode();
                                 System.out.println("Selected stateCode: " + selectedStateCodeIa);
                                 stateId = states.get(position - 1).getStateId();
-                                statename = states.get(position -1).getStateName();
-                                state_zonal_code = states.get(position-1).getState_zone_code();
+                                statename = states.get(position - 1).getStateName();
+                                state_zonal_code = states.get(position - 1).getState_zone_code();
 
                                 fetchDistrictListforIA(selectedStateCodeIa);
 
@@ -1705,7 +1753,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
     private void fetchDistrictListforIA(String selectedStateCode) {
 
-        DistrictModel request = new DistrictModel(selectedStateCode,"");
+        DistrictModel request = new DistrictModel(selectedStateCode, "");
         apiService.getDistrictList(request).enqueue(new Callback<List<DistrictModel>>() {
             @Override
             public void onResponse(Call<List<DistrictModel>> call, Response<List<DistrictModel>> response) {
@@ -1734,7 +1782,6 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     unitdistrictnameListspinner.setAdapter(unitAdapter);
 
 
-
                     iaDistrictSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
@@ -1744,7 +1791,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                 districtId = districtList.get(position - 1).getDistrictId();
                                 districtCode = districtList.get(position - 1).getDistrictCode();
                                 district_name = districtList.get(position - 1).getDistrictName();
-                                System.out.println("Selected IA districtCode: " + selectedDistrictCode+ district_name+districtCode+districtId);
+                                System.out.println("Selected IA districtCode: " + selectedDistrictCode + district_name + districtCode + districtId);
 
                                 for (int i = 0; i < districtList.size(); i++) {
                                     if (districtList.get(i).getDistrictCode().equals(selectedDistrictCode)) {
@@ -1758,7 +1805,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                                 }
                                 agencyRequestList = new ArrayList<>();
                                 implementing_type_agency_layout.setVisibility(View.VISIBLE);
-                                AgencyRequest agencyRequest = new AgencyRequest(1,stateId,districtId);
+                                AgencyRequest agencyRequest = new AgencyRequest(1, stateId, districtId);
                                 agencyRequestList.add(agencyRequest);
                                 fetchSubdistrictList(String.valueOf(districtId));
                                 fetchAgencyOffDetails(agencyRequest);
@@ -1768,7 +1815,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
 
                         @Override
-                        public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+                        public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                        }
                     });
 
                 }
@@ -1798,6 +1846,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             );
         }
     }
+
     private void closeAllCards() {
         for (CardView card : allCards) {
             card.setVisibility(View.GONE);
