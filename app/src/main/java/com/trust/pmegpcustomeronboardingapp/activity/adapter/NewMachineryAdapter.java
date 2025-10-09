@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.trust.pmegpcustomeronboardingapp.R;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BuildingItem;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DRPMasterData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.MachineryItem;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.SimpleTextWatcher;
 
@@ -33,7 +34,25 @@ public class NewMachineryAdapter extends RecyclerView.Adapter<NewMachineryAdapte
         this.machineryItemList = buildingList;
         this.onAmountChangeListener = listener;
     }
-
+    public List<DRPMasterData.MachineryDetail> getUpdatedList() {
+        List<DRPMasterData.MachineryDetail> updatedList = new java.util.ArrayList<>();
+        for (MachineryItem item : machineryItemList) {
+            DRPMasterData.MachineryDetail detail = new DRPMasterData.MachineryDetail();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setRate(Double.parseDouble(item.getRate()));
+            } catch (NumberFormatException e) {
+                detail.setRate(0.0);
+            }
+            try {
+                detail.setAmount(Double.parseDouble(item.getAmount()));
+            } catch (NumberFormatException e) {
+                detail.setAmount(0.0);
+            }
+            updatedList.add(detail);
+        }
+        return updatedList;
+    }
     @NonNull
     @Override
     public NewMachineryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

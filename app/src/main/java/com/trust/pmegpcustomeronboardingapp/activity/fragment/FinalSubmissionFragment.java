@@ -10,6 +10,8 @@ import android.app.AlertDialog;
 import android.app.MediaRouteButton;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,9 +19,15 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +60,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.trust.pmegpcustomeronboardingapp.BuildConfig;
 import com.trust.pmegpcustomeronboardingapp.R;
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.DocumentAdapter;
 import com.trust.pmegpcustomeronboardingapp.activity.model.AgencyModel;
@@ -65,11 +75,14 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantUpdateResult;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicationResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.BuildingItem;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DistrictModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.Document;
 import com.trust.pmegpcustomeronboardingapp.activity.model.GenderModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.InformationSource;
+import com.trust.pmegpcustomeronboardingapp.activity.model.PidDataModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.QualificationModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ScoreCard;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SocialCategory;
 import com.trust.pmegpcustomeronboardingapp.activity.model.SpecialCategory;
 import com.trust.pmegpcustomeronboardingapp.activity.model.StateModel;
@@ -81,13 +94,21 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailRequestModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.faceDetectionResult;
 import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
 import com.trust.pmegpcustomeronboardingapp.activity.screens.NewApplicantUnitActivity;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
+import com.trust.pmegpcustomeronboardingapp.activity.utils.CryptoEncryption;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.TrustMethods;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,7 +176,7 @@ public class FinalSubmissionFragment extends Fragment {
 
     String selectedDistrictName, selectedPincode, selectedVillageName, subdistrictName, selectedNodalCode, agencyName, selectedAgencyCode, selectedAgency_Code, selectedBankName2, alt_selectedCityName, selectedBankName1, selectedCityName, selectedQualDesc, selectedQualCode, selectedSocialCatCode, selectedSpecialCatCode, selectedunittype, selectedStateCode, state_shortCode, state_code, selectedStateCodeIa, statename, state_zonal_code, selectedDistrictCode, districtCode, district_name;
     int selectedagencyoffId, agentId, stateId, districtId, activityUnitType, selectedBankListID, alt_selectedBankListID, selectedBankId2;
-
+    String aadhaarNumber;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -341,6 +362,8 @@ public class FinalSubmissionFragment extends Fragment {
             applicantDataModel = new ApplicantDataModel();
             ApplicantDetailData applicantDetailData = new ApplicantDetailData();
 
+
+
             applicant.setApplID(AppConstant.getApplId());
             applicant.setApplCode(applicantDetailData.getApplCode());
             applicant.setAadharNo(applicantDataModel.getAadharNo());
@@ -515,6 +538,7 @@ public class FinalSubmissionFragment extends Fragment {
         }
 
         String pidOptions = buildPidOptionsXml();
+        Log.i("11","pid" +pidOptions.toString());
         Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
         intent.putExtra("request", pidOptions);
 
@@ -582,7 +606,7 @@ public class FinalSubmissionFragment extends Fragment {
     private String buildPidOptionsXml() {
         String txnId = UUID.randomUUID().toString().replace("-", "");
         return "<PidOptions ver=\"1.0\" env=\"P\">" +
-                "<Opts fCount=\"1\" fType=\"0\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\" wadh=\"\"/>" +
+                "<Opts fCount=\"1\" fType=\"0\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\" wadh=\"E0jzJ/P8UopUHAieZn8CKqS4WPMi5ZSYXgfnlfkWjrc=\"/>" +
                 "<CustOpts>" +
                 "<Param name=\"txnId\" value=\"" + txnId + "\"/>" +
                 "<Param name=\"language\" value=\"en\"/>" +
@@ -597,62 +621,196 @@ public class FinalSubmissionFragment extends Fragment {
     }
 
 
-//    private boolean isAppInstalled(Context context, String packageName) {
-//        try {
-//            context.getPackageManager().getPackageInfo(packageName, 0);
-//            return true;
-//        } catch (PackageManager.NameNotFoundException e) {
-//            return false;
-//        }
-//    }
-//
-//
-//    private boolean hasCameraPermissionForFaceRD(Context context) {
-//        PackageManager pm = context.getPackageManager();
-//        return pm.checkPermission(Manifest.permission.CAMERA, FACE_RD_PACKAGE)
-//                == PackageManager.PERMISSION_GRANTED;
-//    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RD_SERVICE_REQUEST) {
-            if (resultCode == RESULT_OK && data != null) {
-                String pidData = data.getStringExtra("response");
-
-                if (pidData != null && pidData.contains("PID_CREATED")) {
-                    Toast.makeText(getContext(), "Face captured successfully!", Toast.LENGTH_SHORT).show();
-
-
-//                    progressBar.setVisibility(View.VISIBLE);
-
-//                    sendPidDataToBackend(pidData);
-                } else {
-                    Log.e(TAG, "Capture failed: " + pidData);
-                    Toast.makeText(getContext(), "Face capture failed. Please try again.", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                String error = (data != null) ? data.getStringExtra("response") : "No response";
-                Log.e(TAG, "Capture failed: " + error);
-                Toast.makeText(getContext(), "Face capture failed.", Toast.LENGTH_SHORT).show();
-            }
+    private void sendPidDataToBackend(PidDataModel pidDataModel) {
+        String encryptionKey = BuildConfig.ENCRYPTION_KEY;
+        System.out.println("Encryption-key"+encryptionKey);
+        Toast.makeText(getContext(), "Encryption-key"+encryptionKey, Toast.LENGTH_SHORT).show();
+        String encrypted="";
+        String decrypted="";
+        try {
+             encrypted = CryptoEncryption.encryptString(aadhaarNumber, encryptionKey);
+             decrypted = CryptoEncryption.decryptString(encrypted, encryptionKey);
+            Log.d("CRYPTO", "Encrypted: " + encrypted);
+            Log.d("CRYPTO", "Decrypted: " + decrypted);
+        } catch (Exception ex) {
+            Log.e("CRYPTO", "Error", ex);
         }
 
-        if (requestCode == LOCAL_MATCH_REQ) {
-            if (resultCode == RESULT_OK && data != null) {
-                String response = data.getStringExtra("RESPONSE");
-                Log.d(TAG, "Match Response: " + response);
-                Toast.makeText(getContext(), "Match Response: " + response, Toast.LENGTH_SHORT).show();
+        apiService.validateFaceRecognition(pidDataModel).enqueue(new Callback<faceDetectionResult>() {
+            @Override
+            public void onResponse(Call<faceDetectionResult> call, retrofit2.Response<faceDetectionResult> response) {
+                progressDialog.dismiss();
+                if (response.isSuccessful() && response.body() != null) {
+                    faceDetectionResult data = response.body();
+                   Log.i("1122 ","response pid=="+data.toString());
+                    Toast.makeText(getContext(), "response pid=="+data.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<faceDetectionResult> call, Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "response pid=="+t.getMessage(), Toast.LENGTH_LONG).show();
+
+                t.printStackTrace();
+            }
+        });
+    }
+@Override
+public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == RD_SERVICE_REQUEST) {
+        if (resultCode == RESULT_OK && data != null) {
+            String pidJson = data.getStringExtra("response"); // JSON format
+
+            if (pidJson != null && !pidJson.isEmpty()) {
+                String pidXml = convertJsonToXml(pidJson); // Convert JSON → XML
+                logLongString("PID_XML", pidXml);
+                showXmlDialog("PID XML", pidXml);
+//                sendPidDataToBackend(pidData);
             } else {
-                String error = (data != null) ? data.getStringExtra("RESPONSE") : "No response";
-                Log.e(TAG, "Local Match failed: " + error);
+                Toast.makeText(requireContext(), "No PID data received", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    if (requestCode == LOCAL_MATCH_REQ) {
+        if (resultCode == RESULT_OK && data != null) {
+            String response = data.getStringExtra("RESPONSE");
+            Log.d(TAG, "Match Response: " + response);
+            Toast.makeText(getContext(), "Match Response: " + response, Toast.LENGTH_SHORT).show();
+        } else {
+            String error = (data != null) ? data.getStringExtra("RESPONSE") : "No response";
+            Log.e(TAG, "Local Match failed: " + error);
+        }
+    }
+}
+
+    private String convertJsonToXml(String jsonString) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            return "<Pid>" + jsonToXml(jsonObject) + "</Pid>";
+        } catch (Exception e) {
+            Log.e(TAG, "Error converting JSON to XML", e);
+            return jsonString;
+        }
+    }
+
+    private String jsonToXml(JSONObject jsonObject) {
+        StringBuilder xml = new StringBuilder();
+        Iterator<String> keys = jsonObject.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Object value = jsonObject.opt(key);
+            if (value instanceof JSONObject) {
+                xml.append("<").append(key).append(">")
+                        .append(jsonToXml((JSONObject) value))
+                        .append("</").append(key).append(">");
+            } else {
+                xml.append("<").append(key).append(">")
+                        .append(value.toString())
+                        .append("</").append(key).append(">");
+            }
+        }
+        return xml.toString();
+    }
 
 
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == RD_SERVICE_REQUEST) {
+//            if (resultCode == RESULT_OK && data != null) {
+////                String pidData = data.getStringExtra("response");
+//                String pidData = data.getStringExtra("PIDXML");
+//                if (pidData != null) {
+//                    logLongString("PID_DATA", pidData);
+//                }
+//
+//                if (pidData != null && pidData.contains("PID_CREATED")) {
+//                    Toast.makeText(requireContext(), "Face captured successfully!", Toast.LENGTH_SHORT).show();
+//
+//                    showXmlDialog("PID XML", pidData);
+//
+//
+////                    sendPidDataToBackend(pidData);
+//
+//                } else {
+//                    Log.e(TAG, "Capture failed: " + pidData);
+//                    Toast.makeText(requireActivity(), "Face capture failed. Please try again.", Toast.LENGTH_SHORT).show();
+//                }
+//            } else {
+//                String error = (data != null) ? data.getStringExtra("response") : "No response";
+//                Log.e(TAG, "Capture failed: " + error);
+//                Toast.makeText(getContext(), "Face capture failed.", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//        if (requestCode == LOCAL_MATCH_REQ) {
+//            if (resultCode == RESULT_OK && data != null) {
+//                String response = data.getStringExtra("RESPONSE");
+//                Log.d(TAG, "Match Response: " + response);
+//                Toast.makeText(getContext(), "Match Response: " + response, Toast.LENGTH_SHORT).show();
+//            } else {
+//                String error = (data != null) ? data.getStringExtra("RESPONSE") : "No response";
+//                Log.e(TAG, "Local Match failed: " + error);
+//            }
+//        }
+//    }
+
+    private void logLongString(String tag, String message) {
+        if (message == null) return;
+
+        int maxLogSize = 4000;
+        for (int i = 0; i <= message.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = Math.min((i + 1) * maxLogSize, message.length());
+            Log.d(tag, message.substring(start, end));
+        }
+    }
+
+
+    private void showXmlDialog(String title, String xmlContent) {
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle(title);
+
+            // Create a scrollable TextView for XML content
+            TextView textView = new TextView(requireContext());
+            textView.setText(xmlContent);
+            textView.setTextIsSelectable(true);
+            textView.setPadding(50, 30, 50, 30);
+            textView.setTextSize(14);
+            textView.setVerticalScrollBarEnabled(true);
+            textView.setMovementMethod(new ScrollingMovementMethod());
+
+            ScrollView scrollView = new ScrollView(requireContext());
+            scrollView.addView(textView);
+
+            builder.setView(scrollView);
+
+            builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+            builder.setNegativeButton("Copy", (dialog, which) -> {
+                ClipboardManager clipboard = (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("PID XML", xmlContent);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(requireContext(), "PID XML copied to clipboard", Toast.LENGTH_SHORT).show();
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            // Optional: Adjust dialog size
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+
+        } catch (Exception e) {
+            Log.e("showXmlDialog", "Error showing XML dialog", e);
+            Toast.makeText(requireContext(), "Failed to display PID XML", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     private void initData() {
@@ -1641,6 +1799,8 @@ public class FinalSubmissionFragment extends Fragment {
     private void setDataToUI(ApplicantDetailData data) {
         if (data == null) return;
         System.out.println("data_applicant "+new Gson().toJson(data));
+        aadhaarNumber = data.getAadharNo();
+        Toast.makeText(getContext(), "aadhaarNumber "+aadhaarNumber, Toast.LENGTH_LONG).show();
 
         app_adharcardno.setText(data.getAadharNo());
         app_pannumber.setText(data.getPANNo());

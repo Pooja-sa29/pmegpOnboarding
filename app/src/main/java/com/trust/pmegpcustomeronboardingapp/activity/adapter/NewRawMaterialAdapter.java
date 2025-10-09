@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.trust.pmegpcustomeronboardingapp.R;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DRPMasterData;
+import com.trust.pmegpcustomeronboardingapp.activity.model.MachineryItem;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.SimpleTextWatcher;
 
 import java.util.List;
@@ -30,7 +31,25 @@ public class NewRawMaterialAdapter extends RecyclerView.Adapter<NewRawMaterialAd
         this.rawMaterialList = rawMaterials;
         this.onAmountChangeListener = listener;
     }
-
+    public List<DRPMasterData.RawMaterial> getUpdatedList() {
+        List<DRPMasterData.RawMaterial> updatedList = new java.util.ArrayList<>();
+        for (DRPMasterData.RawMaterial item : rawMaterialList) {
+            DRPMasterData.RawMaterial detail = new DRPMasterData.RawMaterial();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setRatePerUnit(item.getRatePerUnit());
+            } catch (NumberFormatException e) {
+                detail.setRatePerUnit(0.0);
+            }
+            try {
+                detail.setAmount(item.getAmount());
+            } catch (NumberFormatException e) {
+                detail.setAmount(0.0);
+            }
+            updatedList.add(detail);
+        }
+        return updatedList;
+    }
     @NonNull
     @Override
     public NewRawMaterialAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,7 +71,7 @@ public class NewRawMaterialAdapter extends RecyclerView.Adapter<NewRawMaterialAd
         TextWatcher watcher = new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                double rate = 0.0, unit = 0.0, req_unit = 0.0;
+                double rate = 0, unit = 0, req_unit = 0;
                 try {
                     rate = Double.parseDouble(holder.rate.getText().toString().trim());
                 } catch (NumberFormatException ignored) {}

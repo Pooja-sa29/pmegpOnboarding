@@ -1,33 +1,33 @@
 package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
-import static android.content.Intent.getIntent;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.trust.pmegpcustomeronboardingapp.R;
+import com.trust.pmegpcustomeronboardingapp.activity.Interface.BaseDprItem;
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.NewBuildingAdapter;
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.NewDetailsOfSalesAdapter;
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.NewMachineryAdapter;
@@ -39,24 +39,29 @@ import com.trust.pmegpcustomeronboardingapp.activity.adapter.NewWorkingCapitalAd
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.NewWorkingCapitalEstimatesAdapter;
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.NewWorkingPowerEstimatesAdapter;
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.ProductAdapter;
-import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDetailData;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDPROnly;
+import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantDataModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicantRequest;
-import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicationResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BuildingItem;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DPRDetailData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DPRResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DPRUpdateRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DRPMasterData;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DprResult;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DprSaveRequestData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.MachineryItem;
-import com.trust.pmegpcustomeronboardingapp.activity.model.NICGroupModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.UnitTypeModel;
 import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
-import com.trust.pmegpcustomeronboardingapp.activity.screens.NewApplicantUnitActivity;
+import com.trust.pmegpcustomeronboardingapp.activity.screens.DashboardScreenActivity;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,7 +72,10 @@ public class DPRFragment extends BaseFormFragment {
     private ProgressDialog progressDialog;
     private TextView txtDprApplicationLayout, txtBuildingLayout, txt_MACHINERY_layout,txt_working_capitallayout,txt_financing_details_Layout,txt_salesDetails_layout,txt_raw_material_Layout,txt_beneficiary_Layout,txt_introduction_Layout,txt_imp_agency_Layout,txt_promoter_details_Layout,txt_ofc_intro_Layout,txt_depreciation_Layout,txt_power_estimate_Layout,txt_working_capital_Layout,txt_salary_details_Layout,txt_wages_Layout,txtAddbuildingRow,txt_add_machinery_row,txt_wages_row,txt_salary_row,txt_raw_material_row,txt_add_sales_row, landTotal,machinery_total,workingCapitalTotal,salesTotal,wagesTotal,rawTotal,salartTotal,rate_of_interest_power;
     private Spinner activitySpinner;
-    Button btn_updateform;
+    Button btn_updateform,btn_saveform;
+    DRPMasterData dprDrpMasterData;
+    DPRDetailData dprDetailData;
+    DprSaveRequestData dprSaveRequestData;
 
     CardView cv_dpr,cv_building_details,cv_machinery_details,cv_working_capital,cv_means_of_financing,cv_sales_details,cv_raw_material_details,cv_wages_details,cv_salary_details,cv_workking_capital_details,cv_power_estimates,cv_depreciation,cv_intro_ofc,cv_promoter,cv_implementing_agency,cv_intro,cv_abt_beneficiary;
     private RecyclerView rvProduct, rvLandEntry, rvMachineryEntry, rvWorkingCapital,
@@ -153,6 +161,7 @@ public class DPRFragment extends BaseFormFragment {
         aboutBeneficiary = view.findViewById(R.id.beneficiary_details);
 
         activitySpinner = view.findViewById(R.id.activityspinner);
+        btn_saveform = view.findViewById(R.id.btn_saveform);
         btn_updateform = view.findViewById(R.id.btn_updateform);
         rvProduct = view.findViewById(R.id.rv_product);
         rvLandEntry = view.findViewById(R.id.rv_land_entry);
@@ -249,18 +258,339 @@ public class DPRFragment extends BaseFormFragment {
         txt_introduction_Layout.setOnClickListener(v -> toggleSection(cv_intro,txt_introduction_Layout ));
         txt_beneficiary_Layout.setOnClickListener(v -> toggleSection(cv_abt_beneficiary,txt_beneficiary_Layout ));
 
+//         btn_updateform.setVisibility(View.VISIBLE);
+        btn_saveform.setOnClickListener(v -> {
+            if (dprDetailData != null && dprDrpMasterData.getData() != null) {
+                dprSaveRequestData = new DprSaveRequestData();
+                DprSaveRequestData.DPRDetail detail = new DprSaveRequestData.DPRDetail();
+                detail.setApplID(Integer.parseInt(AppConstant.getApplId()));
+                detail.setApplCode("");
+                dprSaveRequestData.setDPRDetail(detail);
 
+                //Applicants
+                DprSaveRequestData.Applicant applicant = new DprSaveRequestData.Applicant();
+                applicant.setApplID(Integer.parseInt(AppConstant.getApplId()));
+                applicant.setApplCode("");
+                applicant.setDPRVerified(true);
+
+                List<DprSaveRequestData.Applicant> applicants = new ArrayList<>();
+                applicants.add(applicant);
+                dprSaveRequestData.setApplicant(applicants);
+
+                //Building
+                DprSaveRequestData.BuildingDetail buildingDetail = new DprSaveRequestData.BuildingDetail();
+                buildingDetail.setApplID(dprDetailData.getApplID());
+//                buildingDetail.setAmount(Double.parseDouble(etBuildingAmount.getText().toString()));
+//                buildingDetail.setArea(Double.parseDouble(etBuildingArea.getText().toString()));
+//                buildingDetail.setRatePerSqFt(Double.parseDouble(etRatePerSqFt.getText().toString()));
+                List<DprSaveRequestData.BuildingDetail> buildingDetailList = new ArrayList<>();
+                buildingDetailList.add(buildingDetail);
+                dprSaveRequestData.setBuildingDetails(buildingDetailList);
+
+                //Machinery
+                DprSaveRequestData.MachineryDetail machineryDetail = new DprSaveRequestData.MachineryDetail();
+                List<DprSaveRequestData.MachineryDetail> machineryDetailList = new ArrayList<>();
+                machineryDetailList.add(machineryDetail);
+                dprSaveRequestData.setMachineryDetails(machineryDetailList);
+
+                //working capital detail
+                DprSaveRequestData.WorkingCapitalDetail workingCapitalDetail = new DprSaveRequestData.WorkingCapitalDetail();
+                List<DprSaveRequestData.WorkingCapitalDetail> workingCapitalDetailList = new ArrayList<>();
+                workingCapitalDetailList.add(workingCapitalDetail);
+                dprSaveRequestData.setWorkingCapitalDetails(workingCapitalDetailList);
+
+                //MeansOfFinancing
+                DprSaveRequestData.MeansOfFinancing meansOfFinancing = new DprSaveRequestData.MeansOfFinancing();
+                List<DprSaveRequestData.MeansOfFinancing> meansOfFinancingList = new ArrayList<>();
+                meansOfFinancingList.add(meansOfFinancing);
+                dprSaveRequestData.setMeansOfFinancing(meansOfFinancingList);
+
+           //DetailsOfSales
+                DprSaveRequestData.DetailsOfSales detailsOfSales = new DprSaveRequestData.DetailsOfSales();
+                List<DprSaveRequestData.DetailsOfSales> detailsOfSalesList = new ArrayList<>();
+                detailsOfSalesList.add(detailsOfSales);
+                dprSaveRequestData.setDetailsOfSales(detailsOfSalesList);
+
+                //RawMaterials
+                DprSaveRequestData.RawMaterial rawMaterial = new DprSaveRequestData.RawMaterial();
+                List<DprSaveRequestData.RawMaterial> rawMaterialList = new ArrayList<>();
+                rawMaterialList.add(rawMaterial);
+                dprSaveRequestData.setRawMaterials(rawMaterialList);
+
+                //WagesDetails
+                DprSaveRequestData.WagesDetail wagesDetail = new DprSaveRequestData.WagesDetail();
+                List<DprSaveRequestData.WagesDetail> wagesDetailList1 = new ArrayList<>();
+                wagesDetailList1.add(wagesDetail);
+                dprSaveRequestData.setWagesDetails(wagesDetailList1);
+
+
+               //SalaryDetails
+                DprSaveRequestData.SalaryDetail salaryDetail = new DprSaveRequestData.SalaryDetail();
+                List<DprSaveRequestData.SalaryDetail> salaryDetailList1 = new ArrayList<>();
+                salaryDetailList1.add(salaryDetail);
+                dprSaveRequestData.setSalaryDetails(salaryDetailList1);
+
+                //WorkingCapitalEstimate
+                DprSaveRequestData.WorkingCapitalEstimate workingCapitalEstimate = new DprSaveRequestData.WorkingCapitalEstimate();
+                List<DprSaveRequestData.WorkingCapitalEstimate> workingCapitalEstimateList1 = new ArrayList<>();
+                workingCapitalEstimateList1.add(workingCapitalEstimate);
+                dprSaveRequestData.setWorkingCapitalEstimate(workingCapitalEstimateList1);
+
+
+                //WorkingCapitalEstimate
+                DprSaveRequestData.PowerEstimateExpenditure powerEstimateExpenditure = new DprSaveRequestData.PowerEstimateExpenditure();
+                List<DprSaveRequestData.PowerEstimateExpenditure> powerEstimateExpenditureList1 = new ArrayList<>();
+                powerEstimateExpenditureList1.add(powerEstimateExpenditure);
+                dprSaveRequestData.setPowerEstimateExpenditure(powerEstimateExpenditureList1);
+
+
+
+
+                Log.d("SAVE_REQUEST", new Gson().toJson(dprSaveRequestData));
+
+                SaveApplicationForm(dprSaveRequestData);  // correct object
+            } else {
+                Toast.makeText(getContext(), "No DPR data to save", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btn_updateform.setVisibility(View.VISIBLE);
         btn_updateform.setOnClickListener(v -> {
-            SaveApplicationForm();
+                prepareAndUpdateApplication();
         });
         initData();
         return view;
     }
 
-    private void SaveApplicationForm() {
 
+    private void updateApplicationForm(DPRUpdateRequest dprDrpMasterData) {
+        Log.d("TAG", "updateApplicationForm: "+dprDrpMasterData);
+        apiService.updateDprData(dprDrpMasterData).enqueue(new Callback<DprResult>() {
+            @Override
+            public void onResponse(Call<DprResult> call, Response<DprResult> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    DprResult status = response.body();
+
+                    Log.d("API_RESPONSE", new Gson().toJson(status));
+
+                    if (status.isSuccess()) {
+                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
+                        startActivity(i);
+
+                    } else {
+                        Toast.makeText(getContext(), "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Unexpected response", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DprResult> call, Throwable t) {
+                Toast.makeText(getContext(), "Error1: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void SaveApplicationForm(DprSaveRequestData dprDrpMasterData) {
+        apiService.saveDprData(dprDrpMasterData).enqueue(new Callback<DprResult>() {
+            @Override
+            public void onResponse(Call<DprResult> call, Response<DprResult> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    DprResult status = response.body();
+
+                    Log.d("API_RESPONSE", new Gson().toJson(status));
+
+                    if (status.isSuccess()) {
+                        btn_updateform.setVisibility(View.VISIBLE);
+                        btn_saveform.setVisibility(View.GONE);
+//                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
+//                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
+//                        startActivity(i);
+
+                    } else {
+                        Toast.makeText(getContext(), "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Unexpected response", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DprResult> call, Throwable t) {
+                Toast.makeText(getContext(), "Error1: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
+
+
+//    private void prepareAndUpdateApplication() {
+//        if (dprDrpMasterData != null && dprDrpMasterData.getData() != null) {
+//
+//            // --- Update DPR Detail ---
+//            DRPMasterData.Data data = dprDrpMasterData.getData();
+//            DRPMasterData.DPRDetail detail = data.getDPRDetail();
+//
+//            detail.setOnBuilding(into_ofc.getText().toString().trim());
+//            detail.setOnMachinery(onmachinery.getText().toString().trim());
+//            detail.setLand(landEntry.getText().toString().trim()); // Add this if applicable
+//            detail.setPowerRequirement(txt_power_req.getText().toString().trim());
+//            detail.setRateOfInterest(rate_of_interest_power.getText().toString().trim());
+//            detail.setIntroduction(introduction_txt.getText().toString().trim());
+//            detail.setAboutBeneficiary(aboutBeneficiary.getText().toString().trim());
+//            detail.setPayBackPeriod(payBackPeriod.getText().toString().trim());
+//            detail.setProjectImplementationPeriod(prj_impl_period.getText().toString().trim());
+//            detail.setIntroductionOffice(intro_ofc.getText().toString().trim());
+//            detail.setAboutThePromoter(promoter_info.getText().toString().trim());
+//
+//            // --- Update Applicant Status ---
+//            if (data.getApplicant() != null) {
+//                data.getApplicant().setIsDPRVerified(1);
+//            }
+//
+//            // --- Update Lists from Adapters ---
+//            data.setBuildingDetails(newBuildingAdapter.getUpdatedList());
+//            data.setMachineryDetails(newMachineryAdapter.getUpdatedList());
+//            data.setRawMaterials(newRawaterialAdapter.getUpdatedList());
+//            data.setWagesDetails(newWagesAdapter.getUpdatedList());
+//            data.setSalaryDetails(newSalaryDetailAdapter.getUpdatedList());
+//            data.setDetailsOfSales(newDetailsOfSalesAdapter.getUpdatedList());
+//            data.setMeansOfFinancing(newMeansOfFinancingAdapter.getUpdatedList());
+//            data.setWorkingCapitalDetails(newWorkingCapitalAdapter.getUpdatedList());
+//            data.setWorkingCapitalEstimate(newWorkingCapitalEstimatesAdapter.getUpdatedList());
+//            data.setPowerEstimateExpenditure(newWorkingPowerEstimatesAdapter.getUpdatedList());
+//
+//            // --- Log the final JSON for debugging ---
+//            String jsonRequest = new GsonBuilder().setPrettyPrinting().create().toJson(dprDrpMasterData);
+//            Log.d("FINAL_UPDATE_REQUEST", jsonRequest);
+//
+//            // --- Call Update API ---
+//            updateApplicationForm(dprDrpMasterData);
+//
+//        } else {
+//            Toast.makeText(getContext(), "No DPR data to update", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+
+    private void prepareAndUpdateApplication() {
+
+        if (dprDrpMasterData == null || dprDrpMasterData.getData() == null) {
+            Toast.makeText(getContext(), "No DPR data to update", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DRPMasterData.Data data = dprDrpMasterData.getData();
+        DRPMasterData.DPRDetail detail = data.getDPRDetail();
+        String applCode = detail.getApplCode();
+        int applId = detail.getApplID();
+        String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date());
+
+
+
+        detail.setOnBuilding(landEntry.getText().toString().trim());
+        detail.setOnMachinery(onmachinery.getText().toString().trim());
+        detail.setLand(landEntry.getText().toString().trim());
+        detail.setPowerRequirement(txt_power_req.getText().toString().trim());
+        detail.setRateOfInterest(rate_of_interest_power.getText().toString().trim());
+        detail.setIntroduction(introduction_txt.getText().toString().trim());
+        detail.setAboutBeneficiary(aboutBeneficiary.getText().toString().trim());
+        detail.setPayBackPeriod(payBackPeriod.getText().toString().trim());
+        detail.setProjectImplementationPeriod(prj_impl_period.getText().toString().trim());
+        detail.setIntroductionOffice(intro_ofc.getText().toString().trim());
+        detail.setAboutThePromoter(promoter_info.getText().toString().trim());
+
+        ApplicantDPROnly applicant = new ApplicantDPROnly(1);
+
+
+        List<DRPMasterData.BuildingDetail> buildingDetails = newBuildingAdapter.getUpdatedList();
+        List<DRPMasterData.MachineryDetail> machineryDetails = newMachineryAdapter.getUpdatedList();
+        List<DRPMasterData.RawMaterial> rawMaterials = newRawaterialAdapter.getUpdatedList();
+        List<DRPMasterData.WagesDetail> wagesDetails = newWagesAdapter.getUpdatedList();
+        List<DRPMasterData.SalaryDetail> salaryDetails = newSalaryDetailAdapter.getUpdatedList();
+        List<DRPMasterData.DetailsOfSale> detailsOfSales = newDetailsOfSalesAdapter.getUpdatedList();
+        List<DRPMasterData.MeansOfFinancing> meansOfFinancing = newMeansOfFinancingAdapter.getUpdatedList();
+        List<DRPMasterData.WorkingCapitalDetail> workingCapitalDetails = newWorkingCapitalAdapter.getUpdatedList();
+        List<DRPMasterData.WorkingCapitalEstimate> workingCapitalEstimate = newWorkingCapitalEstimatesAdapter.getUpdatedList();
+        List<DRPMasterData.PowerEstimateExpenditure> powerEstimateExpenditure = newWorkingPowerEstimatesAdapter.getUpdatedList();
+
+        applyCommonFields(buildingDetails, applId, applCode, now);
+        applyCommonFields(machineryDetails, applId, applCode, now);
+        applyCommonFields(rawMaterials, applId, applCode, now);
+        applyCommonFields(wagesDetails, applId, applCode, now);
+        applyCommonFields(salaryDetails, applId, applCode, now);
+        applyCommonFields(detailsOfSales, applId, applCode, now);
+        applyCommonFields(meansOfFinancing, applId, applCode, now);
+        applyCommonFields(workingCapitalDetails, applId, applCode, now);
+        applyCommonFields(workingCapitalEstimate, applId, applCode, now);
+        applyCommonFields(powerEstimateExpenditure, applId, applCode, now);
+
+        DPRUpdateRequest request = new DPRUpdateRequest();
+        request.setDprDetail(detail);
+        request.setApplicant(applicant);
+        request.setBuildingDetails(buildingDetails);
+        request.setMachineryDetails(machineryDetails);
+        request.setRawMaterials(rawMaterials);
+        request.setWagesDetails(wagesDetails);
+        request.setSalaryDetails(salaryDetails);
+        request.setDetailsOfSales(detailsOfSales);
+        request.setMeansOfFinancing(meansOfFinancing);
+        request.setWorkingCapitalDetails(workingCapitalDetails);
+        request.setWorkingCapitalEstimate(workingCapitalEstimate);
+        request.setPowerEstimateExpenditure(powerEstimateExpenditure);
+
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Log.d("FINAL_UPDATE_REQUEST", gson.toJson(request));
+
+
+        updateApplicationForm(request);
+    }
+
+//    private void prepareAndUpdateApplication1(){
+//
+//        DPRUpdateRequest dprUpdateRequest = new DPRUpdateRequest();
+//
+//        DRPMasterData.Data data = dprDrpMasterData.getData();
+//        DRPMasterData.DPRDetail dprDetail=data.getDPRDetail();
+//        dprDetail.setApplID(dprDetail.getApplID());
+//        dprDetail.setApplCode(dprDetail.getApplCode());
+//        dprDetail.setOnBuilding(into_ofc.getText().toString());
+//        dprDetail.setOnMachinery(onmachinery.getText().toString());
+//        dprDetail.setLand(landEntry.getText().toString());
+//        dprDetail.setPowerRequirement(txt_power_req.getText().toString());
+//        dprDetail.setRateOfInterest(rate_of_interest_power.getText().toString());
+//        dprDetail.setIntroduction(introduction_txt.getText().toString().trim());
+//        dprDetail.setAboutBeneficiary(aboutBeneficiary.getText().toString().trim());
+//        dprDetail.setCreatedOn();
+//        dprDetail.setModifyOn();
+//        dprDetail.setPayBackPeriod(payBackPeriod.getText().toString().trim());
+//        dprDetail.setProjectImplementationPeriod(prj_impl_period.getText().toString().trim());
+//        dprDetail.setIntroductionOffice(intro_ofc.getText().toString().trim());
+//        dprDetail.setAboutThePromoter(promoter_info.getText().toString().trim());
+//        dprUpdateRequest.setDprDetail(dprDetail);
+//
+//        ApplicantDPROnly applicant = new ApplicantDPROnly(1);
+//
+//
+//
+//
+//    }
+
+
+    private <T extends BaseDprItem> void applyCommonFields(List<T> list, int applId, String applCode, String createdOn) {
+        if (list != null) {
+            for (T item : list) {
+                item.setApplID(applId);
+                item.setApplCode(applCode);
+                item.setCreatedOn(createdOn);
+                item.setModifyOn(null);
+            }
+        }
+    }
+
+
 
     private void initData() {
         fetchUnitTypeData();
@@ -410,6 +740,7 @@ public class DPRFragment extends BaseFormFragment {
                 if (response.isSuccessful() && response.body() != null) {
                     DRPMasterData data = response.body();
                     Log.d("DRP_master_API_RESPONSE", new Gson().toJson(data));
+                    dprDrpMasterData = data;
                     setMasterDataToUI(data);
                 }
             }
@@ -614,6 +945,7 @@ public class DPRFragment extends BaseFormFragment {
                 if (response.isSuccessful() && response.body() != null) {
                     DPRDetailData data = response.body().getData();
                     Log.d("DRP_API_RESPONSE", new Gson().toJson(data));
+                    dprDetailData = data;
                     setDataToUI(data);
                 }
             }

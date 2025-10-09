@@ -36,6 +36,22 @@ public class NewMeansOfFinancingAdapter extends RecyclerView.Adapter<NewMeansOfF
         return new ViewHolder(view);
     }
 
+    public List<DRPMasterData.MeansOfFinancing> getUpdatedList() {
+        List<DRPMasterData.MeansOfFinancing> updatedList = new java.util.ArrayList<>();
+        for (DRPMasterData.MeansOfFinancing item : meansOfFinancingList) {
+            DRPMasterData.MeansOfFinancing detail = new DRPMasterData.MeansOfFinancing();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setPercentage(item.getPercentage());
+            } catch (NumberFormatException e) {
+                detail.setPercentage(0);
+            }
+
+            updatedList.add(detail);
+        }
+        return updatedList;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DRPMasterData.MeansOfFinancing item = meansOfFinancingList.get(position);

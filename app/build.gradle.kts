@@ -12,8 +12,12 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildFeatures {
+            buildConfig = true
+        }
+        val encryptionKey: String = providers.gradleProperty("ENCRYPTION_KEY").get()
+        buildConfigField("String", "ENCRYPTION_KEY", "\"$encryptionKey\"")
     }
 
     buildTypes {

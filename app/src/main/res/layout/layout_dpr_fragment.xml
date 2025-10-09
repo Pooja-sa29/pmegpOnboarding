@@ -485,7 +485,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="12dp">
-
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="horizontal">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -541,6 +546,7 @@
                             android:layout_height="wrap_content" />
 
                     </LinearLayout>
+                    </HorizontalScrollView>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -586,7 +592,6 @@
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_means_of_financing"
                 android:layout_width="match_parent"
@@ -595,25 +600,27 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="6dp">
 
-                <LinearLayout
+                <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
+                    android:fillViewport="true"
+                    android:layout_marginTop="8dp"
+                    android:scrollbars="horizontal">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
+                        <!-- Header Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sr No"
@@ -621,28 +628,42 @@
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
 
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Particulars"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
 
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Amount"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
                         </LinearLayout>
 
-                        <LinearLayout
-
+                        <!-- Divider Line -->
+                        <View
                             android:layout_width="match_parent"
-                            android:layout_height="8dp"
-                            android:background="@drawable/orange_left_strip"
-                            android:elevation="4dp"
-                            android:orientation="horizontal" />
+                            android:layout_height="2dp"
+                            android:background="@color/orange" />
 
+                        <!-- RecyclerView -->
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_means_of_financing"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp" />
 
                     </LinearLayout>
-
-
-
-                </LinearLayout>
+                </HorizontalScrollView>
             </androidx.cardview.widget.CardView>
+
 
             <TextView
                 android:id="@+id/txt_salesDetails_layout"
@@ -1321,12 +1342,18 @@
                     android:padding="12dp">
 
 
-
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="horizontal">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:orientation="vertical">
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -1381,7 +1408,7 @@
 
                     </LinearLayout>
 
-
+                    </HorizontalScrollView>
 
 
                 </LinearLayout>
@@ -1430,7 +1457,6 @@
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
 
@@ -1576,8 +1602,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
+                            android:inputType="numberDecimal"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
 
@@ -1602,8 +1628,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
+                            android:inputType="numberDecimal"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
 
@@ -1624,8 +1650,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
+                            android:inputType="numberDecimal"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
 
@@ -1645,8 +1671,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="12dp"
+                            android:inputType="numberDecimal"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
 
@@ -1702,7 +1728,6 @@
                             android:layout_height="wrap_content"
                             android:padding="12dp"
                             android:textColor="@color/colorFentBlack"
-                            android:enabled="false"
                             android:maxLines="50"
                             android:textSize="16sp"
                             android:layout_weight="1"/>
@@ -2109,9 +2134,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
                 <Button
+                    android:id="@+id/btn_saveform"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="@color/peacock_green"
+                    android:text="Save" />
+
+                <Button
                     android:id="@+id/btn_updateform"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_margin="5dp"
                     android:backgroundTint="@color/peacock_green"
                     android:text="Update" />

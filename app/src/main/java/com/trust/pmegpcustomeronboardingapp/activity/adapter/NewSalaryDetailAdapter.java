@@ -31,6 +31,32 @@ public class NewSalaryDetailAdapter extends RecyclerView.Adapter<NewSalaryDetail
             this.onAmountChangeListener = listener;
         }
 
+
+    public List<DRPMasterData.SalaryDetail> getUpdatedList() {
+        List<DRPMasterData.SalaryDetail> updatedList = new java.util.ArrayList<>();
+        for (DRPMasterData.SalaryDetail item : salaryDetailList) {
+            DRPMasterData.SalaryDetail detail = new DRPMasterData.SalaryDetail();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setNoOfStaff(item.getNoOfStaff());
+            } catch (NumberFormatException e) {
+                detail.setNoOfStaff((int) 0.0);
+            }
+            try {
+                detail.setAmount(item.getAmount());
+            } catch (NumberFormatException e) {
+                detail.setAmount(0.0);
+            }
+            try {
+                detail.setAmount(item.getAmount());
+            } catch (NumberFormatException e) {
+                detail.setAmount(0.0);
+            }
+            updatedList.add(detail);
+        }
+        return updatedList;
+    }
+
         @NonNull
         @Override
         public NewSalaryDetailAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

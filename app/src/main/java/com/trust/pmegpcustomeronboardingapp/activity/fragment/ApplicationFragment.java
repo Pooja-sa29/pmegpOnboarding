@@ -1393,6 +1393,8 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
                 progressDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
                     ApplicantDetailData data = response.body().getData();
+
+
                     SharedPreferences prefs = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("ApplName", data.getApplName());

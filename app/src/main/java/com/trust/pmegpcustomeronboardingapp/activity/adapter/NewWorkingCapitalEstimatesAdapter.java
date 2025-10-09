@@ -30,7 +30,21 @@ public class NewWorkingCapitalEstimatesAdapter extends RecyclerView.Adapter<com.
         this.workingCapitalList = list;
         this.onAmountChangeListener = listener;
     }
+    public List<DRPMasterData.WorkingCapitalEstimate> getUpdatedList() {
+        List<DRPMasterData.WorkingCapitalEstimate> updatedList = new java.util.ArrayList<>();
+        for (DRPMasterData.WorkingCapitalEstimate item : workingCapitalList) {
+            DRPMasterData.WorkingCapitalEstimate detail = new DRPMasterData.WorkingCapitalEstimate();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setNoOfDays(item.getNoOfDays());
+            } catch (NumberFormatException e) {
+                detail.setNoOfDays(0);
+            }
 
+            updatedList.add(detail);
+        }
+        return updatedList;
+    }
     @NonNull
     @Override
     public NewWorkingCapitalEstimatesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

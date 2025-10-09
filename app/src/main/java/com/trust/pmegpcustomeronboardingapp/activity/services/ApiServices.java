@@ -16,9 +16,13 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.ApplicationResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankDetailResponce;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BankModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DPRDetailData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DPRResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DPRUpdateRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DRPMasterData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DistrictModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DprResult;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DprSaveRequestData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.EDPRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.EDPResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.GenderModel;
@@ -27,6 +31,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.LoginRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.LoginResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.NICDevisionModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.NICGroupModel;
+import com.trust.pmegpcustomeronboardingapp.activity.model.PidDataModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.QualificationModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ResultModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.ScoreCard;
@@ -43,6 +48,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailRequestModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.faceDetectionResult;
 
 import java.util.List;
 
@@ -50,6 +56,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface ApiServices {
@@ -133,19 +140,26 @@ public interface ApiServices {
     @POST("MobileApp/GetApplicantData")
     Call<ApplicationResponse>  getApplicantData(@Body ApplicantRequest applId);
 
+    @POST("MobileApp/ScoreCard")
+    Call<ScoreCard>  getScoreCardData(@Body ApplicantRequest applId);
     @POST("MobileApp/GetDprData")
     Call<DPRResponse>  getDprData(@Body ApplicantRequest applId);
 
-
     @POST("MobileApp/GetSavedDPRMasterData")
     Call<DRPMasterData>  getSavedDPRMasterData(@Body ApplicantRequest applId);
-
-    @POST("MobileApp/ScoreCard")
-    Call<ScoreCard>  getScoreCardData(@Body ApplicantRequest applId);
-
     @POST("MobileApp/UpdateApplicantData")
     Call<ApplicantUpdateResult>  updateApplicantData(@Body ApplicantInfoModel applicantInfoModel);
 
+    @POST("MobileApp/SaveDPRData")
+    Call<DprResult>  saveDprData(@Body DprSaveRequestData dprDrpMasterData);
+
+    @POST("MobileApp/UpdateDPRData")
+    Call<DprResult>  updateDprData(@Body DPRUpdateRequest dprDrpMasterData);
+
+    @GET("MobileApp/ValidateFaceRecogData")
+    Call<faceDetectionResult>  validateFaceRecognition(@Body PidDataModel pidDataModel);
+
 //    @POST("aadhaar/face-auth")
 //    Call<ResponseBody> sendFaceAuthData(String number, String pidData);
+
 }

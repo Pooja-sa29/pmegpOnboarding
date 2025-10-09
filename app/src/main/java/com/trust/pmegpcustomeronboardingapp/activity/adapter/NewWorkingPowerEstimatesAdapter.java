@@ -30,6 +30,26 @@ public class NewWorkingPowerEstimatesAdapter extends RecyclerView.Adapter<NewWor
         this.powerEstimateExpenditureList = list;
         this.onAmountChangeListener = listener;
     }
+    public List<DRPMasterData.PowerEstimateExpenditure> getUpdatedList() {
+        List<DRPMasterData.PowerEstimateExpenditure> updatedList = new java.util.ArrayList<>();
+        for (DRPMasterData.PowerEstimateExpenditure item : powerEstimateExpenditureList) {
+            DRPMasterData.PowerEstimateExpenditure detail = new DRPMasterData.PowerEstimateExpenditure();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setAmountInRs(item.getAmountInRs());
+            } catch (NumberFormatException e) {
+                detail.setAmountInRs((int) 0.0);
+            }
+            try {
+                detail.setCost(item.getCost());
+            } catch (NumberFormatException e) {
+                detail.setCost(0);
+            }
+
+            updatedList.add(detail);
+        }
+        return updatedList;
+    }
 
     @NonNull
     @Override

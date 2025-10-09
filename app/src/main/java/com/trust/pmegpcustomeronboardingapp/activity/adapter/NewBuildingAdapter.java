@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.trust.pmegpcustomeronboardingapp.R;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BuildingItem;
+import com.trust.pmegpcustomeronboardingapp.activity.model.DRPMasterData;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.SimpleTextWatcher;
 
 import java.util.List;
@@ -30,6 +31,30 @@ public class NewBuildingAdapter extends RecyclerView.Adapter<NewBuildingAdapter.
     public NewBuildingAdapter(List<BuildingItem> buildingList, OnAmountChangeListener listener) {
         this.buildingList = buildingList;
         this.onAmountChangeListener = listener;
+    }
+    public List<DRPMasterData.BuildingDetail> getUpdatedList() {
+        List<DRPMasterData.BuildingDetail> updatedList = new java.util.ArrayList<>();
+        for (BuildingItem item : buildingList) {
+            DRPMasterData.BuildingDetail detail = new DRPMasterData.BuildingDetail();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setArea(Double.parseDouble(item.getArea()));
+            } catch (NumberFormatException e) {
+                detail.setArea(0.0);
+            }
+            try {
+                detail.setRatePerSqFt(Double.parseDouble(item.getRate()));
+            } catch (NumberFormatException e) {
+                detail.setRatePerSqFt(0.0);
+            }
+            try {
+                detail.setAmount(Double.parseDouble(item.getAmount()));
+            } catch (NumberFormatException e) {
+                detail.setAmount(0.0);
+            }
+            updatedList.add(detail);
+        }
+        return updatedList;
     }
 
     @NonNull

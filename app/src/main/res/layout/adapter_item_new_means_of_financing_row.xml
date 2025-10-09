@@ -50,7 +50,7 @@
             android:id="@+id/means_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="numberDecimal"
             android:padding="8dp"
             android:textColor="@color/colorFentBlack"
             android:textSize="14sp" />

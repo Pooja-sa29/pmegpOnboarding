@@ -31,6 +31,30 @@ public class NewDetailsOfSalesAdapter extends RecyclerView.Adapter<NewDetailsOfS
         this.detailsOfSaleslist = detailsOfSales;
         this.onAmountChangeListener = listener;
     }
+    public List<DRPMasterData.DetailsOfSale> getUpdatedList() {
+        List<DRPMasterData.DetailsOfSale> updatedList = new java.util.ArrayList<>();
+        for (DRPMasterData.DetailsOfSale item : detailsOfSaleslist) {
+            DRPMasterData.DetailsOfSale detail = new DRPMasterData.DetailsOfSale();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setRatePerUnit(item.getRatePerUnit());
+            } catch (NumberFormatException e) {
+                detail.setRatePerUnit((int) 0.0);
+            }
+            try {
+                detail.setQuantity(item.getQuantity());
+            } catch (NumberFormatException e) {
+                detail.setQuantity((int) 0.0);
+            }
+            try {
+                detail.setAmount(item.getAmount());
+            } catch (NumberFormatException e) {
+                detail.setAmount(0.0);
+            }
+            updatedList.add(detail);
+        }
+        return updatedList;
+    }
 
     @NonNull
     @Override
@@ -52,7 +76,7 @@ public class NewDetailsOfSalesAdapter extends RecyclerView.Adapter<NewDetailsOfS
         TextWatcher watcher = new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                double rate = 0.0, quantity = 0.0;
+                double rate = 0, quantity = 0;
                 try {
                     rate = Double.parseDouble(holder.rate.getText().toString().trim());
                 } catch (NumberFormatException ignored) {}

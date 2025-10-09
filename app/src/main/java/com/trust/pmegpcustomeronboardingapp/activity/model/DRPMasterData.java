@@ -1,6 +1,7 @@
 package com.trust.pmegpcustomeronboardingapp.activity.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.trust.pmegpcustomeronboardingapp.activity.Interface.BaseDprItem;
 
 import java.util.List;
 
@@ -247,7 +248,7 @@ public class DRPMasterData {
         }
 
         // BuildingDetails
-        public static class BuildingDetail {
+        public static class BuildingDetail implements BaseDprItem {
             @SerializedName("BuildingDetailID")
             private int BuildingDetailID;
             @SerializedName("ApplID")
@@ -351,7 +352,7 @@ public class DRPMasterData {
         }
 
         // MachineryDetails
-        public static class MachineryDetail {
+        public static class MachineryDetail implements BaseDprItem{
             @SerializedName("MachineryDetailID")
             private int MachineryDetailID;
             @SerializedName("ApplID")
@@ -455,7 +456,7 @@ public class DRPMasterData {
         }
 
         // WorkingCapitalDetails
-        public static class WorkingCapitalDetail {
+        public static class WorkingCapitalDetail implements BaseDprItem{
             @SerializedName("WorkingCapitalID")
             private int WorkingCapitalID;
             @SerializedName("ApplID")
@@ -476,6 +477,9 @@ public class DRPMasterData {
             public WorkingCapitalDetail(String particulars, double amount) {
                 Particulars = particulars;
                 Amount = amount;
+            }
+
+            public WorkingCapitalDetail() {
             }
 
             public int getWorkingCapitalID() {
@@ -544,7 +548,7 @@ public class DRPMasterData {
         }
 
         // MeansOfFinancing
-        public static class MeansOfFinancing {
+        public static class MeansOfFinancing implements BaseDprItem{
             @SerializedName("MeansOfFinancingID")
             private int MeansOfFinancingID;
             @SerializedName("ApplID")
@@ -565,6 +569,9 @@ public class DRPMasterData {
             public MeansOfFinancing(String particulars, double percentage) {
                 Particulars = particulars;
                 Percentage = percentage;
+            }
+
+            public MeansOfFinancing() {
             }
 
             public int getMeansOfFinancingID() {
@@ -633,7 +640,7 @@ public class DRPMasterData {
         }
 
         // DetailsOfSales
-        public static class DetailsOfSale {
+        public static class DetailsOfSale implements BaseDprItem{
 
             @SerializedName("SalesDetailID")
             private int SalesDetailID;
@@ -661,6 +668,9 @@ public class DRPMasterData {
                 RatePerUnit = ratePerUnit;
                 Quantity = quantity;
                 Amount = amount;
+            }
+
+            public DetailsOfSale() {
             }
 
             public int getSalesDetailID() {
@@ -745,7 +755,7 @@ public class DRPMasterData {
         }
 
         // RawMaterials
-        public static class RawMaterial {
+        public static class RawMaterial implements BaseDprItem{
             @SerializedName("RawMaterialID")
             private int RawMaterialID;
             @SerializedName("ApplID")
@@ -775,6 +785,9 @@ public class DRPMasterData {
                 RatePerUnit = ratePerUnit;
                 RequiredUnit = requiredUnit;
                 Amount = amount;
+            }
+
+            public RawMaterial() {
             }
 
             public int getRawMaterialID() {
@@ -867,7 +880,7 @@ public class DRPMasterData {
         }
 
         // WagesDetails
-        public static class WagesDetail {
+        public static class WagesDetail implements BaseDprItem{
             @SerializedName("WagesDetailID")
             private int WagesDetailID;
             @SerializedName("ApplID")
@@ -894,6 +907,9 @@ public class DRPMasterData {
                 NoOfWorkers = noOfWorkers;
                 WagesPerMonth = wagesPerMonth;
                 Amount = amount;
+            }
+
+            public WagesDetail() {
             }
 
             public int getWagesDetailID() {
@@ -978,7 +994,7 @@ public class DRPMasterData {
         }
 
         // SalaryDetails
-        public static class SalaryDetail {
+        public static class SalaryDetail implements BaseDprItem{
             @SerializedName("SalaryDetailID")
             private int SalaryDetailID;
             @SerializedName("ApplID")
@@ -1005,6 +1021,9 @@ public class DRPMasterData {
                 NoOfStaff = noOfStaff;
                 WagesPerMonth = wagesPerMonth;
                 Amount = amount;
+            }
+
+            public SalaryDetail() {
             }
 
             public int getSalaryDetailID() {
@@ -1089,7 +1108,7 @@ public class DRPMasterData {
         }
 
         // WorkingCapitalEstimate
-        public static class WorkingCapitalEstimate {
+        public static class WorkingCapitalEstimate implements BaseDprItem{
             @SerializedName("WorkingCapitalEstimateID")
             private int WorkingCapitalEstimateID;
             @SerializedName("ApplID")
@@ -1110,6 +1129,9 @@ public class DRPMasterData {
             public WorkingCapitalEstimate(String particulars, int noOfDays) {
                 Particulars = particulars;
                 NoOfDays = noOfDays;
+            }
+
+            public WorkingCapitalEstimate() {
             }
 
             public int getWorkingCapitalEstimateID() {
@@ -1178,7 +1200,7 @@ public class DRPMasterData {
         }
 
         // PowerEstimateExpenditure
-        public static class PowerEstimateExpenditure {
+        public static class PowerEstimateExpenditure implements BaseDprItem{
             @SerializedName("PowerEstimateID")
             private int PowerEstimateID;
             @SerializedName("ApplID")
@@ -1203,6 +1225,9 @@ public class DRPMasterData {
                 Particulars = particulars;
                 Cost = cost;
                 AmountInRs = amountInRs;
+            }
+
+            public PowerEstimateExpenditure() {
             }
 
             public int getPowerEstimateID() {

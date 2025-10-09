@@ -32,7 +32,21 @@ public class NewWorkingCapitalAdapter extends RecyclerView.Adapter<com.trust.pme
         this.workingCapitalList = list;
         this.onAmountChangeListener = listener;
     }
+    public List<DRPMasterData.WorkingCapitalDetail> getUpdatedList() {
+        List<DRPMasterData.WorkingCapitalDetail> updatedList = new java.util.ArrayList<>();
+        for (DRPMasterData.WorkingCapitalDetail item : workingCapitalList) {
+            DRPMasterData.WorkingCapitalDetail detail = new DRPMasterData.WorkingCapitalDetail();
+            detail.setParticulars(item.getParticulars());
+            try {
+                detail.setAmount(item.getAmount());
+            } catch (NumberFormatException e) {
+                detail.setAmount(0);
+            }
 
+            updatedList.add(detail);
+        }
+        return updatedList;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,7 +76,7 @@ public class NewWorkingCapitalAdapter extends RecyclerView.Adapter<com.trust.pme
                 try {
                     item.setAmount(Double.parseDouble(s.toString()));
                 } catch (NumberFormatException e) {
-                    item.setAmount(0.0);
+                    item.setAmount(0);
                 }
                 calculateTotal();
             }
