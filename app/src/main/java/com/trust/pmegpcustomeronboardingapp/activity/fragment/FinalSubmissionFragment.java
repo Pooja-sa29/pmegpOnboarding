@@ -622,19 +622,7 @@ public class FinalSubmissionFragment extends Fragment {
 
 
     private void sendPidDataToBackend(PidDataModel pidDataModel) {
-        String encryptionKey = BuildConfig.ENCRYPTION_KEY;
-        System.out.println("Encryption-key"+encryptionKey);
-        Toast.makeText(getContext(), "Encryption-key"+encryptionKey, Toast.LENGTH_SHORT).show();
-        String encrypted="";
-        String decrypted="";
-        try {
-             encrypted = CryptoEncryption.encryptString(aadhaarNumber, encryptionKey);
-             decrypted = CryptoEncryption.decryptString(encrypted, encryptionKey);
-            Log.d("CRYPTO", "Encrypted: " + encrypted);
-            Log.d("CRYPTO", "Decrypted: " + decrypted);
-        } catch (Exception ex) {
-            Log.e("CRYPTO", "Error", ex);
-        }
+
 
         apiService.validateFaceRecognition(pidDataModel).enqueue(new Callback<faceDetectionResult>() {
             @Override
@@ -662,12 +650,28 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
     if (requestCode == RD_SERVICE_REQUEST) {
         if (resultCode == RESULT_OK && data != null) {
             String pidJson = data.getStringExtra("response"); // JSON format
-
+            String encryptionKey = BuildConfig.ENCRYPTION_KEY;
+            System.out.println("Encryption-key"+encryptionKey);
+            Toast.makeText(getContext(), "Encryption-key"+encryptionKey, Toast.LENGTH_SHORT).show();
+            String encrypted="";
+            String decrypted="";
+            try {
+                encrypted = CryptoEncryption.encryptString(aadhaarNumber, encryptionKey);
+                decrypted = CryptoEncryption.decryptString(encrypted, encryptionKey);
+                Log.d("CRYPTO", "Encrypted: " + encrypted);
+                Log.d("CRYPTO", "Decrypted: " + decrypted);
+            } catch (Exception ex) {
+                Log.e("CRYPTO", "Error", ex);
+            }
             if (pidJson != null && !pidJson.isEmpty()) {
                 String pidXml = convertJsonToXml(pidJson); // Convert JSON → XML
                 logLongString("PID_XML", pidXml);
-                showXmlDialog("PID XML", pidXml);
-//                sendPidDataToBackend(pidData);
+                String message = "🔐 Encrypted Aadhaar:\n" + encrypted +
+                        "\n\n📄 PID XML:\n" + pidXml;
+                showXmlDialog("PID XML", message);
+//                PidDataModel pidDataModel = new PidDataModel(pidXml,encrypted);
+
+//                sendPidDataToBackend(pidDataModel);
             } else {
                 Toast.makeText(requireContext(), "No PID data received", Toast.LENGTH_SHORT).show();
             }

@@ -5,27 +5,27 @@ import java.util.List;
 public class DprSaveRequestData {
 
 
-        private DPRDetail DPRDetail;
+        private DRPMasterData.DPRDetail DPRDetail;
         private List<Applicant> Applicant;
-        private List<BuildingDetail> BuildingDetails;
-        private List<MachineryDetail> MachineryDetails;
-        private List<WorkingCapitalDetail> WorkingCapitalDetails;
-        private List<MeansOfFinancing> MeansOfFinancing;
-        private List<DetailsOfSales> DetailsOfSales;
-        private List<RawMaterial> RawMaterials;
-        private List<WagesDetail> WagesDetails;
-        private List<SalaryDetail> SalaryDetails;
-        private List<WorkingCapitalEstimate> WorkingCapitalEstimate;
-        private List<PowerEstimateExpenditure> PowerEstimateExpenditure;
+        private List<DRPMasterData.BuildingDetail> BuildingDetails;
+        private List<DRPMasterData.MachineryDetail> MachineryDetails;
+        private List<DRPMasterData.WorkingCapitalDetail> WorkingCapitalDetails;
+        private List<DRPMasterData.MeansOfFinancing> MeansOfFinancing;
+        private List<DRPMasterData.DetailsOfSale> DetailsOfSales;
+        private List<DRPMasterData.RawMaterial> RawMaterials;
+        private List<DRPMasterData.WagesDetail> WagesDetails;
+        private List<DRPMasterData.SalaryDetail> SalaryDetails;
+        private List<DRPMasterData.WorkingCapitalEstimate> WorkingCapitalEstimate;
+        private List<DRPMasterData.PowerEstimateExpenditure> PowerEstimateExpenditure;
 
         // Getters and Setters
 
 
-    public DprSaveRequestData.DPRDetail getDPRDetail() {
+    public DRPMasterData.DPRDetail getDPRDetail() {
         return DPRDetail;
     }
 
-    public void setDPRDetail(DprSaveRequestData.DPRDetail DPRDetail) {
+    public void setDPRDetail(DRPMasterData.DPRDetail DPRDetail) {
         this.DPRDetail = DPRDetail;
     }
 
@@ -37,83 +37,83 @@ public class DprSaveRequestData {
         Applicant = applicant;
     }
 
-    public List<BuildingDetail> getBuildingDetails() {
+    public List<DRPMasterData.BuildingDetail> getBuildingDetails() {
         return BuildingDetails;
     }
 
-    public void setBuildingDetails(List<BuildingDetail> buildingDetails) {
+    public void setBuildingDetails(List<DRPMasterData.BuildingDetail> buildingDetails) {
         BuildingDetails = buildingDetails;
     }
 
-    public List<MachineryDetail> getMachineryDetails() {
+    public List<DRPMasterData.MachineryDetail> getMachineryDetails() {
         return MachineryDetails;
     }
 
-    public void setMachineryDetails(List<MachineryDetail> machineryDetails) {
+    public void setMachineryDetails(List<DRPMasterData.MachineryDetail> machineryDetails) {
         MachineryDetails = machineryDetails;
     }
 
-    public List<WorkingCapitalDetail> getWorkingCapitalDetails() {
+    public List<DRPMasterData.WorkingCapitalDetail> getWorkingCapitalDetails() {
         return WorkingCapitalDetails;
     }
 
-    public void setWorkingCapitalDetails(List<WorkingCapitalDetail> workingCapitalDetails) {
+    public void setWorkingCapitalDetails(List<DRPMasterData.WorkingCapitalDetail> workingCapitalDetails) {
         WorkingCapitalDetails = workingCapitalDetails;
     }
 
-    public List<DprSaveRequestData.MeansOfFinancing> getMeansOfFinancing() {
+    public List<DRPMasterData.MeansOfFinancing> getMeansOfFinancing() {
         return MeansOfFinancing;
     }
 
-    public void setMeansOfFinancing(List<DprSaveRequestData.MeansOfFinancing> meansOfFinancing) {
+    public void setMeansOfFinancing(List<DRPMasterData.MeansOfFinancing> meansOfFinancing) {
         MeansOfFinancing = meansOfFinancing;
     }
 
-    public List<DprSaveRequestData.DetailsOfSales> getDetailsOfSales() {
+    public List<DRPMasterData.DetailsOfSale> getDetailsOfSales() {
         return DetailsOfSales;
     }
 
-    public void setDetailsOfSales(List<DprSaveRequestData.DetailsOfSales> detailsOfSales) {
+    public void setDetailsOfSales(List<DRPMasterData.DetailsOfSale> detailsOfSales) {
         DetailsOfSales = detailsOfSales;
     }
 
-    public List<RawMaterial> getRawMaterials() {
+    public List<DRPMasterData.RawMaterial> getRawMaterials() {
         return RawMaterials;
     }
 
-    public void setRawMaterials(List<RawMaterial> rawMaterials) {
+    public void setRawMaterials(List<DRPMasterData.RawMaterial> rawMaterials) {
         RawMaterials = rawMaterials;
     }
 
-    public List<WagesDetail> getWagesDetails() {
+    public List<DRPMasterData.WagesDetail> getWagesDetails() {
         return WagesDetails;
     }
 
-    public void setWagesDetails(List<WagesDetail> wagesDetails) {
+    public void setWagesDetails(List<DRPMasterData.WagesDetail> wagesDetails) {
         WagesDetails = wagesDetails;
     }
 
-    public List<SalaryDetail> getSalaryDetails() {
+    public List<DRPMasterData.SalaryDetail> getSalaryDetails() {
         return SalaryDetails;
     }
 
-    public void setSalaryDetails(List<SalaryDetail> salaryDetails) {
+    public void setSalaryDetails(List<DRPMasterData.SalaryDetail> salaryDetails) {
         SalaryDetails = salaryDetails;
     }
 
-    public List<DprSaveRequestData.WorkingCapitalEstimate> getWorkingCapitalEstimate() {
+    public List<DRPMasterData.WorkingCapitalEstimate> getWorkingCapitalEstimate() {
         return WorkingCapitalEstimate;
     }
 
-    public void setWorkingCapitalEstimate(List<DprSaveRequestData.WorkingCapitalEstimate> workingCapitalEstimate) {
+    public void setWorkingCapitalEstimate(List<DRPMasterData.WorkingCapitalEstimate> workingCapitalEstimate) {
         WorkingCapitalEstimate = workingCapitalEstimate;
     }
 
-    public List<DprSaveRequestData.PowerEstimateExpenditure> getPowerEstimateExpenditure() {
+    public List<DRPMasterData.PowerEstimateExpenditure> getPowerEstimateExpenditure() {
         return PowerEstimateExpenditure;
     }
 
-    public void setPowerEstimateExpenditure(List<DprSaveRequestData.PowerEstimateExpenditure> powerEstimateExpenditure) {
+    public void setPowerEstimateExpenditure(List<DRPMasterData.PowerEstimateExpenditure> powerEstimateExpenditure) {
         PowerEstimateExpenditure = powerEstimateExpenditure;
     }
 
@@ -565,8 +565,8 @@ public class DprSaveRequestData {
             private int ApplID;
             private String ApplCode;
             private String Particulars;
-            private double RatePerUnit;
-            private double Quantity;
+            private int RatePerUnit;
+            private int Quantity;
             private double Amount;
             private String CreatedOn;
             private String ModifyOn;
@@ -597,19 +597,19 @@ public class DprSaveRequestData {
                 Particulars = particulars;
             }
 
-            public double getRatePerUnit() {
+            public int getRatePerUnit() {
                 return RatePerUnit;
             }
 
-            public void setRatePerUnit(double ratePerUnit) {
+            public void setRatePerUnit(int ratePerUnit) {
                 RatePerUnit = ratePerUnit;
             }
 
-            public double getQuantity() {
+            public int getQuantity() {
                 return Quantity;
             }
 
-            public void setQuantity(double quantity) {
+            public void setQuantity(int quantity) {
                 Quantity = quantity;
             }
 

@@ -258,90 +258,189 @@ public class DPRFragment extends BaseFormFragment {
         txt_introduction_Layout.setOnClickListener(v -> toggleSection(cv_intro,txt_introduction_Layout ));
         txt_beneficiary_Layout.setOnClickListener(v -> toggleSection(cv_abt_beneficiary,txt_beneficiary_Layout ));
 
-//         btn_updateform.setVisibility(View.VISIBLE);
+
+
+
+
         btn_saveform.setOnClickListener(v -> {
-            if (dprDetailData != null && dprDrpMasterData.getData() != null) {
+
                 dprSaveRequestData = new DprSaveRequestData();
-                DprSaveRequestData.DPRDetail detail = new DprSaveRequestData.DPRDetail();
+                DRPMasterData.Data data = dprDrpMasterData.getData();
+                DRPMasterData.DPRDetail detail=data.getDPRDetail();
+
                 detail.setApplID(Integer.parseInt(AppConstant.getApplId()));
-                detail.setApplCode("");
+                detail.setApplCode(detail.getApplCode());
+                detail.setOnBuilding(detail.getOnBuilding());
+                detail.setOnMachinery(detail.getOnMachinery());
+                detail.setLand(detail.getLand());
+                detail.setPowerRequirement(detail.getPowerRequirement());
+                detail.setRateOfInterest(detail.getRateOfInterest());
+                detail.setIntroduction(detail.getIntroduction());
+                detail.setAboutBeneficiary(detail.getAboutBeneficiary());
+                detail.setCreatedOn(detail.getCreatedOn());
+                detail.setModifyOn(detail.getModifyOn());
+                detail.setPayBackPeriod(detail.getPayBackPeriod());
+                detail.setProjectImplementationPeriod(detail.getProjectImplementationPeriod());
+                detail.setIntroductionOffice(detail.getIntroductionOffice());
+                detail.setAboutThePromoter(detail.getAboutThePromoter());
                 dprSaveRequestData.setDPRDetail(detail);
 
                 //Applicants
                 DprSaveRequestData.Applicant applicant = new DprSaveRequestData.Applicant();
-                applicant.setApplID(Integer.parseInt(AppConstant.getApplId()));
-                applicant.setApplCode("");
                 applicant.setDPRVerified(true);
+
 
                 List<DprSaveRequestData.Applicant> applicants = new ArrayList<>();
                 applicants.add(applicant);
                 dprSaveRequestData.setApplicant(applicants);
 
                 //Building
-                DprSaveRequestData.BuildingDetail buildingDetail = new DprSaveRequestData.BuildingDetail();
-                buildingDetail.setApplID(dprDetailData.getApplID());
-//                buildingDetail.setAmount(Double.parseDouble(etBuildingAmount.getText().toString()));
-//                buildingDetail.setArea(Double.parseDouble(etBuildingArea.getText().toString()));
-//                buildingDetail.setRatePerSqFt(Double.parseDouble(etRatePerSqFt.getText().toString()));
-                List<DprSaveRequestData.BuildingDetail> buildingDetailList = new ArrayList<>();
-                buildingDetailList.add(buildingDetail);
-                dprSaveRequestData.setBuildingDetails(buildingDetailList);
+
+                List<DRPMasterData.BuildingDetail> buildingDetails = new ArrayList<>();
+                for(int i = 0; i < buildingDetails.size();i++){
+                    DRPMasterData.BuildingDetail buildingDetail = buildingDetails.get(i);
+                    buildingDetails.get(i).setApplID(buildingDetail.getApplID());
+                    buildingDetails.get(i).setApplCode(buildingDetail.getApplCode());
+                    buildingDetails.get(i).setParticulars(buildingDetail.getParticulars());
+                    buildingDetails.get(i).setArea(buildingDetail.getArea());
+                    buildingDetails.get(i).setRatePerSqFt(buildingDetail.getRatePerSqFt());
+                    buildingDetails.get(i).setAmount(buildingDetail.getAmount());
+                    buildingDetails.get(i).setCreatedOn(buildingDetail.getCreatedOn());
+                    buildingDetails.get(i).setModifyOn(buildingDetail.getModifyOn());
+                }
+                dprSaveRequestData.setBuildingDetails(buildingDetails);
 
                 //Machinery
-                DprSaveRequestData.MachineryDetail machineryDetail = new DprSaveRequestData.MachineryDetail();
-                List<DprSaveRequestData.MachineryDetail> machineryDetailList = new ArrayList<>();
-                machineryDetailList.add(machineryDetail);
-                dprSaveRequestData.setMachineryDetails(machineryDetailList);
+                List<DRPMasterData.MachineryDetail> machineryDetails = new ArrayList<>();
+                for(int i = 0; i < machineryDetails.size();i++){
+                    DRPMasterData.MachineryDetail machineryDetail = machineryDetails.get(i);
+                    machineryDetails.get(i).setApplID(machineryDetail.getApplID());
+                    machineryDetails.get(i).setApplCode(machineryDetail.getApplCode());
+                    machineryDetails.get(i).setParticulars(machineryDetail.getParticulars());
+                    machineryDetails.get(i).setQuantity(machineryDetail.getQuantity());
+                    machineryDetails.get(i).setRate(machineryDetail.getRate());
+                    machineryDetails.get(i).setAmount(machineryDetail.getAmount());
+                    machineryDetails.get(i).setCreatedOn(machineryDetail.getCreatedOn());
+                    machineryDetails.get(i).setModifyOn(machineryDetail.getModifyOn());
+                }
+                dprSaveRequestData.setMachineryDetails(machineryDetails);
+
 
                 //working capital detail
-                DprSaveRequestData.WorkingCapitalDetail workingCapitalDetail = new DprSaveRequestData.WorkingCapitalDetail();
-                List<DprSaveRequestData.WorkingCapitalDetail> workingCapitalDetailList = new ArrayList<>();
-                workingCapitalDetailList.add(workingCapitalDetail);
-                dprSaveRequestData.setWorkingCapitalDetails(workingCapitalDetailList);
+                List<DRPMasterData.WorkingCapitalDetail> workingCapitalDetails = new ArrayList<>();
+                for(int i = 0; i < workingCapitalDetails.size();i++){
+                    DRPMasterData.WorkingCapitalDetail workingCapitalDetail = workingCapitalDetails.get(i);
+                    workingCapitalDetails.get(i).setApplID(workingCapitalDetail.getApplID());
+                    workingCapitalDetails.get(i).setApplCode(workingCapitalDetail.getApplCode());
+                    workingCapitalDetails.get(i).setParticulars(workingCapitalDetail.getParticulars());
+                    workingCapitalDetails.get(i).setAmount(workingCapitalDetail.getAmount());
+                    workingCapitalDetails.get(i).setCreatedOn(workingCapitalDetail.getCreatedOn());
+                    workingCapitalDetails.get(i).setModifyOn(workingCapitalDetail.getModifyOn());
+                }
+                dprSaveRequestData.setWorkingCapitalDetails(workingCapitalDetails);
 
                 //MeansOfFinancing
-                DprSaveRequestData.MeansOfFinancing meansOfFinancing = new DprSaveRequestData.MeansOfFinancing();
-                List<DprSaveRequestData.MeansOfFinancing> meansOfFinancingList = new ArrayList<>();
-                meansOfFinancingList.add(meansOfFinancing);
+                List<DRPMasterData.MeansOfFinancing> meansOfFinancingList = new ArrayList<>();
+                for(int i = 0; i < meansOfFinancingList.size();i++){
+                    DRPMasterData.MeansOfFinancing meansOfFinancing = meansOfFinancingList.get(i);
+                    meansOfFinancingList.get(i).setApplID(meansOfFinancing.getApplID());
+                    meansOfFinancingList.get(i).setApplCode(meansOfFinancing.getApplCode());
+                    meansOfFinancingList.get(i).setParticulars(meansOfFinancing.getParticulars());
+                    meansOfFinancingList.get(i).setPercentage(meansOfFinancing.getPercentage());
+                    meansOfFinancingList.get(i).setCreatedOn(meansOfFinancing.getCreatedOn());
+                    meansOfFinancingList.get(i).setModifyOn(meansOfFinancing.getModifyOn());
+                }
                 dprSaveRequestData.setMeansOfFinancing(meansOfFinancingList);
 
            //DetailsOfSales
-                DprSaveRequestData.DetailsOfSales detailsOfSales = new DprSaveRequestData.DetailsOfSales();
-                List<DprSaveRequestData.DetailsOfSales> detailsOfSalesList = new ArrayList<>();
-                detailsOfSalesList.add(detailsOfSales);
+                List<DRPMasterData.DetailsOfSale> detailsOfSalesList = new ArrayList<>();
+                for(int i = 0; i < detailsOfSalesList.size();i++){
+                    DRPMasterData.DetailsOfSale detailsOfSales = detailsOfSalesList.get(i);
+                    detailsOfSalesList.get(i).setApplID(detailsOfSales.getApplID());
+                    detailsOfSalesList.get(i).setApplCode(detailsOfSales.getApplCode());
+                    detailsOfSalesList.get(i).setParticulars(detailsOfSales.getParticulars());
+                    detailsOfSalesList.get(i).setRatePerUnit(detailsOfSales.getRatePerUnit());
+                    detailsOfSalesList.get(i).setQuantity(detailsOfSales.getQuantity());
+                    detailsOfSalesList.get(i).setAmount(detailsOfSales.getAmount());
+                    detailsOfSalesList.get(i).setCreatedOn(detailsOfSales.getCreatedOn());
+                    detailsOfSalesList.get(i).setModifyOn(detailsOfSales.getModifyOn());
+                }
                 dprSaveRequestData.setDetailsOfSales(detailsOfSalesList);
 
                 //RawMaterials
-                DprSaveRequestData.RawMaterial rawMaterial = new DprSaveRequestData.RawMaterial();
-                List<DprSaveRequestData.RawMaterial> rawMaterialList = new ArrayList<>();
-                rawMaterialList.add(rawMaterial);
-                dprSaveRequestData.setRawMaterials(rawMaterialList);
+                List<DRPMasterData.RawMaterial> rawMaterialList1 = new ArrayList<>();
+                for(int i = 0; i < detailsOfSalesList.size();i++){
+                    DRPMasterData.RawMaterial rawMaterial = rawMaterialList1.get(i);
+                    rawMaterialList1.get(i).setApplID(rawMaterial.getApplID());
+                    rawMaterialList1.get(i).setApplCode(rawMaterial.getApplCode());
+                    rawMaterialList1.get(i).setParticulars(rawMaterial.getParticulars());
+                    rawMaterialList1.get(i).setRatePerUnit(rawMaterial.getRatePerUnit());
+                    rawMaterialList1.get(i).setRequiredUnit(rawMaterial.getRequiredUnit());
+                    rawMaterialList1.get(i).setAmount(rawMaterial.getAmount());
+                    rawMaterialList1.get(i).setCreatedOn(rawMaterial.getCreatedOn());
+                    rawMaterialList1.get(i).setModifyOn(rawMaterial.getModifyOn());
+                }
+                dprSaveRequestData.setRawMaterials(rawMaterialList1);
 
                 //WagesDetails
-                DprSaveRequestData.WagesDetail wagesDetail = new DprSaveRequestData.WagesDetail();
-                List<DprSaveRequestData.WagesDetail> wagesDetailList1 = new ArrayList<>();
-                wagesDetailList1.add(wagesDetail);
+                List<DRPMasterData.WagesDetail> wagesDetailList1 = new ArrayList<>();
+                for(int i = 0; i < detailsOfSalesList.size();i++){
+                    DRPMasterData.WagesDetail wagesDetail = wagesDetailList1.get(i);
+                    wagesDetailList1.get(i).setApplID(wagesDetail.getApplID());
+                    wagesDetailList1.get(i).setApplCode(wagesDetail.getApplCode());
+                    wagesDetailList1.get(i).setParticulars(wagesDetail.getParticulars());
+                    wagesDetailList1.get(i).setNoOfWorkers(wagesDetail.getNoOfWorkers());
+                    wagesDetailList1.get(i).setWagesPerMonth(wagesDetail.getWagesPerMonth());
+                    wagesDetailList1.get(i).setAmount(wagesDetail.getAmount());
+                    wagesDetailList1.get(i).setCreatedOn(wagesDetail.getCreatedOn());
+                    wagesDetailList1.get(i).setModifyOn(wagesDetail.getModifyOn());
+                }
                 dprSaveRequestData.setWagesDetails(wagesDetailList1);
 
 
                //SalaryDetails
-                DprSaveRequestData.SalaryDetail salaryDetail = new DprSaveRequestData.SalaryDetail();
-                List<DprSaveRequestData.SalaryDetail> salaryDetailList1 = new ArrayList<>();
-                salaryDetailList1.add(salaryDetail);
+                List<DRPMasterData.SalaryDetail> salaryDetailList1 = new ArrayList<>();
+                for(int i = 0; i < salaryDetailList1.size();i++){
+                    DRPMasterData.SalaryDetail salaryDetail = salaryDetailList1.get(i);
+                    salaryDetailList1.get(i).setApplID(salaryDetail.getApplID());
+                    salaryDetailList1.get(i).setApplCode(salaryDetail.getApplCode());
+                    salaryDetailList1.get(i).setParticulars(salaryDetail.getParticulars());
+                    salaryDetailList1.get(i).setNoOfStaff(salaryDetail.getNoOfStaff());
+                    salaryDetailList1.get(i).setWagesPerMonth(salaryDetail.getWagesPerMonth());
+                    salaryDetailList1.get(i).setAmount(salaryDetail.getAmount());
+                    salaryDetailList1.get(i).setCreatedOn(salaryDetail.getCreatedOn());
+                    salaryDetailList1.get(i).setModifyOn(salaryDetail.getModifyOn());
+                }
                 dprSaveRequestData.setSalaryDetails(salaryDetailList1);
 
                 //WorkingCapitalEstimate
-                DprSaveRequestData.WorkingCapitalEstimate workingCapitalEstimate = new DprSaveRequestData.WorkingCapitalEstimate();
-                List<DprSaveRequestData.WorkingCapitalEstimate> workingCapitalEstimateList1 = new ArrayList<>();
-                workingCapitalEstimateList1.add(workingCapitalEstimate);
+                List<DRPMasterData.WorkingCapitalEstimate> workingCapitalEstimateList1 = new ArrayList<>();
+                for(int i = 0; i < salaryDetailList1.size();i++){
+                    DRPMasterData.WorkingCapitalEstimate workingCapitalEstimate = workingCapitalEstimateList1.get(i);
+                    workingCapitalEstimateList1.get(i).setApplID(workingCapitalEstimate.getApplID());
+                    workingCapitalEstimateList1.get(i).setApplCode(workingCapitalEstimate.getApplCode());
+                    workingCapitalEstimateList1.get(i).setParticulars(workingCapitalEstimate.getParticulars());
+                    workingCapitalEstimateList1.get(i).setNoOfDays(workingCapitalEstimate.getNoOfDays());
+                    workingCapitalEstimateList1.get(i).setCreatedOn(workingCapitalEstimate.getCreatedOn());
+                    workingCapitalEstimateList1.get(i).setModifyOn(workingCapitalEstimate.getModifyOn());
+                }
                 dprSaveRequestData.setWorkingCapitalEstimate(workingCapitalEstimateList1);
 
 
-                //WorkingCapitalEstimate
-                DprSaveRequestData.PowerEstimateExpenditure powerEstimateExpenditure = new DprSaveRequestData.PowerEstimateExpenditure();
-                List<DprSaveRequestData.PowerEstimateExpenditure> powerEstimateExpenditureList1 = new ArrayList<>();
-                powerEstimateExpenditureList1.add(powerEstimateExpenditure);
-                dprSaveRequestData.setPowerEstimateExpenditure(powerEstimateExpenditureList1);
+                //PowerEstimateExpenditure
+                List<DRPMasterData.PowerEstimateExpenditure> powerEstimateExpenditures = new ArrayList<>();
+                for(int i = 0; i < powerEstimateExpenditures.size();i++){
+                    DRPMasterData.PowerEstimateExpenditure powerEstimateExpenditure = powerEstimateExpenditures.get(i);
+                    powerEstimateExpenditures.get(i).setApplID(powerEstimateExpenditure.getApplID());
+                    powerEstimateExpenditures.get(i).setApplCode(powerEstimateExpenditure.getApplCode());
+                    powerEstimateExpenditures.get(i).setParticulars(powerEstimateExpenditure.getParticulars());
+                    powerEstimateExpenditures.get(i).setCost(powerEstimateExpenditure.getCost());
+                    powerEstimateExpenditures.get(i).setAmountInRs(powerEstimateExpenditure.getAmountInRs());
+                    powerEstimateExpenditures.get(i).setCreatedOn(powerEstimateExpenditure.getCreatedOn());
+                    powerEstimateExpenditures.get(i).setModifyOn(powerEstimateExpenditure.getModifyOn());
+                }
+                dprSaveRequestData.setPowerEstimateExpenditure(powerEstimateExpenditures);
+
 
 
 
@@ -349,11 +448,8 @@ public class DPRFragment extends BaseFormFragment {
                 Log.d("SAVE_REQUEST", new Gson().toJson(dprSaveRequestData));
 
                 SaveApplicationForm(dprSaveRequestData);  // correct object
-            } else {
-                Toast.makeText(getContext(), "No DPR data to save", Toast.LENGTH_SHORT).show();
-            }
+
         });
-        btn_updateform.setVisibility(View.VISIBLE);
         btn_updateform.setOnClickListener(v -> {
                 prepareAndUpdateApplication();
         });
@@ -399,14 +495,15 @@ public class DPRFragment extends BaseFormFragment {
                 if (response.isSuccessful() && response.body() != null) {
                     DprResult status = response.body();
 
-                    Log.d("API_RESPONSE", new Gson().toJson(status));
+                    Log.d("API_RESPONSE22", new Gson().toJson(status));
 
                     if (status.isSuccess()) {
+
                         btn_updateform.setVisibility(View.VISIBLE);
                         btn_saveform.setVisibility(View.GONE);
-//                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
-//                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
-//                        startActivity(i);
+                        Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(getContext(), DashboardScreenActivity.class);
+                        startActivity(i);
 
                     } else {
                         Toast.makeText(getContext(), "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
@@ -425,158 +522,175 @@ public class DPRFragment extends BaseFormFragment {
     }
 
 
-//    private void prepareAndUpdateApplication() {
-//        if (dprDrpMasterData != null && dprDrpMasterData.getData() != null) {
-//
-//            // --- Update DPR Detail ---
-//            DRPMasterData.Data data = dprDrpMasterData.getData();
-//            DRPMasterData.DPRDetail detail = data.getDPRDetail();
-//
-//            detail.setOnBuilding(into_ofc.getText().toString().trim());
-//            detail.setOnMachinery(onmachinery.getText().toString().trim());
-//            detail.setLand(landEntry.getText().toString().trim()); // Add this if applicable
-//            detail.setPowerRequirement(txt_power_req.getText().toString().trim());
-//            detail.setRateOfInterest(rate_of_interest_power.getText().toString().trim());
-//            detail.setIntroduction(introduction_txt.getText().toString().trim());
-//            detail.setAboutBeneficiary(aboutBeneficiary.getText().toString().trim());
-//            detail.setPayBackPeriod(payBackPeriod.getText().toString().trim());
-//            detail.setProjectImplementationPeriod(prj_impl_period.getText().toString().trim());
-//            detail.setIntroductionOffice(intro_ofc.getText().toString().trim());
-//            detail.setAboutThePromoter(promoter_info.getText().toString().trim());
-//
-//            // --- Update Applicant Status ---
-//            if (data.getApplicant() != null) {
-//                data.getApplicant().setIsDPRVerified(1);
-//            }
-//
-//            // --- Update Lists from Adapters ---
-//            data.setBuildingDetails(newBuildingAdapter.getUpdatedList());
-//            data.setMachineryDetails(newMachineryAdapter.getUpdatedList());
-//            data.setRawMaterials(newRawaterialAdapter.getUpdatedList());
-//            data.setWagesDetails(newWagesAdapter.getUpdatedList());
-//            data.setSalaryDetails(newSalaryDetailAdapter.getUpdatedList());
-//            data.setDetailsOfSales(newDetailsOfSalesAdapter.getUpdatedList());
-//            data.setMeansOfFinancing(newMeansOfFinancingAdapter.getUpdatedList());
-//            data.setWorkingCapitalDetails(newWorkingCapitalAdapter.getUpdatedList());
-//            data.setWorkingCapitalEstimate(newWorkingCapitalEstimatesAdapter.getUpdatedList());
-//            data.setPowerEstimateExpenditure(newWorkingPowerEstimatesAdapter.getUpdatedList());
-//
-//            // --- Log the final JSON for debugging ---
-//            String jsonRequest = new GsonBuilder().setPrettyPrinting().create().toJson(dprDrpMasterData);
-//            Log.d("FINAL_UPDATE_REQUEST", jsonRequest);
-//
-//            // --- Call Update API ---
-//            updateApplicationForm(dprDrpMasterData);
-//
-//        } else {
-//            Toast.makeText(getContext(), "No DPR data to update", Toast.LENGTH_SHORT).show();
-//        }
-//    }
+    private void prepareAndUpdateApplication(){
 
-
-    private void prepareAndUpdateApplication() {
-
-        if (dprDrpMasterData == null || dprDrpMasterData.getData() == null) {
-            Toast.makeText(getContext(), "No DPR data to update", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        DPRUpdateRequest dprUpdateRequest = new DPRUpdateRequest();
 
         DRPMasterData.Data data = dprDrpMasterData.getData();
-        DRPMasterData.DPRDetail detail = data.getDPRDetail();
-        String applCode = detail.getApplCode();
-        int applId = detail.getApplID();
-        String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date());
-
-
-
-        detail.setOnBuilding(landEntry.getText().toString().trim());
-        detail.setOnMachinery(onmachinery.getText().toString().trim());
-        detail.setLand(landEntry.getText().toString().trim());
-        detail.setPowerRequirement(txt_power_req.getText().toString().trim());
-        detail.setRateOfInterest(rate_of_interest_power.getText().toString().trim());
-        detail.setIntroduction(introduction_txt.getText().toString().trim());
-        detail.setAboutBeneficiary(aboutBeneficiary.getText().toString().trim());
-        detail.setPayBackPeriod(payBackPeriod.getText().toString().trim());
-        detail.setProjectImplementationPeriod(prj_impl_period.getText().toString().trim());
-        detail.setIntroductionOffice(intro_ofc.getText().toString().trim());
-        detail.setAboutThePromoter(promoter_info.getText().toString().trim());
+        DRPMasterData.DPRDetail dprDetail=data.getDPRDetail();
+        dprDetail.setApplID(dprDetail.getApplID());
+        dprDetail.setApplCode(dprDetail.getApplCode());
+        dprDetail.setOnBuilding(into_ofc.getText().toString());
+        dprDetail.setOnMachinery(onmachinery.getText().toString());
+        dprDetail.setLand(landEntry.getText().toString());
+        dprDetail.setPowerRequirement(txt_power_req.getText().toString());
+        dprDetail.setRateOfInterest(rate_of_interest_power.getText().toString());
+        dprDetail.setIntroduction(introduction_txt.getText().toString().trim());
+        dprDetail.setAboutBeneficiary(aboutBeneficiary.getText().toString().trim());
+        dprDetail.setCreatedOn(dprDetail.getCreatedOn());
+        dprDetail.setModifyOn(dprDetailData.getModifyOn());
+        dprDetail.setPayBackPeriod(payBackPeriod.getText().toString().trim());
+        dprDetail.setProjectImplementationPeriod(prj_impl_period.getText().toString().trim());
+        dprDetail.setIntroductionOffice(intro_ofc.getText().toString().trim());
+        dprDetail.setAboutThePromoter(promoter_info.getText().toString().trim());
+        dprUpdateRequest.setDprDetail(dprDetail);
 
         ApplicantDPROnly applicant = new ApplicantDPROnly(1);
-
+        dprUpdateRequest.setApplicant(applicant);
 
         List<DRPMasterData.BuildingDetail> buildingDetails = newBuildingAdapter.getUpdatedList();
+        for(int i = 0; i < buildingDetails.size();i++){
+            DRPMasterData.BuildingDetail buildingDetail = buildingDetails.get(i);
+            buildingDetails.get(i).setApplID(buildingDetail.getApplID());
+            buildingDetails.get(i).setApplCode(buildingDetail.getApplCode());
+            buildingDetails.get(i).setParticulars(buildingDetail.getParticulars());
+            buildingDetails.get(i).setArea(buildingDetail.getArea());
+            buildingDetails.get(i).setRatePerSqFt(buildingDetail.getRatePerSqFt());
+            buildingDetails.get(i).setAmount(buildingDetail.getAmount());
+            buildingDetails.get(i).setCreatedOn(buildingDetail.getCreatedOn());
+            buildingDetails.get(i).setModifyOn(buildingDetail.getModifyOn());
+        }
+        dprUpdateRequest.setBuildingDetails(buildingDetails);
+
         List<DRPMasterData.MachineryDetail> machineryDetails = newMachineryAdapter.getUpdatedList();
-        List<DRPMasterData.RawMaterial> rawMaterials = newRawaterialAdapter.getUpdatedList();
-        List<DRPMasterData.WagesDetail> wagesDetails = newWagesAdapter.getUpdatedList();
-        List<DRPMasterData.SalaryDetail> salaryDetails = newSalaryDetailAdapter.getUpdatedList();
-        List<DRPMasterData.DetailsOfSale> detailsOfSales = newDetailsOfSalesAdapter.getUpdatedList();
-        List<DRPMasterData.MeansOfFinancing> meansOfFinancing = newMeansOfFinancingAdapter.getUpdatedList();
+        for(int i = 0; i < machineryDetails.size();i++){
+            DRPMasterData.MachineryDetail machineryDetail = machineryDetails.get(i);
+            machineryDetails.get(i).setApplID(machineryDetail.getApplID());
+            machineryDetails.get(i).setApplCode(machineryDetail.getApplCode());
+            machineryDetails.get(i).setParticulars(machineryDetail.getParticulars());
+            machineryDetails.get(i).setQuantity(machineryDetail.getQuantity());
+            machineryDetails.get(i).setRate(machineryDetail.getRate());
+            machineryDetails.get(i).setAmount(machineryDetail.getAmount());
+            machineryDetails.get(i).setCreatedOn(machineryDetail.getCreatedOn());
+            machineryDetails.get(i).setModifyOn(machineryDetail.getModifyOn());
+        }
+        dprUpdateRequest.setMachineryDetails(machineryDetails);
+
         List<DRPMasterData.WorkingCapitalDetail> workingCapitalDetails = newWorkingCapitalAdapter.getUpdatedList();
-        List<DRPMasterData.WorkingCapitalEstimate> workingCapitalEstimate = newWorkingCapitalEstimatesAdapter.getUpdatedList();
-        List<DRPMasterData.PowerEstimateExpenditure> powerEstimateExpenditure = newWorkingPowerEstimatesAdapter.getUpdatedList();
+        for(int i = 0; i < workingCapitalDetails.size();i++){
+            DRPMasterData.WorkingCapitalDetail workingCapitalDetail = workingCapitalDetails.get(i);
+            workingCapitalDetails.get(i).setApplID(workingCapitalDetail.getApplID());
+            workingCapitalDetails.get(i).setApplCode(workingCapitalDetail.getApplCode());
+            workingCapitalDetails.get(i).setParticulars(workingCapitalDetail.getParticulars());
+            workingCapitalDetails.get(i).setAmount(workingCapitalDetail.getAmount());
+            workingCapitalDetails.get(i).setCreatedOn(workingCapitalDetail.getCreatedOn());
+            workingCapitalDetails.get(i).setModifyOn(workingCapitalDetail.getModifyOn());
+        }
+        dprUpdateRequest.setWorkingCapitalDetails(workingCapitalDetails);
 
-        applyCommonFields(buildingDetails, applId, applCode, now);
-        applyCommonFields(machineryDetails, applId, applCode, now);
-        applyCommonFields(rawMaterials, applId, applCode, now);
-        applyCommonFields(wagesDetails, applId, applCode, now);
-        applyCommonFields(salaryDetails, applId, applCode, now);
-        applyCommonFields(detailsOfSales, applId, applCode, now);
-        applyCommonFields(meansOfFinancing, applId, applCode, now);
-        applyCommonFields(workingCapitalDetails, applId, applCode, now);
-        applyCommonFields(workingCapitalEstimate, applId, applCode, now);
-        applyCommonFields(powerEstimateExpenditure, applId, applCode, now);
 
-        DPRUpdateRequest request = new DPRUpdateRequest();
-        request.setDprDetail(detail);
-        request.setApplicant(applicant);
-        request.setBuildingDetails(buildingDetails);
-        request.setMachineryDetails(machineryDetails);
-        request.setRawMaterials(rawMaterials);
-        request.setWagesDetails(wagesDetails);
-        request.setSalaryDetails(salaryDetails);
-        request.setDetailsOfSales(detailsOfSales);
-        request.setMeansOfFinancing(meansOfFinancing);
-        request.setWorkingCapitalDetails(workingCapitalDetails);
-        request.setWorkingCapitalEstimate(workingCapitalEstimate);
-        request.setPowerEstimateExpenditure(powerEstimateExpenditure);
+        List<DRPMasterData.MeansOfFinancing> meansOfFinancings = newMeansOfFinancingAdapter.getUpdatedList();
+        for(int i = 0; i < meansOfFinancings.size();i++){
+            DRPMasterData.MeansOfFinancing meansOfFinancing = meansOfFinancings.get(i);
+            meansOfFinancings.get(i).setApplID(meansOfFinancing.getApplID());
+            meansOfFinancings.get(i).setApplCode(meansOfFinancing.getApplCode());
+            meansOfFinancings.get(i).setParticulars(meansOfFinancing.getParticulars());
+            meansOfFinancings.get(i).setPercentage(meansOfFinancing.getPercentage());
+            meansOfFinancings.get(i).setCreatedOn(meansOfFinancing.getCreatedOn());
+            meansOfFinancings.get(i).setModifyOn(meansOfFinancing.getModifyOn());
+        }
+        dprUpdateRequest.setMeansOfFinancing(meansOfFinancings);
 
+
+        List<DRPMasterData.DetailsOfSale> detailsOfSales = newDetailsOfSalesAdapter.getUpdatedList();
+        for(int i = 0; i < detailsOfSales.size();i++){
+            DRPMasterData.DetailsOfSale detailsOfSale = detailsOfSales.get(i);
+            detailsOfSales.get(i).setApplID(detailsOfSale.getApplID());
+            detailsOfSales.get(i).setApplCode(detailsOfSale.getApplCode());
+            detailsOfSales.get(i).setParticulars(detailsOfSale.getParticulars());
+            detailsOfSales.get(i).setRatePerUnit(detailsOfSale.getRatePerUnit());
+            detailsOfSales.get(i).setQuantity(detailsOfSale.getQuantity());
+            detailsOfSales.get(i).setAmount(detailsOfSale.getAmount());
+            detailsOfSales.get(i).setCreatedOn(detailsOfSale.getCreatedOn());
+            detailsOfSales.get(i).setModifyOn(detailsOfSale.getModifyOn());
+        }
+        dprUpdateRequest.setDetailsOfSales(detailsOfSales);
+
+        List<DRPMasterData.RawMaterial> rawMaterials = newRawaterialAdapter.getUpdatedList();
+        for(int i = 0; i < rawMaterials.size();i++){
+            DRPMasterData.RawMaterial rawMaterial = rawMaterials.get(i);
+            rawMaterials.get(i).setApplID(rawMaterial.getApplID());
+            rawMaterials.get(i).setApplCode(rawMaterial.getApplCode());
+            rawMaterials.get(i).setParticulars(rawMaterial.getParticulars());
+            rawMaterials.get(i).setUnit(rawMaterial.getUnit());
+            rawMaterials.get(i).setRatePerUnit(rawMaterial.getRatePerUnit());
+            rawMaterials.get(i).setRequiredUnit(rawMaterial.getRequiredUnit());
+            rawMaterials.get(i).setAmount(rawMaterial.getAmount());
+            rawMaterials.get(i).setCreatedOn(rawMaterial.getCreatedOn());
+            rawMaterials.get(i).setModifyOn(rawMaterial.getModifyOn());
+        }
+        dprUpdateRequest.setRawMaterials(rawMaterials);
+
+        List<DRPMasterData.WagesDetail> wagesDetails = newWagesAdapter.getUpdatedList();
+        for(int i = 0; i < wagesDetails.size();i++){
+            DRPMasterData.WagesDetail wagesDetail = wagesDetails.get(i);
+            wagesDetails.get(i).setApplID(wagesDetail.getApplID());
+            wagesDetails.get(i).setApplCode(wagesDetail.getApplCode());
+            wagesDetails.get(i).setParticulars(wagesDetail.getParticulars());
+            wagesDetails.get(i).setNoOfWorkers(wagesDetail.getNoOfWorkers());
+            wagesDetails.get(i).setWagesPerMonth(wagesDetail.getWagesPerMonth());
+            wagesDetails.get(i).setAmount(wagesDetail.getAmount());
+            wagesDetails.get(i).setCreatedOn(wagesDetail.getCreatedOn());
+            wagesDetails.get(i).setModifyOn(wagesDetail.getModifyOn());
+        }
+        dprUpdateRequest.setWagesDetails(wagesDetails);
+
+
+        List<DRPMasterData.SalaryDetail> salaryDetails = newSalaryDetailAdapter.getUpdatedList();
+        for(int i = 0; i < salaryDetails.size();i++){
+            DRPMasterData.SalaryDetail salaryDetail = salaryDetails.get(i);
+            salaryDetails.get(i).setApplID(salaryDetail.getApplID());
+            salaryDetails.get(i).setApplCode(salaryDetail.getApplCode());
+            salaryDetails.get(i).setParticulars(salaryDetail.getParticulars());
+            salaryDetails.get(i).setNoOfStaff(salaryDetail.getNoOfStaff());
+            salaryDetails.get(i).setWagesPerMonth(salaryDetail.getWagesPerMonth());
+            salaryDetails.get(i).setAmount(salaryDetail.getAmount());
+            salaryDetails.get(i).setCreatedOn(salaryDetail.getCreatedOn());
+            salaryDetails.get(i).setModifyOn(salaryDetail.getModifyOn());
+        }
+        dprUpdateRequest.setSalaryDetails(salaryDetails);
+
+        List<DRPMasterData.WorkingCapitalEstimate> workingCapitalEstimates = newWorkingCapitalEstimatesAdapter.getUpdatedList();
+        for(int i = 0; i < workingCapitalEstimates.size();i++){
+            DRPMasterData.WorkingCapitalEstimate workingCapitalEstimate = workingCapitalEstimates.get(i);
+            workingCapitalEstimates.get(i).setApplID(workingCapitalEstimate.getApplID());
+            workingCapitalEstimates.get(i).setApplCode(workingCapitalEstimate.getApplCode());
+            workingCapitalEstimates.get(i).setParticulars(workingCapitalEstimate.getParticulars());
+            workingCapitalEstimates.get(i).setNoOfDays(workingCapitalEstimate.getNoOfDays());
+            workingCapitalEstimates.get(i).setCreatedOn(workingCapitalEstimate.getCreatedOn());
+            workingCapitalEstimates.get(i).setModifyOn(workingCapitalEstimate.getModifyOn());
+        }
+        dprUpdateRequest.setWorkingCapitalEstimate(workingCapitalEstimates);
+
+        List<DRPMasterData.PowerEstimateExpenditure> powerEstimateExpenditures = newWorkingPowerEstimatesAdapter.getUpdatedList();
+        for(int i = 0; i < powerEstimateExpenditures.size();i++){
+            DRPMasterData.PowerEstimateExpenditure powerEstimateExpenditure = powerEstimateExpenditures.get(i);
+            powerEstimateExpenditures.get(i).setApplID(powerEstimateExpenditure.getApplID());
+            powerEstimateExpenditures.get(i).setApplCode(powerEstimateExpenditure.getApplCode());
+            powerEstimateExpenditures.get(i).setParticulars(powerEstimateExpenditure.getParticulars());
+            powerEstimateExpenditures.get(i).setCost(powerEstimateExpenditure.getCost());
+            powerEstimateExpenditures.get(i).setAmountInRs(powerEstimateExpenditure.getAmountInRs());
+            powerEstimateExpenditures.get(i).setCreatedOn(powerEstimateExpenditure.getCreatedOn());
+            powerEstimateExpenditures.get(i).setModifyOn(powerEstimateExpenditure.getModifyOn());
+        }
+        dprUpdateRequest.setPowerEstimateExpenditure(powerEstimateExpenditures);
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Log.d("FINAL_UPDATE_REQUEST", gson.toJson(request));
+        Log.d("FINAL_UPDATE_REQUEST", gson.toJson(dprUpdateRequest));
 
 
-        updateApplicationForm(request);
+        updateApplicationForm(dprUpdateRequest);
     }
-
-//    private void prepareAndUpdateApplication1(){
-//
-//        DPRUpdateRequest dprUpdateRequest = new DPRUpdateRequest();
-//
-//        DRPMasterData.Data data = dprDrpMasterData.getData();
-//        DRPMasterData.DPRDetail dprDetail=data.getDPRDetail();
-//        dprDetail.setApplID(dprDetail.getApplID());
-//        dprDetail.setApplCode(dprDetail.getApplCode());
-//        dprDetail.setOnBuilding(into_ofc.getText().toString());
-//        dprDetail.setOnMachinery(onmachinery.getText().toString());
-//        dprDetail.setLand(landEntry.getText().toString());
-//        dprDetail.setPowerRequirement(txt_power_req.getText().toString());
-//        dprDetail.setRateOfInterest(rate_of_interest_power.getText().toString());
-//        dprDetail.setIntroduction(introduction_txt.getText().toString().trim());
-//        dprDetail.setAboutBeneficiary(aboutBeneficiary.getText().toString().trim());
-//        dprDetail.setCreatedOn();
-//        dprDetail.setModifyOn();
-//        dprDetail.setPayBackPeriod(payBackPeriod.getText().toString().trim());
-//        dprDetail.setProjectImplementationPeriod(prj_impl_period.getText().toString().trim());
-//        dprDetail.setIntroductionOffice(intro_ofc.getText().toString().trim());
-//        dprDetail.setAboutThePromoter(promoter_info.getText().toString().trim());
-//        dprUpdateRequest.setDprDetail(dprDetail);
-//
-//        ApplicantDPROnly applicant = new ApplicantDPROnly(1);
-//
-//
-//
-//
-//    }
 
 
     private <T extends BaseDprItem> void applyCommonFields(List<T> list, int applId, String applCode, String createdOn) {
@@ -593,6 +707,7 @@ public class DPRFragment extends BaseFormFragment {
 
 
     private void initData() {
+
         fetchUnitTypeData();
 
         //Building entry
@@ -710,8 +825,6 @@ public class DPRFragment extends BaseFormFragment {
 
 
 
-
-
     }
 
     @Override
@@ -723,6 +836,7 @@ public class DPRFragment extends BaseFormFragment {
 
 
         int applicationId = Integer.parseInt(applIdStr);
+
         System.out.println("applicationId"+applicationId);
         getDPRData(applicationId);
         getSavedDPRMasterData(applicationId);
