@@ -25,10 +25,12 @@ android {
             isDebuggable = true
             isMinifyEnabled = false
             isShrinkResources = false
+            buildConfigField ("boolean", "IS_TEST_ENVIRONMENT", "true")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         release {
             isMinifyEnabled = false
+            buildConfigField ("boolean", "IS_TEST_ENVIRONMENT", "false")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

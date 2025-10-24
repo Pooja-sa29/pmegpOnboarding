@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PmegpCustomerOnboardingApp</string>
-    <string name="txt_new_unit">Applicant for new Unit                   </string>
-    <string name="txt_reg_applicant_login">Registered Applicant Login</string>
+    <string name="txt_new_unit">Application for New Unit                   </string>
+    <string name="txt_reg_applicant_login">Registered Applicant login(2nd Loan)</string>
     <string name="txt_ex_applicant_login">Application for Existing Units(2nd Loan)</string>
     <string name="txt_ex_reg_applicant_login">Register Applicant Login</string>
 
@@ -18,11 +18,11 @@
           \n2. I hereby declare that I have not already availed or registered for other Govt. subsidy Schemes, and if found so I will be ready for further legal actions against myself.</string>
 
     //hint text
-    <string name="adhar_card_no">Adhar Card No.*</string>
+    <string name="adhar_card_no">Aadhar Card No.*</string>
     <string name="pan_no">Pan No.*</string>
     <string name="title_txt">Title</string>
     <string name="name_of_applicant">Name of Applicant*</string>
-    <string name="adhar_format">(Name as per Adhar card)</string>
+    <string name="adhar_format">(Name as per Aadhar card)</string>
     <string name="date_of_birth">Date Of Birth*</string>
     <string name="age">Age</string>
     <string name="gender_selection">Select Gender*</string>

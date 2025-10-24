@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.trust.pmegpcustomeronboardingapp.R;
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.IndustryListAdapter;
@@ -76,15 +77,18 @@ public class IndustryDataDialogFragment extends DialogFragment {
                     IndustryListAdapter adapter = (IndustryListAdapter) recyclerView.getAdapter();
                     List<NICGroupModel> selectedItems = new ArrayList<>();
 
-                    for (NICGroupModel item : adapter.getClassList()) {
-                        if (item.isChecked()) {
-                            selectedItems.add(item);
+                        for (NICGroupModel item : adapter.getClassList()) {
+                            if (item.isChecked()) {
+
+                                selectedItems.add(item);
+                            }
                         }
-                    }
-                    adapter.updateList(selectedItems);
-                    if (listener != null) {
-                        listener.onIndustrySelected(selectedItems);
-                    }
+                        adapter.updateList(selectedItems);
+                        if (listener != null) {
+                            listener.onIndustrySelected(selectedItems);
+                        }
+
+
 
                     dismiss();
                 }

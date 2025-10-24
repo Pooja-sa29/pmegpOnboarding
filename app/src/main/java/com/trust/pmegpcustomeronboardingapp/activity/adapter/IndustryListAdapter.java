@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +18,7 @@ import java.util.List;
 public class IndustryListAdapter extends RecyclerView.Adapter<IndustryListAdapter.ClassViewHolder> {
 
         private List<NICGroupModel> classList;
-
+        private static final int MAX_SELECTION = 3;
         public IndustryListAdapter(List<NICGroupModel> classList) {
             this.classList = classList;
         }
@@ -39,9 +40,27 @@ public class IndustryListAdapter extends RecyclerView.Adapter<IndustryListAdapte
             holder.description.setText(item.getNic_desc());
             holder.nic_check_item.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 item.setChecked(isChecked);
+                if (isChecked) {
+                    int selectedCount = getSelectedCount();
+                    if (selectedCount > MAX_SELECTION ) {
+                        // Prevent selecting more than 3
+                        buttonView.setChecked(false);
+                        Toast.makeText(buttonView.getContext(), "Only Three Product details can be selected.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        item.setChecked(true);
+                    }
+                } else {
+                    item.setChecked(false);
+                }
             });
         }
-
+    private int getSelectedCount() {
+        int count = 0;
+        for (NICGroupModel model : classList) {
+            if (model.isChecked()) count++;
+        }
+        return count;
+    }
         @Override
         public int getItemCount() {
             return classList.size();

@@ -517,9 +517,68 @@ public class FinalSubmissionFragment extends Fragment {
                 }
         );
 
-        img_facedetection.setOnClickListener(v -> startFaceCapture());
+        img_facedetection.setOnClickListener(v ->{
+            if (BuildConfig.IS_TEST_ENVIRONMENT) {
+//                startTestFaceCapture();
+                launchInstalledApp("in.gov.uidai.auasample");
+            } else{
+                // Live environment – use Play Store RD service app
+                startFaceCapture();
+            }
+        });
+
 
     }
+
+    private void startTestFaceCapture() {
+        if (isDebuggingEnabled(requireContext())) {
+            Toast.makeText(requireContext(),
+                    "Disable USB/Wireless debugging before test face capture.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (isDeviceRooted()) {
+            Toast.makeText(requireContext(),
+                    "Face capture not allowed on rooted devices.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String pidOptions = buildPidOptionsXml();
+        Log.i("FaceTest", "PID Options: " + pidOptions);
+
+        Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
+        intent.setPackage("in.gov.uidai.auasample"); // ← this targets the test app
+        intent.putExtra("request", pidOptions);
+
+        try {
+            startActivityForResult(intent, RD_SERVICE_REQUEST);
+        } catch (Exception e) {
+            Log.e(TAG, "FaceRD Test app not available", e);
+            Toast.makeText(getContext(),
+                    "FaceRD Test app not found. Please install AUASample APK.",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    private void launchInstalledApp(String packageName) {
+        try {
+            Intent intent = new Intent();
+            intent.setClassName(packageName, "in.gov.uidai.auasample.MainActivity");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),
+                    "FaceRD Test app not found or cannot be launched. Please reinstall AUASample.",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+
 
     private void startFaceCapture() {
 
@@ -605,8 +664,8 @@ public class FinalSubmissionFragment extends Fragment {
 
     private String buildPidOptionsXml() {
         String txnId = UUID.randomUUID().toString().replace("-", "");
-        return "<PidOptions ver=\"1.0\" env=\"P\">" +
-                "<Opts fCount=\"1\" fType=\"0\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\" wadh=\"E0jzJ/P8UopUHAieZn8CKqS4WPMi5ZSYXgfnlfkWjrc=\"/>" +
+        return "<PidOptions ver=\"1.0\" env=\"PP\">" +
+                "<Opts fCount=\"1\" fType=\"0\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\" />" +
                 "<CustOpts>" +
                 "<Param name=\"txnId\" value=\"" + txnId + "\"/>" +
                 "<Param name=\"language\" value=\"en\"/>" +
