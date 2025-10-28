@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.trust.pmegpcustomeronboardingapp.R;
 import com.trust.pmegpcustomeronboardingapp.activity.adapter.IndustryListAdapter;
