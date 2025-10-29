@@ -720,49 +720,6 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
     }
 
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == RD_SERVICE_REQUEST) {
-//            if (resultCode == RESULT_OK && data != null) {
-////                String pidData = data.getStringExtra("response");
-//                String pidData = data.getStringExtra("PIDXML");
-//                if (pidData != null) {
-//                    logLongString("PID_DATA", pidData);
-//                }
-//
-//                if (pidData != null && pidData.contains("PID_CREATED")) {
-//                    Toast.makeText(requireContext(), "Face captured successfully!", Toast.LENGTH_SHORT).show();
-//
-//                    showXmlDialog("PID XML", pidData);
-//
-//
-////                    sendPidDataToBackend(pidData);
-//
-//                } else {
-//                    Log.e(TAG, "Capture failed: " + pidData);
-//                    Toast.makeText(requireActivity(), "Face capture failed. Please try again.", Toast.LENGTH_SHORT).show();
-//                }
-//            } else {
-//                String error = (data != null) ? data.getStringExtra("response") : "No response";
-//                Log.e(TAG, "Capture failed: " + error);
-//                Toast.makeText(getContext(), "Face capture failed.", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//
-//        if (requestCode == LOCAL_MATCH_REQ) {
-//            if (resultCode == RESULT_OK && data != null) {
-//                String response = data.getStringExtra("RESPONSE");
-//                Log.d(TAG, "Match Response: " + response);
-//                Toast.makeText(getContext(), "Match Response: " + response, Toast.LENGTH_SHORT).show();
-//            } else {
-//                String error = (data != null) ? data.getStringExtra("RESPONSE") : "No response";
-//                Log.e(TAG, "Local Match failed: " + error);
-//            }
-//        }
-//    }
-
     private void logLongString(String tag, String message) {
         if (message == null) return;
 
