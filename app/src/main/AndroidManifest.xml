@@ -52,8 +52,7 @@
     </application>
     <queries>
         <!-- Allow your app to see AadhaarFaceRD -->
-        <package android:name="in.gov.uidai.facerd" />
-
+        <package android:name="in.gov.uidai.facerd.nonprod"/>
         <!-- Also allow querying its capture intent -->
         <intent>
             <action android:name="in.gov.uidai.rdservice.face.CAPTURE" />

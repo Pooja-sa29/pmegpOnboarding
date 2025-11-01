@@ -538,6 +538,7 @@ public class FinalSubmissionFragment extends Fragment {
         }
 
         String pidOptions = buildPidOptionsXml();
+//        showXmlDialog("PID XML", pidOptions);
         Log.i("11","pid" +pidOptions.toString());
         Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
         intent.putExtra("request", pidOptions);
@@ -605,8 +606,8 @@ public class FinalSubmissionFragment extends Fragment {
 
     private String buildPidOptionsXml() {
         String txnId = UUID.randomUUID().toString().replace("-", "");
-        return "<PidOptions ver=\"1.0\" env=\"P\">" +
-                "<Opts fCount=\"1\" fType=\"0\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\" wadh=\"E0jzJ/P8UopUHAieZn8CKqS4WPMi5ZSYXgfnlfkWjrc=\"/>" +
+        return "<PidOptions ver=\"1.0\" env=\"PP\">" +
+                "<Opts fCount=\"0\" fType=\"0\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\"/>" +
                 "<CustOpts>" +
                 "<Param name=\"txnId\" value=\"" + txnId + "\"/>" +
                 "<Param name=\"language\" value=\"en\"/>" +
@@ -670,7 +671,7 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
                         "\n\n📄 PID XML:\n" + pidXml;
                 showXmlDialog("PID XML", message);
 //                PidDataModel pidDataModel = new PidDataModel(pidXml,encrypted);
-
+//
 //                sendPidDataToBackend(pidDataModel);
             } else {
                 Toast.makeText(requireContext(), "No PID data received", Toast.LENGTH_SHORT).show();

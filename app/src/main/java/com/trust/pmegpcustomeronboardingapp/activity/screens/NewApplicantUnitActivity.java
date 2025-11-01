@@ -77,6 +77,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.Validator;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -288,9 +289,13 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             if (!Validator.isEmpty(address, "Enter address",scrollView)) return;
             if (!Validator.isEmpty(districtName, "Enter address",scrollView)) return;
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
+
             applicant.setAadharNo(adharcardno.getText().toString().trim());
+            System.out.println("adharno" + adharcardno.getText().toString().trim());
             applicant.setApplTitle(0);
             applicant.setApplName(nameofapplicant.getText().toString().trim());
+            System.out.println("name" +nameofapplicant.getText().toString().trim());
             applicant.setAgencyID(agentId);
             System.out.println("agentId" + agentId);
             applicant.setAgencyCode(selectedAgencyCode);
@@ -301,17 +306,36 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             System.out.println("stateId" + stateId);
             applicant.setDistID(districtId);
             System.out.println("districtId" + districtId);
-            applicant.setStateCode(selectedStateCode);
-            System.out.println("selectedStateCode" + selectedStateCode);
+            applicant.setStateCode(state_shortCode);
+            System.out.println("selectedStateCode" + state_shortCode);
             applicant.setAgencyOffID(selectedagencyoffId > 0 ? selectedagencyoffId : 0);
             System.out.println("selectedagencyoffId" + selectedagencyoffId);
             applicant.setLegalType("INDIVIDUAL");
             applicant.setGender(gender != null ? gender : "");
             System.out.println("gender" + gender);
-            applicant.setDateofBirth(uid_dob.getText().toString().trim());
-            System.out.println("uid_dob" + uid_dob.getText().toString());
+            try {
+                String inputDate = uid_dob.getText().toString().trim(); // "09-29-1995"
+
+                // Parse input date
+                SimpleDateFormat inputFormat = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+                Date date = inputFormat.parse(inputDate);
+
+                // Format to server-required format
+                SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
+                String formattedDate = serverFormat.format(date);
+
+                applicant.setDateofBirth(formattedDate);
+
+                System.out.println("Formatted DOB: " + formattedDate);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
 
             applicant.setAge(Integer.parseInt(uid_age.getText().toString()));
+            System.out.println("age" + Integer.parseInt(uid_age.getText().toString()));
             applicant.setSocialCatID(selectedSocialCatCode != null ? selectedSocialCatCode : "");
             System.out.println("selectedSocialCatCode" + selectedSocialCatCode);
             applicant.setSpecialCatID(selectedSpecialCatCode != null ? selectedSpecialCatCode : "");
@@ -324,49 +348,109 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
 
             applicant.setComnAddress(communication_address.getText().toString());
+            System.out.println("communication_address" + communication_address.getText().toString());
             applicant.setComnTaluka(taluka_block_name.getText().toString());
+            System.out.println("taluka_block_name" + taluka_block_name.getText().toString());
+
             applicant.setComnDistrict(selectedDistrictName);
+            System.out.println("selectedDistrictName" + selectedDistrictName);
+
             applicant.setComnPin(pin_number.getText().toString());
+            System.out.println("pin_number" + pin_number.getText().toString());
+
             applicant.setMobileNo1(mobile_number.getText().toString());
+            System.out.println("mobile_number" + mobile_number.getText().toString());
+
             applicant.setMobileNo2(alternate_mobile_number.getText().toString());
+            System.out.println("alternate_mobile_number" + alternate_mobile_number.getText().toString());
+
             applicant.seteMail(email.getText().toString());
+            System.out.println("email" + email.getText().toString());
+
             applicant.setPanNo(panNumber.getText().toString());
+            System.out.println("panNumber" + panNumber.getText().toString());
 
             applicant.setUnitLocation(unit_loc.getText().toString());
+            System.out.println("unit_loc" + unit_loc.getText().toString());
+
             applicant.setUnitAddress(unitaddress.getText().toString());
+            System.out.println("unitaddress" + unitaddress.getText().toString());
+
             applicant.setUnitTaluka(subdistrictName);
+            System.out.println("subdistrictName" + subdistrictName);
+
             applicant.setUnitDistrict(district_name);
+            System.out.println("district_name" + district_name);
+
             applicant.setUnitPin(pin_code.getText().toString());
-            applicant.setUnitActivityType(String.valueOf(1));
+            System.out.println("pin_code" + pin_code);
+
+            applicant.setUnitActivityType(null);
+
+
             applicant.setUnitActivityName(selectedNicCode);
+            System.out.println("selectedNicCode" + selectedNicCode);
             applicant.setProdDescr(selectedNicDesc3);
+            System.out.println("selectedNicDesc3" + selectedNicDesc3);
 
             applicant.setIsEDPTraining(1);
             applicant.setEdpTrainingInst(edp_name);
-            applicant.setCapitalExpd(Double.parseDouble(capital_exp.getText().toString()));
-            applicant.setWorkingCapital(Double.parseDouble(workingcapital.getText().toString()));
-            applicant.setTotalProjectCost(Double.parseDouble(totalexp.getText().toString()));
-            applicant.setEmployment(Integer.parseInt(employee_count.getText().toString()));
+            System.out.println("edp_name" + edp_name);
 
-//            applicant.setFinBankID1(selectedBankListID);
-//            applicant.setFinBank1(selectedBranch1);
-//            applicant.setBankIFSC1(selectedIfsc1);
-//            applicant.setBankBranch1(selectedBankAddress1);
-//            applicant.setBankAddress1(selectedBankAddress1);
-//            applicant.setBankDist1(selectedBankDistrict1);
-//
-//            applicant.setFinBankID2(selectedBankListID);
-//            applicant.setFinBank2(selectedBranch2);
-//            applicant.setBankIFSC2(selectedIfsc2);
-//            applicant.setBankBranch2(selectedBankAddress2);
-//            applicant.setBankAddress2(selectedBankAddress2);
-//            applicant.setBankDist2(selectedBankDistrict2);
+            applicant.setCapitalExpd(Double.parseDouble(capital_exp.getText().toString()));
+            System.out.println("capital_exp" + Double.parseDouble(capital_exp.getText().toString()));
+
+            applicant.setWorkingCapital(Double.parseDouble(workingcapital.getText().toString()));
+            System.out.println("workingcapital" + Double.parseDouble(workingcapital.getText().toString()));
+
+            applicant.setTotalProjectCost(Double.parseDouble(totalexp.getText().toString()));
+            System.out.println("totalexp" + Double.parseDouble(totalexp.getText().toString()));
+
+            applicant.setEmployment(Integer.parseInt(employee_count.getText().toString()));
+            System.out.println("employee_count" + Double.parseDouble(employee_count.getText().toString()));
+
+            applicant.setFinBankID1(selectedBankListID);
+            System.out.println("selectedBankListID" + selectedBankListID);
+
+            applicant.setFinBank1(selectedBranch1);
+            System.out.println("selectedBranch1" + selectedBranch1);
+
+            applicant.setBankIFSC1(selectedIfsc1);
+            System.out.println("selectedIfsc1" + selectedIfsc1);
+
+            applicant.setBankBranch1(selectedBankAddress1);
+            System.out.println("selectedBankAddress1" + selectedBankAddress1);
+
+            applicant.setBankAddress1(selectedBankAddress1);
+            System.out.println("selectedBankAddress1" + selectedBankAddress1);
+
+            applicant.setBankDist1(selectedBankDistrict1);
+            System.out.println("selectedBankDistrict1" + selectedBankDistrict1);
+
+
+            applicant.setFinBankID2(selectedBankListID);
+            System.out.println("selectedBankDistrict1" + selectedBankDistrict1);
+
+            applicant.setFinBank2(selectedBranch2);
+            System.out.println("selectedBranch2" + selectedBranch2);
+
+            applicant.setBankIFSC2(selectedIfsc2);
+            System.out.println("selectedIfsc2" + selectedIfsc2);
+
+            applicant.setBankBranch2(selectedBankAddress2);
+            System.out.println("selectedBankAddress2" + selectedBankAddress2);
+
+            applicant.setBankAddress2(selectedBankAddress2);
+            System.out.println("selectedBankAddress2" + selectedBankAddress2);
+
+            applicant.setBankDist2(selectedBankDistrict2);
+            System.out.println("selectedBankDistrict2" + selectedBankDistrict2);
+
 
             applicant.setIsAvailCGTMSE(1);
             applicant.setPmegpRef("Implementing Agencies(KVIC/KVIB/DIC)");
             applicant.setIsDeclrAccept(1);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
             String currentDate = sdf.format(new Date());
             applicant.setCreatedOn(currentDate);
             applicant.setFinalSubDate(null);
@@ -381,26 +465,48 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             applicant.setIsAltnBank(1);
             applicant.setUserType("APPL");
             applicant.setStateName(statename);
+            System.out.println("statename" + statename);
+
             applicant.setDistrictName(district_name);
+            System.out.println("district_name" + district_name);
+
             applicant.setSchemeID(1);
             applicant.setIsUnderAlternativeBank(0);
             applicant.setIsAltBankRejected(0);
 
             applicant.setUnitActivityName2(selectedNicCode);
+            System.out.println("selectedNicCode" + selectedNicCode);
+
             applicant.setProdDescr2(selectedNicDesc);
+            System.out.println("selectedNicDesc" + selectedNicDesc);
+
             applicant.setUnitActivityName3(selectedNicCode2);
+            System.out.println("selectedNicCode2" + selectedNicCode2);
+
             applicant.setProdDescr3(selectedNicDesc3);
+            System.out.println("selectedNicDesc3" + selectedNicDesc3);
+
             applicant.setIsCharAppliAccepted(1);
 
             applicant.setComnStateID(27);
             applicant.setComnStateName(statename);
+            System.out.println("statename" + statename);
+
             applicant.setMaskAadharNo("XXXX XXXX 2019");
             applicant.setState_Code(stateId);
+            System.out.println("stateId" + stateId);
+
             applicant.setState_Name(statename);
+            System.out.println("statename" + statename);
+
             applicant.setLgdCode(535843);
             applicant.setTrainingMode(0);
             applicant.setVillageName(selectedVillageName);
+            System.out.println("selectedVillageName" + selectedVillageName);
+
             applicant.setLgdCodeId(Integer.parseInt(lgd_code.getText().toString()));
+            System.out.println("lgd_code" + Integer.parseInt(lgd_code.getText().toString()));
+
             applicant.setIsGenerateChallan(0);
             applicant.setIsDPRVerified(0);
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
