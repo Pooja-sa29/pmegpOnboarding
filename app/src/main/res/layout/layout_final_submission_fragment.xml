@@ -1782,7 +1782,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:backgroundTint="@color/peacock_green"
-                        android:text="Update" />
+                        android:enabled="false"
+                        android:text="Final Submission"
+                        android:textColor="@color/white"/>
                 </LinearLayout>
             </LinearLayout>
 

@@ -266,7 +266,12 @@ public class DPRFragment extends BaseFormFragment {
 
                 dprSaveRequestData = new DprSaveRequestData();
                 DRPMasterData.Data data = dprDrpMasterData.getData();
-                DRPMasterData.DPRDetail detail=data.getDPRDetail();
+            DRPMasterData.DPRDetail detail;
+            if (data.getDPRDetail() == null) {
+                detail = new DRPMasterData.DPRDetail();
+            } else {
+                detail = data.getDPRDetail();
+            }
 
                 detail.setApplID(Integer.parseInt(AppConstant.getApplId()));
                 detail.setApplCode(detail.getApplCode());

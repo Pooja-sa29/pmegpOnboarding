@@ -1130,9 +1130,15 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                     app_qualificationspinner.setAdapter(adapter);
                     app_qualificationspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            QualificationModel qualificationModel = qualificationModelList.get(position);
+                            if (position == 0) {
+                                selectedQualCode = "";
+                                selectedQualDesc = "";
+                                return;
+                            }
+                            QualificationModel qualificationModel = qualificationModelList.get(position-1);
                             selectedQualCode = qualificationModel.getLk_shortCode();
                             selectedQualDesc = qualificationModel.getLk_desc();
                         }
@@ -1419,6 +1425,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
     private void setDataToUI(ApplicantDetailData data) {
         if (data == null) return;
         System.out.println("data_applicant "+new Gson().toJson(data));
+        System.out.println("getComnDistrict "+data.getComnDistrict());
 
         app_adharcardno.setText(data.getAadharNo());
         app_pannumber.setText(data.getPANNo());
@@ -1426,7 +1433,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
         app_dob.setText(data.getDateofBirth().equals("null")?"": TrustMethods.convertUnixDateToDate(data.getDateofBirth()));
         app_age.setText(String.valueOf(data.getAge()));
         app_communication_address.setText(data.getComnAddress());
-        app_district.setText(data.getComnDistrict());
+        app_district.setText(data.getDistrictName());
 
         app_taluka_block_name.setText(data.getComnTaluka());
         app_pin_number.setText(data.getComnPin());

@@ -25,6 +25,9 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.DprResult;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DprSaveRequestData;
 import com.trust.pmegpcustomeronboardingapp.activity.model.EDPRequest;
 import com.trust.pmegpcustomeronboardingapp.activity.model.EDPResponse;
+import com.trust.pmegpcustomeronboardingapp.activity.model.FaceAuthRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.FaceDetectionResult;
+import com.trust.pmegpcustomeronboardingapp.activity.model.FaceRdFinalResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.GenderModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.InformationSource;
 import com.trust.pmegpcustomeronboardingapp.activity.model.LoginRequest;
@@ -48,15 +51,16 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailRequestModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageRequest;
-import com.trust.pmegpcustomeronboardingapp.activity.model.faceDetectionResult;
 
 import java.util.List;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface ApiServices {
@@ -156,10 +160,14 @@ public interface ApiServices {
     @POST("MobileApp/UpdateDPRData")
     Call<DprResult>  updateDprData(@Body DPRUpdateRequest dprDrpMasterData);
 
-    @GET("MobileApp/ValidateFaceRecogData")
-    Call<faceDetectionResult>  validateFaceRecognition(@Body PidDataModel pidDataModel);
+    @POST("MobileApp/ValidateFaceRecogData")
+    @Headers("Content-Type: application/xml")
+    Call<FaceDetectionResult> validateFaceRecognition(@Header("aadharNo") String encryptedAadhaar, @Body RequestBody  model);
 
-//    @POST("aadhaar/face-auth")
-//    Call<ResponseBody> sendFaceAuthData(String number, String pidData);
+    @POST("MobileApp/UpdateStatusForFinalSubmission")
+    Call<FaceRdFinalResponse>  updateStatusForFinalSubmission(@Body FaceAuthRequest faceAuthRequest);
+
+
+
 
 }

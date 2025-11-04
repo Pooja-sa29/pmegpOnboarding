@@ -39,17 +39,29 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
+    packagingOptions {
+        exclude ("META-INF/DEPENDENCIES")
+        exclude ("META-INF/LICENSE")
+        exclude ("META-INF/LICENSE.txt")
+        exclude ("META-INF/NOTICE")
+        exclude ("META-INF/NOTICE.txt")
+        exclude ("META-INF/services/javax.xml.parsers.SAXParserFactory")
+        exclude ("META-INF/services/javax.xml.parsers.DocumentBuilderFactory")
+    }
 }
 
 dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.espresso.core)
+    implementation(libs.room.external.antlr)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation ("com.google.mlkit:face-detection:16.1.5")
+    implementation ("org.simpleframework:simple-xml:2.7.1")
+    implementation ("com.squareup.retrofit2:converter-simplexml:2.9.0")
 }

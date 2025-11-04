@@ -1,33 +1,30 @@
 package com.trust.pmegpcustomeronboardingapp.activity.retrofitClient;
 
-import java.security.cert.X509Certificate;
-
+import retrofit2.Retrofit;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
+import okhttp3.OkHttpClient;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
 
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+public class XmlApiClient {
 
-public class ApiClient {
     private static final String BASE_URL = "https://192.168.0.16:8054/";
-//    private static final String BASE_URL = "https://115.124.125.153/";
     private static Retrofit retrofit;
 
     public static Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(getUnsafeOkHttpClient()) // For self-signed SSL
+                    .addConverterFactory(SimpleXmlConverterFactory.create()) // Use XML converter
+                    .client(getUnsafeOkHttpClient())
                     .build();
         }
         return retrofit;
     }
 
-    // Allow self-signed SSL (like your current HttpClientWrapper)
-    static OkHttpClient getUnsafeOkHttpClient() {
+    private static OkHttpClient getUnsafeOkHttpClient() {
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {

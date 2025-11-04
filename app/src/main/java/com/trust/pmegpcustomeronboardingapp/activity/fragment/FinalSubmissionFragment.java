@@ -78,6 +78,9 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.BankModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.BuildingItem;
 import com.trust.pmegpcustomeronboardingapp.activity.model.DistrictModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.Document;
+import com.trust.pmegpcustomeronboardingapp.activity.model.FaceAuthRequest;
+import com.trust.pmegpcustomeronboardingapp.activity.model.FaceDetectionResult;
+import com.trust.pmegpcustomeronboardingapp.activity.model.FaceRdFinalResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.GenderModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.InformationSource;
 import com.trust.pmegpcustomeronboardingapp.activity.model.PidDataModel;
@@ -94,8 +97,9 @@ import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailRequestModel;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageDetailResponse;
 import com.trust.pmegpcustomeronboardingapp.activity.model.VillageRequest;
-import com.trust.pmegpcustomeronboardingapp.activity.model.faceDetectionResult;
 import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
+import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.XmlApiClient;
+import com.trust.pmegpcustomeronboardingapp.activity.screens.DashboardScreenActivity;
 import com.trust.pmegpcustomeronboardingapp.activity.screens.NewApplicantUnitActivity;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
@@ -103,6 +107,8 @@ import com.trust.pmegpcustomeronboardingapp.activity.utils.CryptoEncryption;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.TrustMethods;
 
 import org.json.JSONObject;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -117,10 +123,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class FinalSubmissionFragment extends Fragment {
 
@@ -171,8 +180,9 @@ public class FinalSubmissionFragment extends Fragment {
     private boolean isInitialLoad = true;
     String comn_district;
     String unit_district;
-    private static final String FACE_RD_PACKAGE = "in.gov.uidai.facerd";
-
+    private static final String FACE_RD_PACKAGE = "in.gov.uidai.facerd.nonprod";
+    String status;
+    Boolean IsFinalAuthDone = false;
 
     String selectedDistrictName, selectedPincode, selectedVillageName, subdistrictName, selectedNodalCode, agencyName, selectedAgencyCode, selectedAgency_Code, selectedBankName2, alt_selectedCityName, selectedBankName1, selectedCityName, selectedQualDesc, selectedQualCode, selectedSocialCatCode, selectedSpecialCatCode, selectedunittype, selectedStateCode, state_shortCode, state_code, selectedStateCodeIa, statename, state_zonal_code, selectedDistrictCode, districtCode, district_name;
     int selectedagencyoffId, agentId, stateId, districtId, activityUnitType, selectedBankListID, alt_selectedBankListID, selectedBankId2;
@@ -209,6 +219,7 @@ public class FinalSubmissionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_final_submission_fragment, container, false);
         apiService = ApiClient.getClient().create(ApiServices.class);
+
 
         implementing_type_agency_layout = view.findViewById(R.id.app_implementing_type_agency_layout);
         app_adharcardno = view.findViewById(R.id.app_adharcardno);
@@ -341,7 +352,7 @@ public class FinalSubmissionFragment extends Fragment {
         });
 
         img_biometrics.setOnClickListener(v -> {
-
+             showDialog();
         });
 
 
@@ -436,6 +447,21 @@ public class FinalSubmissionFragment extends Fragment {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Log.d("FINAL_JSON", gson.toJson(applicant));
 
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+            alert.setIcon(R.drawable.baseline_check_circle_24);
+            alert.setCancelable(false);
+            alert.setMessage("Form submitted Successfully.");
+            alert.setPositiveButton("OK",
+                    (dialog, whichButton) -> {
+                       Intent i = new Intent(requireContext(),DashboardScreenActivity.class);
+                       requireContext().startActivity(i);
+                       dialog.dismiss();
+                    });
+
+
+            AlertDialog alertDialog = alert.create();
+            alertDialog.show();
 //            SaveApplicationForm(applicant);
 
         });
@@ -443,6 +469,21 @@ public class FinalSubmissionFragment extends Fragment {
         initData();
 
         return view;
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+        alert.setCancelable(false);
+        alert.setMessage("For Biometric Authentication, Kindly visit nearest CSC Center.");
+        alert.setPositiveButton("OK",
+                (dialog, whichButton) -> {
+                    dialog.dismiss();
+
+                });
+
+
+        AlertDialog alertDialog = alert.create();
+        alertDialog.show();
     }
 
 
@@ -568,30 +609,7 @@ public class FinalSubmissionFragment extends Fragment {
         }
         return false;
     }
-    private void startLocalFaceMatch() {
-        String xmlRequest = buildLocalFaceMatchXml();
-        Intent intent = new Intent("in.gov.uidai.rdservice.face.LOCAL_FACE_MATCH");
-        intent.putExtra("request", xmlRequest);
 
-        try {
-            startActivityForResult(intent, LOCAL_MATCH_REQ);
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "Install FaceRD app from Play Store", Toast.LENGTH_LONG).show();
-            Log.e(TAG, "FaceRD not available", e);
-            openPlayStoreForFaceRD();
-        }
-    }
-
-    private String buildLocalFaceMatchXml() {
-        String requestId = UUID.randomUUID().toString().replace("-", "");
-        String doc1 = "RHVtbXlEb2Mx";
-        String doc2 = "RHVtbXlEb2My";
-        return "<localFaceMatchRequest requestId=\"" + requestId + "\" language=\"en\" enableAutoCapture=\"true\" encryptResponse=\"n\">" +
-                "<Document1 docType=\"AADHAAR\" auaCode=\"\">" + doc1 + "</Document1>" +
-                "<Document2 docType=\"PHOTO\" auaCode=\"123456\">" + doc2 + "</Document2>" +
-                "<Signature>DummySignature</Signature>" +
-                "</localFaceMatchRequest>";
-    }
 
 
     private void openPlayStoreForFaceRD() {
@@ -622,30 +640,103 @@ public class FinalSubmissionFragment extends Fragment {
     }
 
 
-    private void sendPidDataToBackend(PidDataModel pidDataModel) {
+    private void sendPidDataToBackend(String adharEncNumber, String pidDataModel) {
 
 
-        apiService.validateFaceRecognition(pidDataModel).enqueue(new Callback<faceDetectionResult>() {
-            @Override
-            public void onResponse(Call<faceDetectionResult> call, retrofit2.Response<faceDetectionResult> response) {
-                progressDialog.dismiss();
-                if (response.isSuccessful() && response.body() != null) {
-                    faceDetectionResult data = response.body();
-                   Log.i("1122 ","response pid=="+data.toString());
-                    Toast.makeText(getContext(), "response pid=="+data.toString(), Toast.LENGTH_LONG).show();
-                }
-            }
+        if (pidDataModel == null) {
+            Toast.makeText(requireContext(), "PID Data is empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            @Override
-            public void onFailure(Call<faceDetectionResult> call, Throwable t) {
-                progressDialog.dismiss();
-                Toast.makeText(getContext(), "response pid=="+t.getMessage(), Toast.LENGTH_LONG).show();
+        RequestBody body = RequestBody.create(
+                MediaType.parse("application/xml"),
+                pidDataModel
+        );
+        // Get API service for XML endpoint
+        Retrofit apiClient = XmlApiClient.getClient();
+        ApiServices apiService = apiClient.create(ApiServices.class);
 
-                t.printStackTrace();
-            }
-        });
+        // Call API
+        apiService.validateFaceRecognition(adharEncNumber, body)
+                .enqueue(new Callback<FaceDetectionResult>() {
+                    @Override
+                    public void onResponse(Call<FaceDetectionResult> call, retrofit2.Response<FaceDetectionResult> response) {
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            FaceDetectionResult data = response.body();
+                            Log.i("PID API", "ret=" + data.ret + ", code=" + data.code);
+
+
+                            if ("y".equalsIgnoreCase(data.ret)) {
+                                // Make your submit button visible
+                                Toast.makeText(requireContext(), "Face Auth Successful", Toast.LENGTH_SHORT).show();
+                                status = "1";
+                                IsFinalAuthDone = true;
+                                FaceAuthRequest faceAuthRequest = new FaceAuthRequest(Integer.valueOf(AppConstant.getApplId()),status,IsFinalAuthDone);
+                                UpdateFaceDetectionStatusToBackend(faceAuthRequest);
+                            }else{
+                                Toast.makeText(requireContext(), "Please Try Again...", Toast.LENGTH_SHORT).show();
+
+                            }
+                        } else {
+                            Toast.makeText(requireContext(), "PID API Response error: " + response.code(), Toast.LENGTH_LONG).show();
+                            try {
+                                Log.e("PID API", "Error body: " + response.errorBody().string());
+                            } catch (Exception e) { e.printStackTrace(); }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<FaceDetectionResult> call, Throwable t) {
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+
+                        Toast.makeText(requireContext(), "PID API Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        t.printStackTrace();
+                    }
+                });
     }
-@Override
+
+    private void UpdateFaceDetectionStatusToBackend(FaceAuthRequest faceAuthRequest) {
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait, Loading DPR Data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        apiService.updateStatusForFinalSubmission(faceAuthRequest).enqueue(new Callback<FaceRdFinalResponse>() {
+                    @Override
+                    public void onResponse(Call<FaceRdFinalResponse> call, retrofit2.Response<FaceRdFinalResponse> response) {
+                        progressDialog.dismiss();
+                        if (response.isSuccessful() && response.body() != null) {
+                            FaceRdFinalResponse data = response.body();
+                            Toast.makeText(requireContext(), ""+data.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            if (data.isSuccess()) {
+                                app_form_check.setChecked(true);
+                                if(app_form_check.isChecked()){
+                                    app_btn_updateform.setEnabled(true);
+                                }
+                            }
+                        } else {
+                            Toast.makeText(requireContext(), "API Response Error: " + response.code(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<FaceRdFinalResponse> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(requireContext(), "API Call Failed: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        t.printStackTrace();
+                    }
+                });
+    }
+
+
+
+    @Override
 public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == RD_SERVICE_REQUEST) {
@@ -653,7 +744,7 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
             String pidJson = data.getStringExtra("response"); // JSON format
             String encryptionKey = BuildConfig.ENCRYPTION_KEY;
             System.out.println("Encryption-key"+encryptionKey);
-            Toast.makeText(getContext(), "Encryption-key"+encryptionKey, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "Encryption-key"+encryptionKey, Toast.LENGTH_SHORT).show();
             String encrypted="";
             String decrypted="";
             try {
@@ -669,10 +760,10 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
                 logLongString("PID_XML", pidXml);
                 String message = "🔐 Encrypted Aadhaar:\n" + encrypted +
                         "\n\n📄 PID XML:\n" + pidXml;
-                showXmlDialog("PID XML", message);
-//                PidDataModel pidDataModel = new PidDataModel(pidXml,encrypted);
-//
-//                sendPidDataToBackend(pidDataModel);
+//                showXmlDialog("PID XML", message);
+
+
+                sendPidDataToBackend(encrypted,pidXml);
             } else {
                 Toast.makeText(requireContext(), "No PID data received", Toast.LENGTH_SHORT).show();
             }
@@ -776,6 +867,9 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
 
 
     private void initData() {
+        app_form_check.setChecked(false);
+        app_btn_updateform.setEnabled(false);
+
         titleList.add(0, "--Select title--");
         titleList.add(1, "Smt.");
         titleList.add(2, "Kum.");
@@ -1495,7 +1589,13 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
                     app_qualificationspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            QualificationModel qualificationModel = qualificationModelList.get(position);
+
+                            if (position == 0) {
+                                selectedQualCode = "";
+                                selectedQualDesc = "";
+                                return;
+                            }
+                            QualificationModel qualificationModel = qualificationModelList.get(position-1);
                             selectedQualCode = qualificationModel.getLk_shortCode();
                             selectedQualDesc = qualificationModel.getLk_desc();
                         }
@@ -1762,7 +1862,7 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
         if (data == null) return;
         System.out.println("data_applicant "+new Gson().toJson(data));
         aadhaarNumber = data.getAadharNo();
-        Toast.makeText(getContext(), "aadhaarNumber "+aadhaarNumber, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getContext(), "aadhaarNumber "+aadhaarNumber, Toast.LENGTH_LONG).show();
 
         app_adharcardno.setText(data.getAadharNo());
         app_pannumber.setText(data.getPANNo());
@@ -1770,7 +1870,7 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
         app_dob.setText(data.getDateofBirth().equals("null")?"": TrustMethods.convertUnixDateToDate(data.getDateofBirth()));
         app_age.setText(String.valueOf(data.getAge()));
         app_communication_address.setText(data.getComnAddress());
-        app_district.setText(data.getComnDistrict());
+        app_district.setText(data.getDistrictName());
         app_taluka_block_name.setText(data.getComnTaluka());
         app_pin_number.setText(data.getComnPin());
         app_unitaddress.setText(data.getUnitAddress());
