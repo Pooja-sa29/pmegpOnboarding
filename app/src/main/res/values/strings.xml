@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PmegpCustomerOnboardingApp</string>
-    <string name="txt_new_unit">Applicant for new Unit                   </string>
-    <string name="txt_reg_applicant_login">Registered Applicant Login</string>
+    <string name="txt_new_unit">Application for New Unit                   </string>
+    <string name="txt_reg_applicant_login">Registered Applicant login(2nd Loan)</string>
     <string name="txt_ex_applicant_login">Application for Existing Units(2nd Loan)</string>
     <string name="txt_ex_reg_applicant_login">Register Applicant Login</string>
 

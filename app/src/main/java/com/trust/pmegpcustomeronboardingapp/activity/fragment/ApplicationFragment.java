@@ -376,9 +376,15 @@ public class ApplicationFragment extends BaseFormFragment {
     }
 
     private void SaveApplicationForm(ApplicantInfoModel applicant) {
+        progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Please wait,...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         apiService.updateApplicantData(applicant).enqueue(new Callback<ApplicantUpdateResult>() {
             @Override
             public void onResponse(Call<ApplicantUpdateResult> call, Response<ApplicantUpdateResult> response) {
+                progressDialog.dismiss();
+
                 if (response.isSuccessful() && response.body() != null) {
                     ApplicantUpdateResult status = response.body();
 
@@ -399,6 +405,8 @@ public class ApplicationFragment extends BaseFormFragment {
 
             @Override
             public void onFailure(Call<ApplicantUpdateResult> call, Throwable t) {
+                progressDialog.dismiss();
+
                 Toast.makeText(getContext(), "Error1: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -1403,7 +1411,7 @@ private void fetchDistrictListforIA(String selectedStateCode, String preSelected
 
                     SharedPreferences prefs = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("ApplName", data.getApplName());
+                    editor.putString("ApplName", data.getApplName()!= null ? data.getApplName() : "");
                     editor.apply();
 
                     Log.d("API_RESPONSE", new Gson().toJson(data));

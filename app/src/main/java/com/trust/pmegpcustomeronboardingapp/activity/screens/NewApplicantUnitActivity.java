@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -226,7 +227,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 //        unitlocationspinner.setClickable(false);
 
 
-        cv_basicInfo.setVisibility(View.GONE);
+        cv_basicInfo.setVisibility(View.VISIBLE);
         cv_correspondenceadd.setVisibility(View.GONE);
         cv_ImplementingAgency.setVisibility(View.GONE);
         cv_unitAddress.setVisibility(View.GONE);
@@ -275,7 +276,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             if (!Validator.isSpinnerSelected(spinnerVillage, "Select village")) return;
             if (!Validator.isEmpty(lgd_code, "Enter lgd code",scrollView)) return;
             if (!Validator.isNumber(pin_code, "Enter valid Pin code",scrollView)) return;
-            if (!Validator.isNumber(unit_loc, "Enter valid unit location",scrollView)) return;
+            if (!Validator.isEmpty(unit_loc, "Enter valid unit location",scrollView)) return;
 
             if (!Validator.isSpinnerSelected(unit_type_spinner, "Select Unit Type")) return;
 
@@ -588,7 +589,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
         closeAllCards();
 
-
+        toggleSection(cv_basicInfo, txt_basic_info);
         txt_basic_info.setOnClickListener(v -> toggleSection(cv_basicInfo, txt_basic_info));
         txt_communication_address.setOnClickListener(v -> toggleSection(cv_correspondenceadd, txt_communication_address));
         txt_imp_agency.setOnClickListener(v -> toggleSection(cv_ImplementingAgency, txt_imp_agency));
@@ -728,12 +729,13 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_otp, null);
         builder.setView(dialogView);
 
+        CheckBox checkBox = dialogView.findViewById(R.id.consent_checkbox);
         TextView consentText = dialogView.findViewById(R.id.tvConsent);
         EditText etOtp = dialogView.findViewById(R.id.etOtp);
         Button btnSubmit = dialogView.findViewById(R.id.btnSubmit);
         Button btnCancle = dialogView.findViewById(R.id.btnCancle);
-
-        consentText.setText("UIDAI OTP Consent\n\n" +
+        btnSubmit.setEnabled(false);
+        consentText.setText(
                 "I hereby give my consent to use Aadhaar OTP authentication for eKYC to apply for the PMEGP loan. " +
                 "I understand that by performing this authentication, the basic demographic details such as my name, " +
                 "date of birth, gender, and address as registered with UIDAI may be shared by UIDAI.\n\n" +
@@ -741,6 +743,13 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+        System.out.println("checkBox.isChecked() "+checkBox.isChecked());
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                btnSubmit.setEnabled(isChecked);
+            }
+        });
 
         btnSubmit.setOnClickListener(v -> {
             String otp = etOtp.getText().toString().trim();
@@ -928,6 +937,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         titleList.add(1, "Smt.");
         titleList.add(2, "Kum.");
         titleList.add(3, "Ms.");
+        titleList.add(4, "Mr.");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this,
                 R.layout.spinner_selected_item, titleList);
@@ -1078,8 +1088,9 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<VillageDetailModel> villageList = response.body();
 
-
                     List<String> villageNames = new ArrayList<>();
+                    villageNames.add(0, "--Select Village--");
+
                     for (VillageDetailModel village : villageList) {
                         villageNames.add(village.getVillageName());
                     }

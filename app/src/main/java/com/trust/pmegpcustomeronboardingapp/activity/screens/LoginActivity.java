@@ -1,5 +1,6 @@
 package com.trust.pmegpcustomeronboardingapp.activity.screens;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     String currentCaptcha;
     String captcha_code;
     ApiServices apiService;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +104,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginAuthentication(String user_Id, String password_code) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait, Logging in...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         try {
             JSONObject loginJson = new JSONObject();
             loginJson.put("UserID", user_Id.trim());
@@ -120,6 +126,8 @@ public class LoginActivity extends AppCompatActivity {
             apiService.loginAuthentication(requestBody).enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    progressDialog.dismiss();
+
                     if (response.isSuccessful() && response.body() != null) {
                         LoginResponse result = response.body();
 
@@ -156,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });

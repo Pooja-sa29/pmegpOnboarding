@@ -25,10 +25,14 @@ android {
             isDebuggable = true
             isMinifyEnabled = false
             isShrinkResources = false
+            buildConfigField ("String", "RD_ENV", "\"PP\"")
+            buildConfigField ("String", "RD_PACKAGE", "\"in.gov.uidai.facerd.nonprod\"")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         release {
             isMinifyEnabled = false
+            buildConfigField ("String", "RD_ENV", "\"P\"")
+            buildConfigField ("String", "RD_PACKAGE", "\"in.gov.uidai.facerd\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

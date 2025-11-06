@@ -102,6 +102,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.XmlApiClient
 import com.trust.pmegpcustomeronboardingapp.activity.screens.DashboardScreenActivity;
 import com.trust.pmegpcustomeronboardingapp.activity.screens.NewApplicantUnitActivity;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
+import com.trust.pmegpcustomeronboardingapp.activity.utils.AadhaarErrorUtil;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.CryptoEncryption;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.TrustMethods;
@@ -183,14 +184,14 @@ public class FinalSubmissionFragment extends Fragment {
     private static final String FACE_RD_PACKAGE = "in.gov.uidai.facerd.nonprod";
     String status;
     Boolean IsFinalAuthDone = false;
-
+    private ProgressDialog globalDialog;
     String selectedDistrictName, selectedPincode, selectedVillageName, subdistrictName, selectedNodalCode, agencyName, selectedAgencyCode, selectedAgency_Code, selectedBankName2, alt_selectedCityName, selectedBankName1, selectedCityName, selectedQualDesc, selectedQualCode, selectedSocialCatCode, selectedSpecialCatCode, selectedunittype, selectedStateCode, state_shortCode, state_code, selectedStateCodeIa, statename, state_zonal_code, selectedDistrictCode, districtCode, district_name;
     int selectedagencyoffId, agentId, stateId, districtId, activityUnitType, selectedBankListID, alt_selectedBankListID, selectedBankId2;
     String aadhaarNumber;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        AadhaarErrorUtil.loadErrors(requireContext());
     }
 
 //    private void sendPidDataToServer(String pidData) {
@@ -582,6 +583,7 @@ public class FinalSubmissionFragment extends Fragment {
 //        showXmlDialog("PID XML", pidOptions);
         Log.i("11","pid" +pidOptions.toString());
         Intent intent = new Intent("in.gov.uidai.rdservice.face.CAPTURE");
+        intent.setPackage(BuildConfig.RD_PACKAGE);
         intent.putExtra("request", pidOptions);
 
         try {
@@ -614,9 +616,9 @@ public class FinalSubmissionFragment extends Fragment {
 
     private void openPlayStoreForFaceRD() {
         try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + FACE_RD_PACKAGE)));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.RD_PACKAGE)));
         } catch (android.content.ActivityNotFoundException e) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + FACE_RD_PACKAGE)));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.RD_PACKAGE)));
         }
     }
 
@@ -624,7 +626,8 @@ public class FinalSubmissionFragment extends Fragment {
 
     private String buildPidOptionsXml() {
         String txnId = UUID.randomUUID().toString().replace("-", "");
-        return "<PidOptions ver=\"1.0\" env=\"PP\">" +
+        String env = BuildConfig.RD_ENV;
+        return "<PidOptions ver=\"1.0\" env=\"" + env + "\">" +
                 "<Opts fCount=\"0\" fType=\"0\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\"/>" +
                 "<CustOpts>" +
                 "<Param name=\"txnId\" value=\"" + txnId + "\"/>" +
@@ -647,16 +650,14 @@ public class FinalSubmissionFragment extends Fragment {
             Toast.makeText(requireContext(), "PID Data is empty!", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        showLoading("Please wait… validating face...");
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/xml"),
                 pidDataModel
         );
-        // Get API service for XML endpoint
         Retrofit apiClient = XmlApiClient.getClient();
         ApiServices apiService = apiClient.create(ApiServices.class);
 
-        // Call API
         apiService.validateFaceRecognition(adharEncNumber, body)
                 .enqueue(new Callback<FaceDetectionResult>() {
                     @Override
@@ -668,21 +669,26 @@ public class FinalSubmissionFragment extends Fragment {
                         if (response.isSuccessful() && response.body() != null) {
                             FaceDetectionResult data = response.body();
                             Log.i("PID API", "ret=" + data.ret + ", code=" + data.code);
-
-
+                            String ret = data.ret;
+                            String code = data.code;
                             if ("y".equalsIgnoreCase(data.ret)) {
-                                // Make your submit button visible
+
                                 Toast.makeText(requireContext(), "Face Auth Successful", Toast.LENGTH_SHORT).show();
                                 status = "1";
                                 IsFinalAuthDone = true;
                                 FaceAuthRequest faceAuthRequest = new FaceAuthRequest(Integer.valueOf(AppConstant.getApplId()),status,IsFinalAuthDone);
                                 UpdateFaceDetectionStatusToBackend(faceAuthRequest);
                             }else{
-                                Toast.makeText(requireContext(), "Please Try Again...", Toast.LENGTH_SHORT).show();
+                                String errorMessage = AadhaarErrorUtil.getDescription(code);
 
+                                Toast.makeText(requireContext(),
+                                        "Authentication Failed: " + errorMessage,
+                                        Toast.LENGTH_LONG).show();
+                                hideLoading();
                             }
                         } else {
                             Toast.makeText(requireContext(), "PID API Response error: " + response.code(), Toast.LENGTH_LONG).show();
+                            hideLoading();
                             try {
                                 Log.e("PID API", "Error body: " + response.errorBody().string());
                             } catch (Exception e) { e.printStackTrace(); }
@@ -696,6 +702,7 @@ public class FinalSubmissionFragment extends Fragment {
                         }
 
                         Toast.makeText(requireContext(), "PID API Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        hideLoading();
                         t.printStackTrace();
                     }
                 });
@@ -706,19 +713,31 @@ public class FinalSubmissionFragment extends Fragment {
         progressDialog.setMessage("Please wait, Loading DPR Data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
+        showLoading("Updating final authentication status...");
+
         apiService.updateStatusForFinalSubmission(faceAuthRequest).enqueue(new Callback<FaceRdFinalResponse>() {
                     @Override
                     public void onResponse(Call<FaceRdFinalResponse> call, retrofit2.Response<FaceRdFinalResponse> response) {
                         progressDialog.dismiss();
+                        hideLoading();
                         if (response.isSuccessful() && response.body() != null) {
                             FaceRdFinalResponse data = response.body();
-                            Toast.makeText(requireContext(), ""+data.getMessage(), Toast.LENGTH_SHORT).show();
 
                             if (data.isSuccess()) {
                                 app_form_check.setChecked(true);
-                                if(app_form_check.isChecked()){
-                                    app_btn_updateform.setEnabled(true);
-                                }
+                                app_form_check.setEnabled(false);
+
+                                app_btn_updateform.setEnabled(true);
+                                Toast.makeText(requireContext(), ""+data.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                    app_btn_updateform.setEnabled(false);
+                                }, 2000);
+                            }else{
+                                app_form_check.setChecked(true);
+                                app_btn_updateform.setEnabled(true);
+                                Toast.makeText(requireContext(), ""+data.getMessage(), Toast.LENGTH_SHORT).show();
+
                             }
                         } else {
                             Toast.makeText(requireContext(), "API Response Error: " + response.code(), Toast.LENGTH_LONG).show();
@@ -729,12 +748,29 @@ public class FinalSubmissionFragment extends Fragment {
                     public void onFailure(Call<FaceRdFinalResponse> call, Throwable t) {
                         progressDialog.dismiss();
                         Toast.makeText(requireContext(), "API Call Failed: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        hideLoading();
                         t.printStackTrace();
                     }
                 });
     }
 
 
+
+
+    private void showLoading(String message) {
+        if (globalDialog == null) {
+            globalDialog = new ProgressDialog(requireContext());
+            globalDialog.setCancelable(false);
+        }
+        globalDialog.setMessage(message);
+        globalDialog.show();
+    }
+
+    private void hideLoading() {
+        if (globalDialog != null && globalDialog.isShowing()) {
+            globalDialog.dismiss();
+        }
+    }
 
     @Override
 public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -758,8 +794,8 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
             if (pidJson != null && !pidJson.isEmpty()) {
                 String pidXml = convertJsonToXml(pidJson); // Convert JSON → XML
                 logLongString("PID_XML", pidXml);
-                String message = "🔐 Encrypted Aadhaar:\n" + encrypted +
-                        "\n\n📄 PID XML:\n" + pidXml;
+//                String message = "🔐 Encrypted Aadhaar:\n" + encrypted +
+                 //       "\n\n📄 PID XML:\n" + pidXml;
 //                showXmlDialog("PID XML", message);
 
 
@@ -867,7 +903,6 @@ public void onActivityResult(int requestCode, int resultCode, @Nullable Intent d
 
 
     private void initData() {
-        app_form_check.setChecked(false);
         app_btn_updateform.setEnabled(false);
 
         titleList.add(0, "--Select title--");

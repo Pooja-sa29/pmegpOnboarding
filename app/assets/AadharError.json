@@ -1,0 +1,589 @@
+{
+  "errors": [
+    {
+      "code": "K-100",
+      "description": "Resident authentication failed"
+    },
+    {
+      "code": "K-200",
+      "description": "Resident data currently not available"
+    },
+    {
+      "code": "K-540",
+      "description": "Invalid KYC XML"
+    },
+    {
+      "code": "K-541",
+      "description": "Invalid e-KYC API version"
+    },
+    {
+      "code": "K-542",
+      "description": " Invalid resident consent (�rc� attribute in �Kyc� element)"
+    },
+    {
+      "code": "K-544",
+      "description": "Invalid resident auth type (�ra� attribute in �Kyc� element does not match what is in PID block)"
+    },
+    {
+      "code": "K-545",
+      "description": "Resident has opted-out of this service. This feature is not implemented currently"
+    },
+    {
+      "code": "K-546",
+      "description": "Invalid value for �pfr� attribute "
+    },
+    {
+      "code": "K-547",
+      "description": "Invalid value for �wadh� attribute within PID block"
+    },
+    {
+      "code": "K-100",
+      "description": "Resident authentication failed"
+    },
+    {
+      "code": "K-550",
+      "description": "Invalid Uses Attribute"
+    },
+    {
+      "code": "K-551",
+      "description": "Invalid Txn namespace"
+    },
+    {
+      "code": "K-552",
+      "description": "Invalid License key"
+    },
+    {
+      "code": "K-569",
+      "description": "Digital signature verification failed for e-KYC XML"
+    },
+    {
+      "code": "K-570",
+      "description": "Invalid key info in digital signature for e-KYC XML (it is either expired, or does not belong to the AUA or is not created by a well-known Certification Authority)"
+    },
+    {
+      "code": "K-600",
+      "description": "AUA is invalid or not an authorized KUA"
+    },
+    {
+      "code": "K-601",
+      "description": "ASA is invalid or not an authorized ASA"
+    },
+    {
+      "code": "K-602",
+      "description": "KUA encryption key not available"
+    },
+    {
+      "code": "K-603",
+      "description": "ASA encryption key not available"
+    },
+    {
+      "code": "K-604",
+      "description": "ASA Signature not allowed"
+    },
+    {
+      "code": "K-605",
+      "description": "Neither KUA key nor ASA encryption key are available"
+    },
+    {
+      "code": "K-6955",
+      "description": "Technical Failure"
+    },
+    {
+      "code": "K-999",
+      "description": "Unknown error"
+    }
+
+
+
+    ,
+    {
+      "code": "100",
+      "description": "Pi (basic) attributes of demographic data did not match."
+    },
+    {
+      "code": "200",
+      "description": "Pa (address) attributes of demographic data did not match."
+    },
+    {
+      "code": "300",
+      "description": "Biometric data did not match."
+    },
+    {
+      "code": "310",
+      "description": "Duplicate fingers used."
+    },
+    {
+      "code": "311",
+      "description": "Duplicate Irises used."
+    },
+    {
+      "code": "312",
+      "description": "FMR and FIR cannot be used in same transaction."
+    },
+    {
+      "code": "313",
+      "description": "Single FIR record contains more than one finger."
+    },
+    {
+      "code": "314",
+      "description": "Total number of FMR/FIR should not exceed 10."
+    },
+    {
+      "code": "315",
+      "description": "Number of IIR should not exceed 2."
+    },
+    {
+      "code": "316",
+      "description": "Number of FID should not exceed 1."
+    },
+    {
+      "code": "317",
+      "description": "Number of biometric modalities (Face/Finger/IRIS) should not exceed 2."
+    },
+    {
+      "code": "318",
+      "description": "BFD transaction should not contain other modalities in input."
+    },
+    {
+      "code": "330",
+      "description": "Biometrics locked by Aadhaar number holder."
+    },
+    {
+      "code": "331",
+      "description": "Aadhaar locked by Aadhaar number holder. This mean that all permanent forms of identifiers are locked for any kind of authentication. Resident can still use VID."
+    },
+    {
+      "code": "332",
+      "description": "Aadhaar number usage is blocked by Aadhaar number holder."
+    },
+    {
+      "code": "333",
+      "description": "Mismatch in �posh� attributes mentioned for FMR and FIR. Value of �posh� if mentioned other than �default� (when both FMR and FIR is used) should have the same finger position for FMR as that of corresponding FIR.Version 2.5 (Revision 1) Aadhaar Authentication API � UIDAI, 2022 http://uidai.gov.in/ Page 26 of 34"
+    },
+    {
+      "code": "334",
+      "description": "Mismatch in count of FMR and FIR. ie Number of FMRs and FIRs should be same inside PID."
+    },
+    {
+      "code": "400",
+      "description": "Invalid OTP value."
+    },
+    {
+      "code": "402",
+      "description": "�txn� value did not match with �txn� value of Request OTP API."
+    },
+    {
+      "code": "403",
+      "description": "Maximum number of attempts for OTP match is exceeded or OTP is not generated. Please generate a fresh OTP and try to authenticate again."
+    },
+    {
+      "code": "430",
+      "description": "TOTP usage is not allowed for this aadhaar holder. Please install m-aadhaar and generate TOTP."
+    },
+    {
+      "code": "500",
+      "description": "Invalid encryption of session key."
+    },
+    {
+      "code": "501",
+      "description": "Invalid certificate identifier in �ci� attribute of �Skey�."
+    },
+    {
+      "code": "502",
+      "description": "Invalid encryption of PID."
+    },
+    {
+      "code": "503",
+      "description": "Invalid encryption of Hmac."
+    },
+    {
+      "code": "504",
+      "description": "Session key re-initiation required due to expiry or key out of sync."
+    },
+    {
+      "code": "505",
+      "description": "Synchronized Key usage not allowed for the AUA."
+    },
+    {
+      "code": "510",
+      "description": "Invalid Auth XML format."
+    },
+    {
+      "code": "511",
+      "description": "Invalid PID XML format."
+    },
+    {
+      "code": "512",
+      "description": "Invalid consent value in �rc� attribute of �Auth�."
+    },
+    {
+      "code": "513",
+      "description": "Invalid Protobuf Format"
+    },
+    {
+      "code": "514",
+      "description": "Invalid UID token in input."
+    },
+    {
+      "code": "515",
+      "description": "Invalid VID Number in input."
+    },
+    {
+      "code": "516",
+      "description": "Invalid/Non Decryptable ANCS Token in input. Use correct ANCS token in request."
+    },
+    {
+      "code": "517",
+      "description": "Expired VID is used in input."
+    },
+    {
+      "code": "518",
+      "description": "ANCS Token in input is already used or expired."
+    },
+    {
+      "code": "519",
+      "description": "Inappropriate ANCS token used. This means that the ANCS token used is not associated with the AUA or with the transaction ID."
+    },
+    {
+      "code": "520",
+      "description": "Invalid �tid� value."
+    },
+    {
+      "code": "521",
+      "description": "Invalid �dc� code under Device tag."
+    },
+    {
+      "code": "524",
+      "description": "Invalid �mi� code under Device tag."
+    },
+    {
+      "code": "527",
+      "description": "Invalid �mc� code under Device tag."
+    },
+    {
+      "code": "528",
+      "description": "Device key rotation related issue."
+    },
+    {
+      "code": "530",
+      "description": "Invalid authenticator code."
+    },
+    {
+      "code": "531",
+      "description": "Invalid Sub-AUA."
+    },
+    {
+      "code": "532",
+      "description": "VID is not yet generated. To use specific services like UID lock which require VID to be pre generated, please generate a VID before using service. "
+    },
+    {
+      "code": "540",
+      "description": "Invalid Auth XML version."
+    },
+    {
+      "code": "541",
+      "description": "Invalid PID XML version."
+    },
+    {
+      "code": "542",
+      "description": "AUA not authorized for ASA. This error will be returned if AUA and ASA do not have linking in the portal."
+    },
+    {
+      "code": "543",
+      "description": "Sub-AUA not associated with �AUA�. ie The code specified in �sa� attribute is not added as �Sub-AUA� in portal or is not associated with an AUA."
+    },
+    {
+      "code": "550",
+      "description": "Invalid �Uses� element attributes."
+    },
+    {
+      "code": "552� �Invalid �wadh� element."
+    },
+    {
+      "code": "553",
+      "description": "RD service used is not allowed for the AUA."
+    },
+    {
+      "code": "554� �Public devices are not allowed to be used."
+    },
+    {
+      "code": "555",
+      "description": "rdsId is invalid and not part of certification registry.Version 2.5 (Revision 1) Aadhaar Authentication API � UIDAI, 2022 http://uidai.gov.in/ Page 27 of 34"
+    },
+    {
+      "code": "556",
+      "description": "rdsVer is invalid and not part of certification registry."
+    },
+    {
+      "code": "557",
+      "description": "dpId is invalid and not part of certification registry."
+    },
+    {
+      "code": "558",
+      "description": "Invalid dih"
+    },
+    {
+      "code": "559",
+      "description": "Device Certificate has expired "
+    },
+    {
+      "code": "560",
+      "description": "DP Master Certificate has expired "
+    },
+    {
+      "code": "561",
+      "description": "Request expired (�Pid->ts� value is older than N hours where N is a configured threshold in authentication server)."
+    },
+    {
+      "code": "562",
+      "description": "Timestamp value is future time (value specified �Pid->ts� is ahead of authentication server time beyond acceptable threshold)."
+    },
+    {
+      "code": "563",
+      "description": "Duplicate request (this error occurs when exactly same authentication request was re-sent by AUA)."
+    },
+    {
+      "code": "564",
+      "description": "HMAC Validation failed."
+    },
+    {
+      "code": "565",
+      "description": "AUA license has expired."
+    },
+    {
+      "code": "566",
+      "description": "Invalid non-decryptable license key."
+    },
+    {
+      "code": "567",
+      "description": "Invalid input (this error occurs when unsupported characters were found in Indian language values, �lname� or �lav�)."
+    },
+    {
+      "code": "568",
+      "description": "Unsupported Language."
+    },
+    {
+      "code": "569",
+      "description": "Digital signature verification failed (means that authentication request XML was modified after it was signed)."
+    },
+    {
+      "code": "570",
+      "description": "Invalid key info in digital signature (this means that certificate used for signing the authentication request is not valid � it is either expired, or does not belong to the AUA or is not created by a well-known Certification Authority)."
+    },
+    {
+      "code": "571",
+      "description": "PIN requires reset."
+    },
+    {
+      "code": "572",
+      "description": "Invalid biometric position."
+    },
+    {
+      "code": "573",
+      "description": "Pi usage not allowed as per license."
+    },
+    {
+      "code": "574",
+      "description": "Pa usage not allowed as per license."
+    },
+    {
+      "code": "575",
+      "description": "Pfa usage not allowed as per license."
+    },
+    {
+      "code": "576� - FMR usage not allowed as per license."
+    },
+    {
+      "code": "577",
+      "description": "FIR usage not allowed as per license."
+    },
+    {
+      "code": "578",
+      "description": "IIR usage not allowed as per license."
+    },
+    {
+      "code": "579",
+      "description": "OTP usage not allowed as per license."
+    },
+    {
+      "code": "580",
+      "description": "PIN usage not allowed as per license."
+    },
+    {
+      "code": "581",
+      "description": "Fuzzy matching usage not allowed as per license."
+    },
+    {
+      "code": "582",
+      "description": "Local language usage not allowed as per license."
+    },
+    {
+      "code": "586",
+      "description": "FID usage not allowed as per license. "
+    },
+    {
+      "code": "587",
+      "description": "Name space not allowed."
+    },
+    {
+      "code": "588",
+      "description": "Registered device not allowed as per license."
+    },
+    {
+      "code": "590",
+      "description": "Public device not allowed as per license."
+    },
+    {
+      "code": "591",
+      "description": "BFD usage is not allowed as per license."
+    },
+    {
+      "code": "592",
+      "description": "Device blocked for more than allowed error percentage."
+    },
+    {
+      "code": "593",
+      "description": "Device blocked for more than allowed velocity."
+    },
+    {
+      "code": "710",
+      "description": "Missing �Pi� data as specified in �Uses�."
+    },
+    {
+      "code": "720",
+      "description": "Missing �Pa� data as specified in �Uses�."
+    },
+    {
+      "code": "721",
+      "description": "Missing �Pfa� data as specified in �Uses�."
+    },
+    {
+      "code": "730",
+      "description": "Missing PIN data as specified in �Uses�."
+    },
+    {
+      "code": "740",
+      "description": "Missing OTP data as specified in �Uses�."
+    },
+    {
+      "code": "800",
+      "description": "Invalid biometric data."
+    },
+    {
+      "code": "810",
+      "description": "Missing biometric data as specified in �Uses�.Version 2.5 (Revision 1) Aadhaar Authentication API � UIDAI, 2022 http://uidai.gov.in/ Page 28 of 34"
+    },
+    {
+      "code": "811",
+      "description": "Missing biometric data in CIDR for the given Aadhaar Number/Virtual ID."
+    },
+    {
+      "code": "812",
+      "description": "Aadhaar number holder has not done �Best Finger Detection�. Application should initiate BFD to help Aadhaar number holder identify their best fingers."
+    },
+    {
+      "code": "820",
+      "description": "Missing or empty value for �bt� attribute in �Uses� element."
+    },
+    {
+      "code": "821",
+      "description": "Invalid value in the �bt� attribute of �Uses� element."
+    },
+    {
+      "code": "822",
+      "description": "Invalid value in the �bs� attribute of �Bio� element within �Pid�."
+    },
+    {
+      "code": "901",
+      "description": "No authentication data found in the request (this corresponds to a scenario wherein none of the auth data � Demo, Pv, or Bios � is present)."
+    },
+    {
+      "code": "902",
+      "description": "Invalid �dob� value in the �Pi� element (this corresponds to a scenarios wherein �dob� attribute is not of the format �YYYY� or �YYYYMM-DD�, or the age is not in valid range)."
+    },
+    {
+      "code": "910",
+      "description": "Invalid �mv� value in the �Pi� element."
+    },
+    {
+      "code": "911",
+      "description": "Invalid �mv� value in the �Pfa� element."
+    },
+    {
+      "code": "912",
+      "description": "Invalid �ms� value."
+    },
+    {
+      "code": "913",
+      "description": "Both �Pa� and �Pfa� are present in the authentication request (Pa and Pfa are mutually exclusive)."
+    },
+    {
+      "code": "914",
+      "description": "Face alone is of allowed as biometric modality. You should send face along with another biometric modality like Finger or IRIS or OTP."
+    },
+    {
+      "code": "915",
+      "description": "Face auth is not allowed for this age of resident."
+    },
+    {
+      "code": "916",
+      "description": "Invalid face Image format in input."
+    },
+    {
+      "code": "917",
+      "description": "Invalid face capture type."
+    },
+    {
+      "code": "930 to 939",
+      "description": "Technical error that are internal to authentication server."
+    },
+    {
+      "code": "940",
+      "description": "Unauthorized ASA channel."
+    },
+    {
+      "code": "941",
+      "description": "Unspecified ASA channel."
+    },
+    {
+      "code": "950",
+      "description": "OTP store related technical error."
+    },
+    {
+      "code": "951",
+      "description": "Biometric lock related technical error."
+    },
+    {
+      "code": "952",
+      "description": "OTP Flooding."
+    },
+    {
+      "code": "953",
+      "description": "Exceeded Maximum OTP generation Limit."
+    },
+    {
+      "code": "980",
+      "description": "Unsupported option."
+    },
+    {
+      "code": "995",
+      "description": "Aadhaar suspended by competent authority."
+    },
+    {
+      "code": "996",
+      "description": "Aadhaar cancelled (Aadhaar is not in authenticable status)."
+    },
+    {
+      "code": "997",
+      "description": "Aadhaar suspended (Aadhaar is not in authenticatable status)."
+    },
+    {
+      "code": "998",
+      "description": "Invalid Aadhaar Number/Virtual ID/ANCS/UID TOKEN."
+    },
+    {
+      "code": "999",
+      "description": "Unknown error."
+    }
+  ]
+}

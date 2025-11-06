@@ -76,15 +76,18 @@ public class IndustryDataDialogFragment extends DialogFragment {
                     IndustryListAdapter adapter = (IndustryListAdapter) recyclerView.getAdapter();
                     List<NICGroupModel> selectedItems = new ArrayList<>();
 
-                    for (NICGroupModel item : adapter.getClassList()) {
-                        if (item.isChecked()) {
-                            selectedItems.add(item);
+                        for (NICGroupModel item : adapter.getClassList()) {
+                            if (item.isChecked()) {
+
+                                selectedItems.add(item);
+                            }
                         }
-                    }
-                    adapter.updateList(selectedItems);
-                    if (listener != null) {
-                        listener.onIndustrySelected(selectedItems);
-                    }
+                        adapter.updateList(selectedItems);
+                        if (listener != null) {
+                            listener.onIndustrySelected(selectedItems);
+                        }
+
+
 
                     dismiss();
                 }
