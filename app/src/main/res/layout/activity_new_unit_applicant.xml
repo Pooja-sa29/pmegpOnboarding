@@ -81,7 +81,7 @@
                                 android:id="@+id/adharcardno"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="textCapCharacters"
+                                android:inputType="number"
                                 android:padding="12dp"
                                 android:textColor="@color/colorFentBlack"
                                 android:textSize="16sp" />
@@ -93,7 +93,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/peacock_green"
-                            android:text="Validate Adhar" />
+                            android:text="Validate Aadhar" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/CustomTextInputLayout"
@@ -440,6 +440,7 @@
                                 android:layout_height="wrap_content"
                                 android:padding="12dp"
                                 android:inputType="number"
+                                android:maxLength="10"
                                 android:textColor="@color/colorFentBlack"
                                 android:textSize="16sp" />
 
@@ -460,6 +461,7 @@
                                 android:layout_height="wrap_content"
                                 android:padding="12dp"
                                 android:inputType="number"
+                                android:maxLength="10"
                                 android:textColor="@color/colorFentBlack"
                                 android:textSize="16sp" />
 
@@ -1116,6 +1118,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <TextView
+                            android:id="@+id/capital_exp_words"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rupees zero only"
@@ -1142,6 +1145,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <TextView
+                            android:id="@+id/workingcapital_words"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rupees zero only"
@@ -1189,6 +1193,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:padding="12dp"
+                                android:inputType="number"
                                 android:textColor="@color/colorFentBlack"
                                 android:textSize="16sp" />
 

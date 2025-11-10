@@ -13,7 +13,7 @@ public class ApplicantInfoModel {
     private String aadharNo;
 
     @SerializedName("ApplTitle")
-    private int applTitle;
+    private String applTitle;
 
     @SerializedName("ApplName")
     private String applName;
@@ -228,11 +228,11 @@ public class ApplicantInfoModel {
         this.aadharNo = aadharNo;
     }
 
-    public int getApplTitle() {
+    public String getApplTitle() {
         return applTitle;
     }
 
-    public void setApplTitle(int applTitle) {
+    public void setApplTitle(String applTitle) {
         this.applTitle = applTitle;
     }
 

@@ -13,16 +13,16 @@
     <string name="txt_finance_bank_primary">Primary Financing Bank</string>
     <string name="txt_alternate_finance_bank">Alternate Financeing Bank</string>
     <string name="txt_other_info">Other Information</string>
-    <string name="txt_note">Note: Credit Guarantee Fund Trust for Micro and Small Enterprises (CGTMSE) fee will be applicable from bank.</string>
+    <string name="txt_note">Note: As per RBI Guidelines, there’s no collateral requirements for loans below 10 lakh.</string>
     <string name="txt_terms_and_condition">1. I, hereby voluntarily and explicitly consent to the sharing of my Aadhaar and PAN details with KVIC and MoMSME. I understand that these details will be used solely for PMEGP Loan Purpose, and I confirm that all information shared is accurate to the best of my knowledge. I acknowledge that I have been informed about the purpose of sharing these details and agree to the same, also I will not shift my Unit till the Physical Verification is completed.
           \n2. I hereby declare that I have not already availed or registered for other Govt. subsidy Schemes, and if found so I will be ready for further legal actions against myself.</string>
 
     //hint text
-    <string name="adhar_card_no">Adhar Card No.*</string>
+    <string name="adhar_card_no">Aadhar Card No.*</string>
     <string name="pan_no">Pan No.*</string>
     <string name="title_txt">Title</string>
     <string name="name_of_applicant">Name of Applicant*</string>
-    <string name="adhar_format">(Name as per Adhar card)</string>
+    <string name="adhar_format">(Name as per Aadhar card)</string>
     <string name="date_of_birth">Date Of Birth*</string>
     <string name="age">Age</string>
     <string name="gender_selection">Select Gender*</string>

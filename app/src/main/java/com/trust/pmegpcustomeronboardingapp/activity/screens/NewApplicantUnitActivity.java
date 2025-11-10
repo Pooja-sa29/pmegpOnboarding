@@ -1,5 +1,6 @@
 package com.trust.pmegpcustomeronboardingapp.activity.screens;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
 import static java.security.AccessController.getContext;
 
 import android.annotation.SuppressLint;
@@ -78,6 +79,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.retrofitClient.ApiClient;
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.Validator;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -122,6 +124,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     List<AgencyRequest> agencyRequestList;
     List<String> titleList = new ArrayList<String>();
     EditText   ifsc_code,alt_ifscbank_code,address,alt_primary_address,districtName,alt_pf_districtEd,branchName,alt_branch_name,email, lgd_code, edp_training_insti, pin_code, unit_loc, adharcardno, nameofapplicant, uid_dob, uid_age, communication_address, district, taluka_block_name, pin_number, mobile_number, alternate_mobile_number, panNumber, unitlocation, unitaddress, unitPin, capital_exp, workingcapital, totalexp, employee_count;
+     TextView capital_exptxt,workingcap_exptxt;
+    String correspondence_pincode;
     CheckBox agency_type_check;
     TextView agency_type, agency_type_district, agency_type_pin, agency_type_state, agency_type_mobile, agency_type_email;
     LinearLayout implementing_type_agency_layout;
@@ -131,6 +135,14 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
     RadioGroup cgtmse_radioGrp, edp_radioGrp, edp_subgrp_radioGrp;
     CheckBox checkbox_availt_note;
     int cgtmseFlag = 0, agentId;
+    private static final String[] tensNames = {
+            "", " Ten", " Twenty", " Thirty", " Forty", " Fifty", " Sixty", " Seventy", " Eighty", " Ninety"
+    };
+
+    private static final String[] numNames = {
+            "", " One", " Two", " Three", " Four", " Five", " Six", " Seven", " Eight", " Nine", " Ten",
+            " Eleven", " Twelve", " Thirteen", " Fourteen", " Fifteen", " Sixteen", " Seventeen", " Eighteen", " Nineteen"
+    };
 
 
     @SuppressLint("MissingInflatedId")
@@ -226,6 +238,17 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 //        unitlocationspinner.setEnabled(false);
 //        unitlocationspinner.setClickable(false);
 
+        branchName = findViewById(R.id.branch_name);
+        alt_branch_name = findViewById(R.id.alt_branch_name);
+        ifsc_code = findViewById(R.id.ifscbank_code);
+        alt_ifscbank_code = findViewById(R.id.alt_ifscbank_code);
+        address = findViewById(R.id.primary_address);
+        alt_primary_address = findViewById(R.id.alt_primary_address);
+        districtName = findViewById(R.id.pf_districtEd);
+        alt_pf_districtEd = findViewById(R.id.alt_pf_districtEd);
+
+        capital_exptxt= findViewById(R.id.capital_exp_words);
+        workingcap_exptxt = findViewById(R.id.workingcapital_words);
 
         cv_basicInfo.setVisibility(View.VISIBLE);
         cv_correspondenceadd.setVisibility(View.GONE);
@@ -252,49 +275,191 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         btn_submitform.setOnClickListener(v -> {
             ApplicantDataModel applicant = new ApplicantDataModel();
 
-            if (!Validator.isEmpty(adharcardno, "Enter Aadhaar number",scrollView)) return;
-            if (!Validator.isEmpty(panNumber, "Enter Pan number",scrollView)) return;
-            if (!Validator.isEmpty(nameofapplicant, "Enter applicant name",scrollView)) return;
-            if (!Validator.isSpinnerSelected(spinner_gender, "Select gender")) return;
-            if (!Validator.isSpinnerSelected(socialCategorySpinner, "Select Category spinner")) return;
-            if (!Validator.isSpinnerSelected(specialCategorySpinner, "Select Special spinner")) return;
-            if (!Validator.isSpinnerSelected(qualificationspinner, "Select Qualification")) return;
+            //basic info validation
 
-            if (!Validator.isEmpty(communication_address, "Enter Address",scrollView)) return;
-            if (!Validator.isSpinnerSelected(state_spinner, "Select State")) return;
-            if (!Validator.isEmpty(district, "Enter District",scrollView)) return;
-            if (!Validator.isEmpty(taluka_block_name, "Enter Taluka/Block",scrollView)) return;
-            if (!Validator.isEmpty(pin_number, "Enter Pin number",scrollView)) return;
-            if (!Validator.isEmpty(mobile_number, "Enter Mobile number",scrollView)) return;
+            if (!Validator.isEmpty(adharcardno, "12 digit Aadhar number of the applicant should be filled in.", scrollView)) {
+                cv_basicInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_basicInfo);
+                return;
+            }
+            if (!Validator.isEmpty(panNumber, "Enter your Pan number", scrollView)) {
+                cv_basicInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_basicInfo);
+                return;
+            }
+            if (!Validator.isEmpty(nameofapplicant, "Enter applicant name", scrollView)) {
+                cv_basicInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_basicInfo);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(spinner_gender, "Select gender")) {
+                cv_basicInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_basicInfo);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(socialCategorySpinner, "Select Social Category")) {
+                cv_basicInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_basicInfo);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(specialCategorySpinner, "Select Special Category")) {
+                cv_basicInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_basicInfo);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(qualificationspinner, "Select Qualification")) {
+                cv_basicInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_basicInfo);
+                return;
+            }
 
-            if (!Validator.isSpinnerSelected(implementing_agency_spinner, "Select agency")) return;
-            if (!Validator.isSpinnerSelected(iastateSpinner, "Select state")) return;
-            if (!Validator.isSpinnerSelected(iaDistrictSpinner, "Select district")) return;
+          // communication info validation
+            if (!Validator.isEmpty(communication_address, "Enter Address", scrollView)) {
+                cv_correspondenceadd.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_correspondenceadd);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(state_spinner, "Select State")) {
+                cv_correspondenceadd.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_correspondenceadd);
+                return;
+            }
+            if (!Validator.isEmpty(district, "Enter District", scrollView)) {
+                cv_correspondenceadd.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_correspondenceadd);
+                return;
+            }
+            if (!Validator.isEmpty(taluka_block_name, "Enter Taluka/Block", scrollView)) {
+                cv_correspondenceadd.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_correspondenceadd);
+                return;
+            }
+            if (!Validator.isEmpty(pin_number, "Enter Pin number", scrollView)) {
+                cv_correspondenceadd.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_correspondenceadd);
+                return;
+            }
+            if (!Validator.isNumber(mobile_number, "Enter 10 digit primary Mobile number", scrollView)) {
+                cv_correspondenceadd.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_correspondenceadd);
+                return;
+            }
+            if (!Validator.isEmail(email, "Enter valid email address", scrollView)) {
+                cv_correspondenceadd.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_correspondenceadd);
+                return;
+            }
 
-            if (!Validator.isSpinnerSelected(unitdistrictnameListspinner, "Select district")) return;
-            if (!Validator.isSpinnerSelected(spinner_subdistrict, "Select sub-district")) return;
-            if (!Validator.isSpinnerSelected(spinnerVillage, "Select village")) return;
-            if (!Validator.isEmpty(lgd_code, "Enter lgd code",scrollView)) return;
-            if (!Validator.isNumber(pin_code, "Enter valid Pin code",scrollView)) return;
-            if (!Validator.isEmpty(unit_loc, "Enter valid unit location",scrollView)) return;
+            //implementing agency validation
+            if (!Validator.isSpinnerSelected(implementing_agency_spinner, "Select agency")) {
+                cv_ImplementingAgency.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_ImplementingAgency);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(iastateSpinner, "Select state")) {
+                cv_ImplementingAgency.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_ImplementingAgency);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(iaDistrictSpinner, "Select district")) {
+                cv_ImplementingAgency.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_ImplementingAgency);
+                return;
+            }
 
-            if (!Validator.isSpinnerSelected(unit_type_spinner, "Select Unit Type")) return;
+            // unit field validation
+            if (!Validator.isSpinnerSelected(unitdistrictnameListspinner, "Select district")) {
+                cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_unitAddress);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(spinner_subdistrict, "Select sub-district")) {
+                cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_unitAddress);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(spinnerVillage, "Select village")) {
+                cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_unitAddress);
+                return;
+            }
+            if (!Validator.isEmpty(lgd_code, "Enter lgd code", scrollView)) {
+                cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_unitAddress);
+                return;
+            }
+            if (!Validator.isEmpty(pin_code, "Enter valid Pin code", scrollView)) {
+                cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_unitAddress);
+                return;
+            }
+            if (!Validator.isEmpty(unit_loc, "Enter valid unit location", scrollView)) {
+                cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_unitAddress);
+                return;
+            }
+            if (!Validator.isEmpty(unitaddress, "Enter the official unit address", scrollView)) {
+                cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_unitAddress);
+                return;
+            }
 
-            if (!Validator.isNumber(capital_exp, "Enter Capital Expenditure",scrollView)) return;
-            if (!Validator.isNumber(workingcapital, "Enter Working Capital",scrollView)) return;
-            if (!Validator.isNumber(employee_count, "Enter Employment count",scrollView)) return;
+            //priject info validation
+            if (!Validator.isSpinnerSelected(unit_type_spinner, "Select Unit Type")) {
+                cv_projectInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_projectInfo);
+                return;
+            }
+            if (!Validator.isNumber(capital_exp, "Enter Capital Expenditure", scrollView)) {
+                cv_projectInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_projectInfo);
+                return;
+            }
+            if (!Validator.isNumber(workingcapital, "Enter Working Capital", scrollView)) {
+                cv_projectInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_projectInfo);
+                return;
+            }
+            if (!Validator.isNumber(employee_count, "Enter Employment count", scrollView)) {
+                cv_projectInfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_projectInfo);
+                return;
+            }
 
-            if (!Validator.isSpinnerSelected(bankNameSpinner, "Select Bank")) return;
-            if (!Validator.isEmpty(ifsc_code, "Enter ifsc code",scrollView)) return;
-            if (!Validator.isEmpty(branchName, "Enter branch name",scrollView)) return;
-            if (!Validator.isEmpty(address, "Enter address",scrollView)) return;
-            if (!Validator.isEmpty(districtName, "Enter address",scrollView)) return;
+           // primary bank validation
+            if (!Validator.isSpinnerSelected(bankNameSpinner, "Select Bank")) {
+                cv_primaryfbanking.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_primaryfbanking);
+                return;
+            }
+
+            if (!Validator.isEmpty(ifsc_code, "Enter ifsc code", scrollView)) {
+                cv_primaryfbanking.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_primaryfbanking);
+                return;
+            }
+            if (!Validator.isEmpty(branchName, "Enter branch name", scrollView)) {
+                cv_primaryfbanking.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_primaryfbanking);
+                return;
+            }
+            if (!Validator.isEmpty(address, "Enter address", scrollView)) {
+                cv_primaryfbanking.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_primaryfbanking);
+                return;
+            }
+            if (!Validator.isEmpty(districtName, "Enter address", scrollView)) {
+                cv_primaryfbanking.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, cv_primaryfbanking);
+                return;
+            }
+
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
 
             applicant.setAadharNo(adharcardno.getText().toString().trim());
             System.out.println("adharno" + adharcardno.getText().toString().trim());
-            applicant.setApplTitle(0);
+            applicant.setApplTitle("0");
             applicant.setApplName(nameofapplicant.getText().toString().trim());
             System.out.println("name" +nameofapplicant.getText().toString().trim());
             applicant.setAgencyID(agentId);
@@ -355,9 +520,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
             applicant.setComnDistrict(selectedDistrictName);
             System.out.println("selectedDistrictName" + selectedDistrictName);
-
-            applicant.setComnPin(pin_number.getText().toString());
-            System.out.println("pin_number" + pin_number.getText().toString());
+            applicant.setComnPin(correspondence_pincode);
+            System.out.println("pin_number" +correspondence_pincode);
 
             applicant.setMobileNo1(mobile_number.getText().toString());
             System.out.println("mobile_number" + mobile_number.getText().toString());
@@ -601,7 +765,9 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
         initData();
     }
-
+    private void scrollToView(ScrollView scrollView, View targetView) {
+        scrollView.post(() -> scrollView.smoothScrollTo(0, targetView.getTop()));
+    }
     public int calculateAge(String dobString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         LocalDate dob = LocalDate.parse(dobString, formatter);
@@ -654,6 +820,9 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
         double total_exp = capVal + workingVal;
         totalexp.setText(String.valueOf(total_exp));
+
+        capital_exptxt.setText(convert((long) capVal));
+        workingcap_exptxt.setText(convert((long) workingVal));
     }
 
     private double parseDoubleSafe(String s) {
@@ -802,15 +971,23 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
                         district.setText(status.getData().getDist());
                         taluka_block_name.setText(status.getData().getSubdist());
-                        pin_code.setText(status.getData().getPincode());
+                        pin_number.setText(status.getData().getPincode());
+                        correspondence_pincode = pin_number.getText().toString();
 
                         if (gender != null) {
                             if (gender.equalsIgnoreCase("M")) {
                                 spinner_gender.setSelection(1);
+
+                                int position = titleList.indexOf("Mr.");
+                                if (position >= 0) titleSpinner.setSelection(position);
                             } else if (gender.equalsIgnoreCase("F")) {
                                 spinner_gender.setSelection(2);
+
+                                titleSpinner.setSelection(0);
                             } else {
                                 spinner_gender.setSelection(3);
+
+                                titleSpinner.setSelection(0);
                             }
                         }
                     } else {
@@ -835,9 +1012,15 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
 
     private void SaveApplicationForm(ApplicantDataModel applicantDataModel) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait,...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         apiService.saveForm(applicantDataModel).enqueue(new Callback<ResultModel>() {
             @Override
             public void onResponse(Call<ResultModel> call, Response<ResultModel> response) {
+                progressDialog.dismiss();
+
                 if (response.isSuccessful() && response.body() != null) {
                     ResultModel status = response.body();
 
@@ -852,8 +1035,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         editor.putString("UserID", status.getUserID());
                         editor.putString("Password", status.getPassword());
                         editor.apply();
-
                         Intent i = new Intent(NewApplicantUnitActivity.this, LoginActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clears back stack
                         startActivity(i);
                     } else {
                         Toast.makeText(NewApplicantUnitActivity.this, "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
@@ -865,6 +1048,8 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResultModel> call, Throwable t) {
+                progressDialog.dismiss();
+
                 Toast.makeText(NewApplicantUnitActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -1675,14 +1860,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         builder.setTitle("Select District");
         builder.setItems(bankItems, (dialog, which) -> {
             BankDetailResponce selected = bankDetailResponceList.get(which);
-             branchName = findViewById(R.id.branch_name);
-             alt_branch_name = findViewById(R.id.alt_branch_name);
-             ifsc_code = findViewById(R.id.ifscbank_code);
-             alt_ifscbank_code = findViewById(R.id.alt_ifscbank_code);
-             address = findViewById(R.id.primary_address);
-             alt_primary_address = findViewById(R.id.alt_primary_address);
-             districtName = findViewById(R.id.pf_districtEd);
-             alt_pf_districtEd = findViewById(R.id.alt_pf_districtEd);
+
 
 
             if (isPrimary) {
@@ -1972,5 +2150,41 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             txt.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(this, R.drawable.arrow_up_24), null);
         }
     }
+    private String convertLessThanOneThousand(int number) {
+        String current;
+        if (number % 100 < 20) {
+            current = numNames[number % 100];
+            number /= 100;
+        } else {
+            current = numNames[number % 10];
+            number /= 10;
+            current = tensNames[number % 10] + current;
+            number /= 10;
+        }
+        if (number == 0) return current;
+        return numNames[number] + " Hundred" + current;
+    }
 
+    public String convert(long number) {
+        if (number == 0) { return "Zero"; }
+
+        String snumber = Long.toString(number);
+
+        String mask = "000000000000";
+        DecimalFormat df = new DecimalFormat(mask);
+        snumber = df.format(number);
+
+        int billions = Integer.parseInt(snumber.substring(0,3));
+        int millions = Integer.parseInt(snumber.substring(3,6));
+        int hundredThousands = Integer.parseInt(snumber.substring(6,9));
+        int thousands = Integer.parseInt(snumber.substring(9,12));
+
+        String tradBillions = (billions == 0) ? "" : convertLessThanOneThousand(billions) + " Billion ";
+        String tradMillions = (millions == 0) ? "" : convertLessThanOneThousand(millions) + " Million ";
+        String tradHundredThousands = (hundredThousands == 0) ? "" :
+                (hundredThousands == 1 ? "One Thousand " : convertLessThanOneThousand(hundredThousands) + " Thousand ");
+        String tradThousand = convertLessThanOneThousand(thousands);
+
+        return (tradBillions + tradMillions + tradHundredThousands + tradThousand).trim();
+    }
 }

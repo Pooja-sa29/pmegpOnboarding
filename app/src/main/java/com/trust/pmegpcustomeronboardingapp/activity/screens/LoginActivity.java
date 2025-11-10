@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         initComponent();
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+        System.out.println("isloggedin"+isLoggedIn);
         if (isLoggedIn) {
             startActivity(new Intent(this, DashboardScreenActivity.class));
             finish();
@@ -138,6 +139,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (result.isSuccess()) {
                             SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                            prefs.edit().putBoolean("isLoggedIn", true).apply();
+
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putBoolean("isLoggedIn", true);
                             editor.putInt("ApplID", result.getApplID());
