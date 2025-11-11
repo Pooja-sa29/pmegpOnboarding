@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:hint="Particulars"
-        card_view:boxBackgroundColor="@color/light_grayish_blue">
+        card_view:boxBackgroundColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/salary_particulars"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:hint="No. of Staff"
-        card_view:boxBackgroundColor="@color/light_grayish_blue">
+        card_view:boxBackgroundColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/salary_staff"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:hint="Wages Per Month (Total Month 12)"
-        card_view:boxBackgroundColor="@color/light_grayish_blue">
+        card_view:boxBackgroundColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/salary_wagespermonth"
@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:hint="Amount in Rs."
-        card_view:boxBackgroundColor="@color/light_grayish_blue">
+        card_view:boxBackgroundColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/salary_amount"

@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:hint="Particulars"
-        card_view:boxBackgroundColor="@color/light_grayish_blue">
+        card_view:boxBackgroundColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/buildup_particulars"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:hint="Area"
-        card_view:boxBackgroundColor="@color/light_grayish_blue">
+        card_view:boxBackgroundColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/buildup_area"
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:hint="Rate/Sq.ft"
-        card_view:boxBackgroundColor="@color/light_grayish_blue">
+        card_view:boxBackgroundColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/buildup_rate"
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:hint="Amount"
-        card_view:boxBackgroundColor="@color/light_grayish_blue">
+        card_view:boxBackgroundColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/buildup_amount"

@@ -5,15 +5,19 @@ import static java.security.AccessController.getContext;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,6 +25,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -35,7 +40,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.trust.pmegpcustomeronboardingapp.R;
@@ -143,7 +150,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
             "", " One", " Two", " Three", " Four", " Five", " Six", " Seven", " Eight", " Nine", " Ten",
             " Eleven", " Twelve", " Thirteen", " Fourteen", " Fifteen", " Sixteen", " Seventeen", " Eighteen", " Nineteen"
     };
-
+    TextInputLayout txtAdharInputLayout;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -259,6 +266,10 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         cv_alt_fbanking.setVisibility(View.GONE);
         cv_otherInfo.setVisibility(View.GONE);
         findViewById(R.id.edp_training_insti_name).setVisibility(View.GONE);
+
+
+        txtAdharInputLayout = findViewById(R.id.adhar_til);
+
 
         changeDistrict.setOnClickListener(v -> {
             if (selectedStateCode != null) {
@@ -683,9 +694,12 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         btn_ifsc_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selectedBankListID != 0 && selectedCityName != null) {
-                    showBankIfscDetails(selectedBankListID, selectedCityName, true);
-                }
+                    if (selectedBankListID != 0 && selectedCityName != null) { // selectedCityName must be set when bank is selected
+                        showBankIfscDetails(selectedBankListID, selectedCityName, true);
+                    } else {
+                        Toast.makeText(NewApplicantUnitActivity.this, "Please select city for the bank first", Toast.LENGTH_SHORT).show();
+                    }
+
 
             }
         });
@@ -1027,7 +1041,10 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     Log.d("API_RESPONSE", new Gson().toJson(status));
 
                     if (status.isSuccess()) {
-                        Toast.makeText(NewApplicantUnitActivity.this, status.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(NewApplicantUnitActivity.this,
+                                    status.getMessage(),
+                                    Toast.LENGTH_LONG
+                            ).show();
 
                         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
@@ -1036,7 +1053,6 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                         editor.putString("Password", status.getPassword());
                         editor.apply();
                         Intent i = new Intent(NewApplicantUnitActivity.this, LoginActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clears back stack
                         startActivity(i);
                     } else {
                         Toast.makeText(NewApplicantUnitActivity.this, "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1117,6 +1133,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
 
         setupAutoCalculation();
 
+        txtAdharInputLayout.setBoxBackgroundColor(this.getColor(R.color.white));
 
         titleList.add(0, "--Select title--");
         titleList.add(1, "Smt.");
@@ -1756,70 +1773,7 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         });
     }
 
-//    private void fetchBankList() {
-//        apiService.getBankList().enqueue(new Callback<List<BankModel>>() {
-//            @Override
-//            public void onResponse(Call<List<BankModel>> call, Response<List<BankModel>> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    List<BankModel> bankModelList = response.body();
-//                    System.out.println("agencyList" +bankModelList.size());
-//
-//                    List<String> bankName = new ArrayList<>();
-//                    bankName.add(0,"--Select Bank name--");
-//                    for (BankModel bankModel : bankModelList) {
-//                        bankName.add(bankModel.getBankName());
-//
-//
-//                    }
-//
-//                    ArrayAdapter<String> adapter = new ArrayAdapter<>(NewApplicantUnitActivity.this, R.layout.spinner_selected_item, bankName);
-//                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-//                    bankNameSpinner.setAdapter(adapter);
-//                    bankNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                        @Override
-//                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                            if (position > 0) {
-//                                BankModel bankModel = bankModelList.get(position - 1);
-//                                selectedBankListID = bankModel.getBankListId();
-//                                selectedCityName = district_name;
-//                                selectedBankName1 = bankModel.getBankName();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onNothingSelected(AdapterView<?> parent) {
-//
-//                        }
-//                    });
-//                    alternate_finance_spinner.setAdapter(adapter);
-//                    alternate_finance_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                        @Override
-//                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                            if (position > 0) {
-//                                BankModel bankModel = bankModelList.get(position - 1);
-//                                alt_selectedBankListID = bankModel.getBankListId();
-//                                alt_selectedCityName = district_name;
-//                                selectedBankId2 = bankModel.getBankListId();
-//                                selectedBankName2 = bankModel.getBankName();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onNothingSelected(AdapterView<?> parent) {
-//
-//                        }
-//                    });
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<BankModel>> call, Throwable t) {
-//                t.printStackTrace();
-//            }
-//        });
-//    }
+
 
     private void showBankIfscDetails(int b_id, String b_name, boolean isPrimary) {
         BankDetailRequest request = new BankDetailRequest(b_id, b_name);
@@ -1843,67 +1797,125 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
         });
     }
 
-    private void showDialogForBankDetails(List<BankDetailResponce> bankDetailResponceList, boolean isPrimary) {
-        ApplicantDataModel applicant = new ApplicantDataModel();
 
-        if (bankDetailResponceList == null || bankDetailResponceList.isEmpty()) {
-            Toast.makeText(this, "No districts found", Toast.LENGTH_SHORT).show();
-            return;
+    private void showDialogForBankDetails(List<BankDetailResponce> bankList, boolean isPrimary) {
+
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_searchable_list);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        EditText searchEdt = dialog.findViewById(R.id.searchEdt);
+        ListView listView = dialog.findViewById(R.id.listView);
+
+        // Prepare list items
+        List<String> displayList = new ArrayList<>();
+        for (BankDetailResponce item : bankList) {
+            displayList.add(item.getIFSCCode() + " ~ " + item.getBranchName());
         }
 
-        String[] bankItems = new String[bankDetailResponceList.size()];
-        for (int i = 0; i < bankDetailResponceList.size(); i++) {
-            bankItems[i] = bankDetailResponceList.get(i).getIFSCCode() + " ~ " + bankDetailResponceList.get(i).getBranchName();
-        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, displayList);
+        listView.setAdapter(adapter);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select District");
-        builder.setItems(bankItems, (dialog, which) -> {
-            BankDetailResponce selected = bankDetailResponceList.get(which);
+        searchEdt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+        });
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+
+            // Find the original item from filtered text
+            String selectedText = adapter.getItem(position);
+            int index = displayList.indexOf(selectedText);
+
+            BankDetailResponce selected = bankList.get(index);
 
 
+                if (isPrimary) {
+                    branchName.setText(selected.getBranchName());
+                    ifsc_code.setText(selected.getIFSCCode());
+                    address.setText(selected.getAddress());
+                    districtName.setText(selected.getCityName());
+                }
 
-            if (isPrimary) {
-                branchName.setText(selected.getBranchName());
-                ifsc_code.setText(selected.getIFSCCode());
-                address.setText(selected.getAddress());
-                districtName.setText(selected.getCityName());
-
-                selectedIfsc1 = ifsc_code.getText().toString();
-                selectedBranch1 = branchName.getText().toString();
-                selectedBankAddress1 = address.getText().toString();
-                selectedBankDistrict1 = districtName.getText().toString();
-
-                applicant.setFinBankID1(selectedBankListID);
-                applicant.setFinBank1(selectedBranch1);
-                applicant.setBankIFSC1(selectedIfsc1);
-                applicant.setBankBranch1(selectedBankAddress1);
-                applicant.setBankAddress1(selectedBankAddress1);
-                applicant.setBankDist1(selectedBankDistrict1);
-            } else {
-
+             else {
                 alt_branch_name.setText(selected.getBranchName());
                 alt_ifscbank_code.setText(selected.getIFSCCode());
                 alt_primary_address.setText(selected.getAddress());
                 alt_pf_districtEd.setText(selected.getCityName());
-
-                selectedIfsc2 = ifsc_code.getText().toString();
-                selectedBranch2 = branchName.getText().toString();
-                selectedBankAddress2 = address.getText().toString();
-                selectedBankDistrict2 = districtName.getText().toString();
-
-                applicant.setFinBankID2(alt_selectedBankListID);
-                applicant.setFinBank2(selectedBranch2);
-                applicant.setBankIFSC2(selectedIfsc2);
-                applicant.setBankBranch2(selectedBankAddress2);
-                applicant.setBankAddress2(selectedBankAddress2);
-                applicant.setBankDist2(selectedBankDistrict2);
             }
 
+            dialog.dismiss();
         });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+
+        dialog.show();
     }
+
+//    private void showDialogForBankDetails(List<BankDetailResponce> bankDetailResponceList, boolean isPrimary) {
+//        ApplicantDataModel applicant = new ApplicantDataModel();
+//
+//        if (bankDetailResponceList == null || bankDetailResponceList.isEmpty()) {
+//            Toast.makeText(this, "No districts found", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        String[] bankItems = new String[bankDetailResponceList.size()];
+//        for (int i = 0; i < bankDetailResponceList.size(); i++) {
+//            bankItems[i] = bankDetailResponceList.get(i).getIFSCCode() + " ~ " + bankDetailResponceList.get(i).getBranchName();
+//        }
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Select District");
+//        builder.setItems(bankItems, (dialog, which) -> {
+//            BankDetailResponce selected = bankDetailResponceList.get(which);
+//
+//
+//
+//            if (isPrimary) {
+//                branchName.setText(selected.getBranchName());
+//                ifsc_code.setText(selected.getIFSCCode());
+//                address.setText(selected.getAddress());
+//                districtName.setText(selected.getCityName());
+//
+//                selectedIfsc1 = ifsc_code.getText().toString();
+//                selectedBranch1 = branchName.getText().toString();
+//                selectedBankAddress1 = address.getText().toString();
+//                selectedBankDistrict1 = districtName.getText().toString();
+//
+//                applicant.setFinBankID1(selectedBankListID);
+//                applicant.setFinBank1(selectedBranch1);
+//                applicant.setBankIFSC1(selectedIfsc1);
+//                applicant.setBankBranch1(selectedBankAddress1);
+//                applicant.setBankAddress1(selectedBankAddress1);
+//                applicant.setBankDist1(selectedBankDistrict1);
+//            } else {
+//
+//                alt_branch_name.setText(selected.getBranchName());
+//                alt_ifscbank_code.setText(selected.getIFSCCode());
+//                alt_primary_address.setText(selected.getAddress());
+//                alt_pf_districtEd.setText(selected.getCityName());
+//
+//                selectedIfsc2 = ifsc_code.getText().toString();
+//                selectedBranch2 = branchName.getText().toString();
+//                selectedBankAddress2 = address.getText().toString();
+//                selectedBankDistrict2 = districtName.getText().toString();
+//
+//                applicant.setFinBankID2(alt_selectedBankListID);
+//                applicant.setFinBank2(selectedBranch2);
+//                applicant.setBankIFSC2(selectedIfsc2);
+//                applicant.setBankBranch2(selectedBankAddress2);
+//                applicant.setBankAddress2(selectedBankAddress2);
+//                applicant.setBankDist2(selectedBankDistrict2);
+//            }
+//
+//        });
+//        builder.setNegativeButton("Cancel", null);
+//        builder.show();
+//    }
 
     private void fetchUnitTypeData() {
         apiService.getUnitType().enqueue(new Callback<List<UnitTypeModel>>() {

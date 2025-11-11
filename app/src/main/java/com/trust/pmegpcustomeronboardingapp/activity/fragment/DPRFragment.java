@@ -1,9 +1,13 @@
 package com.trust.pmegpcustomeronboardingapp.activity.fragment;
 
 
+import static android.content.Context.MODE_PRIVATE;
+import static androidx.room.jarjarred.org.antlr.v4.runtime.misc.MurmurHash.finish;
+
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,6 +77,7 @@ public class DPRFragment extends BaseFormFragment {
     private TextView txtDprApplicationLayout, txtBuildingLayout, txt_MACHINERY_layout,txt_working_capitallayout,txt_financing_details_Layout,txt_salesDetails_layout,txt_raw_material_Layout,txt_beneficiary_Layout,txt_introduction_Layout,txt_imp_agency_Layout,txt_promoter_details_Layout,txt_ofc_intro_Layout,txt_depreciation_Layout,txt_power_estimate_Layout,txt_working_capital_Layout,txt_salary_details_Layout,txt_wages_Layout,txtAddbuildingRow,txt_add_machinery_row,txt_wages_row,txt_salary_row,txt_raw_material_row,txt_add_sales_row, landTotal,machinery_total,workingCapitalTotal,salesTotal,wagesTotal,rawTotal,salartTotal,rate_of_interest_power;
     private Spinner activitySpinner;
     Button btn_updateform,btn_saveform;
+    int flag_update = 0;
     DRPMasterData dprDrpMasterData;
     DPRDetailData dprDetailData;
     DprSaveRequestData dprSaveRequestData;
@@ -503,6 +508,10 @@ public class DPRFragment extends BaseFormFragment {
                     Log.d("API_RESPONSE22", new Gson().toJson(status));
 
                     if (status.isSuccess()) {
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("isFlagUpdate", true);
+                        editor.apply(); // Save the flag
 
                         btn_updateform.setVisibility(View.VISIBLE);
                         btn_saveform.setVisibility(View.GONE);
@@ -836,7 +845,13 @@ public class DPRFragment extends BaseFormFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         apiService = ApiClient.getClient().create(ApiServices.class);
-
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        boolean isFlagUpdate = prefs.getBoolean("isFlagUpdate", false);
+        System.out.println("isFlagUpdate"+isFlagUpdate);
+        if (isFlagUpdate) {
+            btn_updateform.setVisibility(View.VISIBLE);
+            btn_saveform.setVisibility(View.GONE);
+        }
         String applIdStr = AppConstant.getApplId();
 
 

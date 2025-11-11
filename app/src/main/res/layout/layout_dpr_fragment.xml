@@ -58,7 +58,7 @@
                         android:layout_marginHorizontal="4dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/spinner_border" />
+                        android:background="@drawable/spinner_background" />
 
 
                     <TextView
@@ -175,7 +175,7 @@
                         android:layout_margin="10dp"
                         android:layout_marginVertical="8dp"
                         android:hint="Land*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/Land_entry"
@@ -1449,7 +1449,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="Power Requirement*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edp_training_insti_name"
@@ -1537,7 +1537,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="Rate of interest*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/rate_of_interest_power"
@@ -1595,7 +1595,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="On Building*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/onBuilding"
@@ -1621,7 +1621,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="On Machinery*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/onmachinery"
@@ -1643,7 +1643,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="paybackPeriod*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/payBackPeriod"
@@ -1664,7 +1664,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="On Machinery*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/prj_impl_period"
@@ -1720,7 +1720,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="On Building*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/intro_ofc"
@@ -1781,7 +1781,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="About the Promoter*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/promoter_info"
@@ -1854,7 +1854,7 @@
                         android:layout_marginHorizontal="4dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/spinner_border" />
+                        android:background="@drawable/spinner_background" />
 
 
                     <TextView
@@ -1873,7 +1873,7 @@
                         android:layout_marginHorizontal="4dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/spinner_border" />
+                        android:background="@drawable/spinner_background" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -1891,7 +1891,7 @@
                         android:layout_marginHorizontal="4dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/spinner_border" />
+                        android:background="@drawable/spinner_background" />
 
 
 
@@ -2040,7 +2040,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="About the Promoter*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/intro"
@@ -2102,7 +2102,7 @@
                         android:visibility="visible"
                         android:layout_marginVertical="8dp"
                         android:hint="About the Promoter*"
-                        card_view:boxBackgroundColor="@color/light_grayish_blue">
+                        card_view:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/beneficiary_details"

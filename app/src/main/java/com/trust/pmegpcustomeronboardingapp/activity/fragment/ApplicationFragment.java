@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -73,6 +74,7 @@ import com.trust.pmegpcustomeronboardingapp.activity.screens.NewApplicantUnitAct
 import com.trust.pmegpcustomeronboardingapp.activity.services.ApiServices;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.AppConstant;
 import com.trust.pmegpcustomeronboardingapp.activity.utils.TrustMethods;
+import com.trust.pmegpcustomeronboardingapp.activity.utils.Validator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,6 +88,7 @@ import retrofit2.Response;
 
 public class ApplicationFragment extends BaseFormFragment {
     private ProgressDialog progressDialog;
+    ScrollView scrollView;
 
     private ApiServices apiService;
     ApplicantDataModel applicantDataModel;
@@ -208,6 +211,7 @@ public class ApplicationFragment extends BaseFormFragment {
          availLayout = view.findViewById(R.id.app_avail_layout);
         app_yes_radio = view.findViewById(R.id.app_yes_radio);
         app_No_radio = view.findViewById(R.id.app_No_radio);
+        scrollView = view.findViewById(R.id.scrollView);
 
         txt_application_layout = view.findViewById(R.id.txt_application_layout);
         app_txt_communicationLayout = view.findViewById(R.id.app_txt_communicationLayout);
@@ -267,6 +271,53 @@ public class ApplicationFragment extends BaseFormFragment {
             ApplicantInfoModel applicant = new ApplicantInfoModel();
              applicantDataModel = new ApplicantDataModel();
             ApplicantDetailData applicantDetailData = new ApplicantDetailData();
+
+            if (!Validator.isSpinnerSelected(app_agencydistrictSpinner, "Select district")) {
+                app_cv_implementing_agency.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_implementing_agency);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(app_unitsubdistrictnameSpinner, "Select sub-district")) {
+                app_cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_unitAddress);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(app_unitvillagenamespinner, "Select village")) {
+                app_cv_unitAddress.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_unitAddress);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(app_activityspinner, "Select Activity type")) {
+                app_cv_projectinfo.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_projectinfo);
+                return;
+            }
+            if (!Validator.isSpinnerSelected(app_bank_spinner_list, "Select Bank")) {
+                app_cv_primary_Financing_bank.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_primary_Financing_bank);
+                return;
+            }
+
+            if (!Validator.isEmpty(app_ifscbank_code, "Enter ifsc code", scrollView)) {
+                app_cv_primary_Financing_bank.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_primary_Financing_bank);
+                return;
+            }
+            if (!Validator.isEmpty(app_branch_name, "Enter branch name", scrollView)) {
+                app_cv_primary_Financing_bank.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_primary_Financing_bank);
+                return;
+            }
+            if (!Validator.isEmpty(app_primary_address, "Enter address", scrollView)) {
+                app_cv_primary_Financing_bank.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_primary_Financing_bank);
+                return;
+            }
+            if (!Validator.isEmpty(app_pf_districtEd, "Enter address", scrollView)) {
+                app_cv_primary_Financing_bank.setVisibility(View.VISIBLE);
+                scrollToView(scrollView, app_cv_primary_Financing_bank);
+                return;
+            }
 
             applicant.setApplID(AppConstant.getApplId());
             applicant.setApplCode(applicantDetailData.getApplCode());
@@ -350,7 +401,9 @@ public class ApplicationFragment extends BaseFormFragment {
 
         return view;
     }
-
+    private void scrollToView(ScrollView scrollView, View targetView) {
+        scrollView.post(() -> scrollView.smoothScrollTo(0, targetView.getTop()));
+    }
     private void fetchDistrictList(String code) {
         System.out.println("state_code"+code);
         DistrictModel request = new DistrictModel(code,"");
@@ -449,6 +502,7 @@ public class ApplicationFragment extends BaseFormFragment {
         titleList.add(1, "Smt.");
         titleList.add(2, "Kum.");
         titleList.add(3, "Ms.");
+        titleList.add(4, "Mr.");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                 R.layout.spinner_selected_item, titleList);

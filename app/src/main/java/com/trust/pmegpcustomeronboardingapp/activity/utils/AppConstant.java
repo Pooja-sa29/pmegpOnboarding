@@ -8,6 +8,7 @@ public class AppConstant {
 
     private static String userID;
     private static Boolean isLoggedIn;
+    private static Boolean flagUpdate;
     private static String applId;
     private static String applName;
 
@@ -35,6 +36,14 @@ public class AppConstant {
         AppConstant.isLoggedIn = isLoggedIn;
     }
 
+    public static Boolean getFlagUpdate() {
+        return flagUpdate;
+    }
+
+    public static void setFlagUpdate(Boolean flagUpdate) {
+        AppConstant.flagUpdate = flagUpdate;
+    }
+
     public static String getApplId() {
         return applId;
     }
@@ -49,5 +58,6 @@ public class AppConstant {
         userID = prefs.getString("ApplCode", null);
         isLoggedIn = prefs.getBoolean("isLoggedIn", false);
         applName = prefs.getString("ApplName",null);
+        flagUpdate = prefs.getBoolean("isFlagUpdate",false);
     }
 }

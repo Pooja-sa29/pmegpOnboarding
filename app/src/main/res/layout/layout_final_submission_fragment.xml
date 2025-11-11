@@ -53,7 +53,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="@string/adhar_card_no"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_adharcardno"
@@ -73,7 +73,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="@string/pan_no"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_pannumber"
@@ -102,7 +102,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border"
+                            android:background="@drawable/spinner_background"
                             android:padding="10dp"
                             android:textColor="@color/colorFentBlack"
                             android:textSize="16sp" />
@@ -114,7 +114,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="@string/name_of_applicant"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_nameofapplicant"
@@ -140,7 +140,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="@string/date_of_birth"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_dob"
@@ -160,7 +160,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="@string/age"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_age"
@@ -189,7 +189,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -207,7 +207,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border"
+                            android:background="@drawable/spinner_background"
                             android:padding="10dp"
                             android:textColor="@color/colorFentBlack"
                             android:textSize="16sp" />
@@ -228,7 +228,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border"
+                            android:background="@drawable/spinner_background"
                             android:padding="10dp"
                             android:textColor="@color/colorFentBlack"
                             android:textSize="16sp" />
@@ -249,7 +249,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border"
+                            android:background="@drawable/spinner_background"
                             android:padding="10dp"
                             android:textColor="@color/colorFentBlack"
                             android:textSize="16sp" />
@@ -295,7 +295,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="@string/communication_add"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_communication_address"
@@ -323,7 +323,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border"
+                            android:background="@drawable/spinner_background"
                             android:padding="10dp"
                             android:textColor="@color/colorFentBlack"
                             android:textSize="16sp" />
@@ -336,7 +336,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="@string/select_district"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_district"
@@ -364,7 +364,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Taluka/Block*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_taluka_block_name"
@@ -385,7 +385,7 @@
                             android:layout_marginVertical="8dp"
                             android:layout_marginEnd="3dp"
                             android:hint="Pin*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_pin_number"
@@ -405,7 +405,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Primary Mobile Number*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_mobile_number"
@@ -425,7 +425,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Secondary Mobile Number"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_alternate_mobile_number"
@@ -446,7 +446,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Email*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_email"
@@ -507,7 +507,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
 
                         <TextView
@@ -526,7 +526,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -544,7 +544,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
 
                         <LinearLayout
@@ -749,7 +749,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -767,7 +767,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -785,7 +785,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -795,7 +795,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="LGD Code*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_lgd_code"
@@ -815,7 +815,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Pin*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_unitpincode"
@@ -835,7 +835,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Unit Location*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_unitLoc"
@@ -854,7 +854,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Unit Address*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_unitaddress"
@@ -914,7 +914,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -1084,7 +1084,7 @@
                                 android:layout_marginVertical="8dp"
                                 android:hint="EDP Training Instu. name*"
                                 android:visibility="gone"
-                                card_view:boxBackgroundColor="@color/light_grayish_blue">
+                                card_view:boxBackgroundColor="@color/white">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/app_edp_training_insti_name"
@@ -1124,7 +1124,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Capital Expenditure*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_capital_exp"
@@ -1149,7 +1149,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Working Capital*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_workingcapital"
@@ -1174,7 +1174,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Total"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_totalexp"
@@ -1200,7 +1200,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="No of Employees"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_employee_count"
@@ -1259,7 +1259,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -1269,7 +1269,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="IFSC/Bank Code*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_ifscbank_code"
@@ -1298,7 +1298,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Branch Name*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_branch_name"
@@ -1319,7 +1319,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Address"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_primary_address"
@@ -1339,7 +1339,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="District"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_pf_districtEd"
@@ -1402,7 +1402,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -1412,7 +1412,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="IFSC/Bank Code*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_alt_ifscbank_code"
@@ -1441,7 +1441,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Branch Name*"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_alt_branch_name"
@@ -1462,7 +1462,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="Address"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_alt_primary_address"
@@ -1482,7 +1482,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginVertical="8dp"
                             android:hint="District"
-                            card_view:boxBackgroundColor="@color/light_grayish_blue">
+                            card_view:boxBackgroundColor="@color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/app_alt_pf_districtEd"
@@ -1595,7 +1595,7 @@
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/spinner_border" />
+                            android:background="@drawable/spinner_background" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
