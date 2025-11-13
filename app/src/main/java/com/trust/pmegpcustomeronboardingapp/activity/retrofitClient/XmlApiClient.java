@@ -10,8 +10,8 @@ import java.security.cert.X509Certificate;
 
 public class XmlApiClient {
 
-    private static final String BASE_URL = "https://192.168.0.16:8054/";
-//    private static final String BASE_URL = "https://115.124.125.153/";
+//    private static final String BASE_URL = "https://192.168.0.16:8054/";
+    private static final String BASE_URL = "https://115.124.125.153/";
     private static Retrofit retrofit;
 
     public static Retrofit getClient() {

@@ -1041,19 +1041,26 @@ public class NewApplicantUnitActivity extends AppCompatActivity {
                     Log.d("API_RESPONSE", new Gson().toJson(status));
 
                     if (status.isSuccess()) {
-                            Toast.makeText(NewApplicantUnitActivity.this,
-                                    status.getMessage(),
-                                    Toast.LENGTH_LONG
-                            ).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(NewApplicantUnitActivity.this);
+                        builder.setTitle("Success");
+                        builder.setMessage(status.getMessage());
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("OK", (dialog, which) -> {
+                            SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putInt("ApplID", status.getApplID());
+                            editor.putString("UserID", status.getUserID());
+                            editor.putString("Password", status.getPassword());
+                            editor.apply();
 
-                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putInt("ApplID", status.getApplID());
-                        editor.putString("UserID", status.getUserID());
-                        editor.putString("Password", status.getPassword());
-                        editor.apply();
-                        Intent i = new Intent(NewApplicantUnitActivity.this, LoginActivity.class);
-                        startActivity(i);
+                            Intent i = new Intent(NewApplicantUnitActivity.this, LoginActivity.class);
+                            startActivity(i);
+                            finish(); // optional – close current screen
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
                     } else {
                         Toast.makeText(NewApplicantUnitActivity.this, "Save failed: " + status.getMessage(), Toast.LENGTH_SHORT).show();
                     }
